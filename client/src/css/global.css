@@ -1,0 +1,12 @@
+video::-webkit-media-text-track-display-backdrop{
+  background-color: none !important;
+}
+
+video::-webkit-media-text-track-display {
+  overflow: visible !important;
+}
+
+video::cue{
+  opacity: 1;
+  background-color: none !important;
+}
