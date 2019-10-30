@@ -1,10 +1,14 @@
 import axios from 'axios';
-import { GET_ERRORS, SET_CURRENT_USER, SET_SETTINGS} from './types';
+import { 
+    GET_ERRORS, 
+    // SET_CURRENT_USER, 
+    SET_SETTINGS
+} from './types';
 import setAuthToken from '../setAuthToken';
-import jwt_decode from 'jwt-decode';
-import { setCurrentUser } from './authentication'
+// import jwt_decode from 'jwt-decode';
+// import { setCurrentUser } from './authentication'
 
-export const setUserSettings = settings => {
+export const setUserSettings = (settings) => {
     return {
         type: SET_SETTINGS,
         payload: settings

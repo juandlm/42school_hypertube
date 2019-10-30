@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(require('morgan')('combined'));
 app.use(require('cookie-parser')());
 
-filmController.cronFilms()
+filmController.cronFilms();
 
 // passport.authenticate('jwt', { session: false })
 app.use('/api/users', userRouter)

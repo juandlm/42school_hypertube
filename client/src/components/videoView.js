@@ -180,12 +180,12 @@ class VideoView extends React.Component {
     const video = document.querySelector("video")
     //console.log(prefLang)
     let firstTrack, secondTrack = ''
-    if (prefLang == 'en' || prefLang == ''){
+    if (prefLang === 'en' || prefLang === ''){
       firstTrack = createTrack(enSub, "English", "en", prefLang)
       firstTrack.default = 'true'
       secondTrack = createTrack(frSub, "French", "fr", prefLang)
     }
-    if (prefLang == 'fr'){
+    if (prefLang === 'fr'){
       firstTrack = createTrack(frSub, "French", "fr", prefLang)
       firstTrack.default = 'true'
       secondTrack = createTrack(enSub, "English", "en", prefLang)
@@ -291,7 +291,7 @@ class VideoView extends React.Component {
   }
 
   setLang(){
-    if (this.state.lang == 'en' || this.state.lang == ''){
+    if (this.state.lang === 'en' || this.state.lang === ''){
       console.log(this.state.subtitleFr)
       return (
         { file: {
@@ -303,7 +303,7 @@ class VideoView extends React.Component {
         }
       )
     }
-    if (this.state.lang == 'fr'){
+    if (this.state.lang === 'fr'){
       return (
         { file: {
           tracks: [
@@ -347,7 +347,7 @@ class VideoView extends React.Component {
         </div>
       )
     }
-    const lang = this.state.lang
+    // const lang = this.state.lang
     const query = this.state.query
     return(
       <div>

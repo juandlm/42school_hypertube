@@ -1,30 +1,36 @@
-const User = require('../models/User')
+const User = require('../models/User');
+const Mail = require('../models/Mails');
 
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const htmlspecialchars = require('htmlspecialchars');
 const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
+const validateLoginForgottenInput = require('../validation/loginForgotten');
+const validateLoginNewPasswordInput = require('../validation/loginNewPassword');
 const validateSettingsInput = require('../validation/settings');
 
 module.exports = {
 
 	register: (req, res) => {
-
-		console.log(req.body)
-
 		const { errors, isValid } = validateRegisterInput(req.body);
+		if (!isValid) return res.status(400).json(errors);
 
-		if (!isValid) {
-			return res.status(400).json(errors);
-		}
-		User.find({$or: [{ username: req.body.username }, { email: req.body.email }]}).then(user => {
+		const username = htmlspecialchars(req.body.username);
+		const email = htmlspecialchars(req.body.email);
+		const firstName = htmlspecialchars(req.body.firstName);
+		const lastName = htmlspecialchars(req.body.lastName);
+		const password = htmlspecialchars(req.body.password);
+		const password_confirm = htmlspecialchars(req.body.password_confirm);
+
+		User.find({$or: [{ username: username }, { email: email }]}).then(user => {
 			if (user == '') {
 				const newUser = new User({
-					username: req.body.username,
-					email: req.body.email,
-					firstName: req.body.firstName,
-					lastName: req.body.lastName,
-					password: req.body.password,
-					password_confirm: req.body.password_confirm,
+					username: username,
+					email: email,
+					firstName: firstName,
+					lastName: lastName,
+					password: password,
+					password_confirm: password_confirm,
 				});
 
 				bcrypt.genSalt(10, (err, salt) => {
@@ -45,11 +51,11 @@ module.exports = {
 					}
 				});
 			}
-			else if (user[0].email == req.body.email) {
+			else if (user[0].email == email) {
 				return res.status(400).json({
 					email: 'Email already exists'
 				});
-			} else if (user[0].username == req.body.username) {
+			} else if (user[0].username == username) {
 				return res.status(400).json({
 					username: 'Username already exists'
 				});
@@ -58,15 +64,11 @@ module.exports = {
 	},
 
 	login: (req, res) => {
-
 		const { errors, isValid } = validateLoginInput(req.body);
+		if(!isValid) return res.status(400).json(errors);
 
-		if(!isValid) {
-			return res.status(400).json(errors);
-		}
-
-		const email = req.body.email;
-		const password = req.body.password;
+		const email = htmlspecialchars(req.body.email);
+		const password = htmlspecialchars(req.body.password);
 
 		User.findOne({email})
 		.then(user => {
@@ -93,30 +95,20 @@ module.exports = {
 		});
 	},
 
-		// Work in Progress
+	// Work in Progress
 	loginForgotten: (req, res) => {
-
 		const { errors, isValid } = validateLoginForgottenInput(req.body);
 		if(!isValid) return res.status(400).json(errors);
 		
 		const email = htmlspecialchars(req.body.email);
-		console.log(email);
 
 		User.findOne({ email })
 		.then(user => {
 			if (!user) {
 				errors.email = 'User not found';
-
-				//test
-				Mail.mailLoginForgotten(email, 'roro', 'testToken', res);
-
 				return res.status(404).json(errors);
 			}
-
-			// envoi du mail ici
-			// Mail.mailLoginForgotten(email, user.username, user.token, res);
-
-			console.log('OK');
+			Mail.mailLoginForgotten(email, user.username, 'token123', res);
 			res.send('OK');
 		});
 	},
@@ -127,7 +119,6 @@ module.exports = {
 
 		const { errors, isValid } = validateLoginNewPasswordInput(req.body);
 		if(!isValid) return res.status(400).json(errors);
-
 
 		const password = htmlspecialchars(req.body.password);
 
@@ -165,41 +156,44 @@ module.exports = {
 	},
 
 	modifySettings: (req, res) => {
-		const { errors, isValid } = validateSettingsInput(req.body)
-		if(!isValid) {
-			return res.status(400).json(errors)
-		}
-		const {userId, settings} = req.body
+		const { errors, isValid } = validateSettingsInput(req.body);
+		if(!isValid) return res.status(400).json(errors);
+		const { userId, settings } = req.body;
+	
 		Object.keys(settings).forEach((key) => (settings[key] == null || settings[key] == '' || key == 'password_confirm') && delete settings[key]);
 		User.findOneAndUpdate({_id: userId}, {$set : settings}, {new:true}, (err, doc) => {
-			if (err){
-				errors.settings = 'Cannot update user settings'
-				res.status(400).json(errors)
-			} else{
-				console.log(doc)
-				res.status(201).json({username: doc.name || '', email: doc.email || '', langue: doc.lang || '', avatar:doc.avatar || ''})
+			if (err) {
+				errors.settings = 'Cannot update user settings';
+				res.status(400).json(errors);
+			} else {
+				console.log(doc);
+				res.status(201).json({username: doc.name || '', email: doc.email || '', langue: doc.lang || '', avatar:doc.avatar || ''});
 			}
 		})
 	},
 
 	getSettings: (req, res) => {
-		User.findOne({_id: req.body.userId}, (err, doc) => {
+		const userId = htmlspecialchars(req.body.userId);
+
+		User.findOne({_id: userId}, (err, doc) => {
 			//console.log(doc)
 			if (err)
-				res.status(500).send(err)
+				res.status(500).send(err);
 			else
-				res.status(200).json({username: doc.name || '', email: doc.email || '', langue: doc.lang || '', avatar:doc.avatar || ''})
+				res.status(200).json({username: doc.name || '', email: doc.email || '', langue: doc.lang || '', avatar:doc.avatar || ''});
 		})
 	},
 
 	getUserInfo: (req, res) => {
-		//htmlspecialchars
-		// console.log(req.body.username)
-		User.findOne({username: req.body.username}, ['username', 'firstName', 'lastName', 'avatar'], (err, data) => {
+		const username = htmlspecialchars(req.body.username);
+
+		User.findOne({ username: username }, ['username', 'firstName', 'lastName', 'avatar'], (err, data) => {
+
+			console.log(data._id);
 			if (err)
-				res.status(500).send(err)
+				res.status(500).send(err);
 			else
-				res.status(200).json(data)
-		})
+				res.status(200).json(data);
+		});
 	}
 }

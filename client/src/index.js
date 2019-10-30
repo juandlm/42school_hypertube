@@ -2,13 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-
 //import * as serviceWorker from './serviceWorker';
+import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { indigo } from '@material-ui/core/colors';
 
-ReactDOM.render(<App />, document.getElementById('blabla'));
+const theme = createMuiTheme({
+    palette: {
+        type: 'light', // Change this to dark theme
+        primary: {
+            main: indigo['500'],
+        },
+    }
+});
+const Hypertube = () => (
+    <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+    </MuiThemeProvider>
+);
 
-//ReactDOM.render(<AppRouter />, document.getElementById('root'));
-//ReactDOM.render(<App />, document.getElementById('navbar'));
+ReactDOM.render(<Hypertube />, document.getElementById('root'));
 
 
 // If you want your app to work offline and load faster, you can change

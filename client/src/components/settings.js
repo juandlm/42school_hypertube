@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { modifySettings, getUserSettings } from '../actions/settings';
 import classnames from 'classnames';
-import store from '../store';
+// import store from '../store';
 
 import registerStyle from '../css/register';
 import {Button, CssBaseline, InputLabel, MenuItem, FormControl, Select} from '@material-ui/core/';

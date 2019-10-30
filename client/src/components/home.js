@@ -241,7 +241,11 @@ class Home extends React.Component {
     }
     return (
       <div>
-      <PrimarySearchAppBar searchBar={true} refresh={this.refreshComponent.bind(this)} updateFilms={this.updateFilms.bind(this)}/>
+      <PrimarySearchAppBar 
+        searchBar={true} 
+        refresh={this.refreshComponent.bind(this)} 
+        updateFilms={this.updateFilms.bind(this)} 
+      />
       <ListFilter filterData={this.filterData.bind(this)}></ListFilter>
       <GridList spacing={8} cols={5} style={{ display:'flex', justifyContent: 'flex-start', alignItems:'center', flexDirection:'row', backgroundColor: 'rgba(29,29,29,1)'}}>
         {this.state.films.map((film, index) => (

@@ -31,3 +31,23 @@
     transform: rotate(360deg);
   }
 }
+
+/* Colors */
+:root {
+  --main-color : #3f51b5; /* indigo: 500 */ 
+}
+
+/* Legals */
+.legalsClose {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.signupConsent, a {
+  text-decoration: none;
+  color: var(--main-color);
+}
+.signupConsent:hover, a:hover {
+  color: var(--main-color);
+  text-decoration: underline;
+}

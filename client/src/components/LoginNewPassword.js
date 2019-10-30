@@ -13,7 +13,7 @@ import Link from '@material-ui/core/Link';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import Legals from './Legals';
 
-  const styles = theme => ({
+const styles = theme => ({
     root: {
         height: '100vh'
     },

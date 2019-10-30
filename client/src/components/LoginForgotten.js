@@ -13,7 +13,7 @@ import Link from '@material-ui/core/Link';
 import { Grid, Paper, Typography, Box } from '@material-ui/core';
 import Legals from './Legals';
 
-  const styles = theme => ({
+const styles = theme => ({
     root: {
         height: '100vh'
     },
@@ -55,8 +55,8 @@ const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} 
 
 class LoginForgotten extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             email: '',
             send: false,
@@ -68,26 +68,27 @@ class LoginForgotten extends Component {
 
     handleInputChange(e) {
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
+            errors: {}
         })
     }
 
     handleSubmit(e) {
         e.preventDefault();
         const user = {
-            email: this.state.email,
+            email: this.state.email
         }
         this.props.loginForgottenUser(user);
-        console.log(this.state.errors);
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.errors) {
             this.setState({ 
-                errors: nextProps.errors,
-                email: ''
+                errors: nextProps.errors
             });
         }
+        if (nextProps.send)
+            this.setState({ send: true });
     }
 
     beforeSubmit = () => {
@@ -137,7 +138,7 @@ class LoginForgotten extends Component {
         return (
             <div>
                 <Typography className={classes.subtitle}>
-                    Un email vient de vous être envoyé à cette adresse (vérifiez vos spam):
+                    Un email vient de vous être envoyé à cette adresse:
                 </Typography>
                 <Paper>
                     <Box m={3} p={3} textAlign="center">
@@ -205,12 +206,14 @@ class LoginForgotten extends Component {
 LoginForgotten.propTypes = {
     loginForgottenUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
+    send: PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
-    errors: state.errors
+    errors: state.errors,
+    send: state.send
 })
 
 export default connect(mapStateToProps, { loginForgottenUser })(withStyles(styles)(LoginForgotten))

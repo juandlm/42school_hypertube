@@ -1,7 +1,11 @@
 import axios from 'axios';
-import { GET_ERRORS, SET_CURRENT_USER } from './types';
 import setAuthToken from '../setAuthToken';
 import jwt_decode from 'jwt-decode';
+import { 
+    GET_ERRORS, 
+    SET_CURRENT_USER, 
+    GET_SEND
+} from './types';
 
 export const registerUser = (user, history) => dispatch => {
     axios.post('/api/users/register', user)
@@ -35,7 +39,12 @@ export const loginUser = (user) => dispatch => {
 export const loginForgottenUser = (user) => dispatch => {
     axios.post('/api/users/loginForgotten', user)
             .then(res => {
-				console.log(res);
+                console.log(res.data);
+               
+                dispatch({
+                    type: GET_SEND,
+                    payload: true
+                });
             })
             .catch(err => {
                 dispatch({
