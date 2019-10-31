@@ -6,11 +6,8 @@ import { connect } from 'react-redux';
 import { loginForgottenUser } from '../actions/authentication';
 
 import classnames from 'classnames';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import { Grid, Paper, Typography, Box } from '@material-ui/core';
+import { Grid, Paper, Typography, Box, Link, TextField, Button } from '@material-ui/core';
 import Legals from './Legals';
 import styles from '../css/public';
 

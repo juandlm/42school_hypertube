@@ -6,11 +6,8 @@ import { connect } from 'react-redux';
 import { loginCheckNewPasswordUser, loginNewPasswordUser } from '../actions/authentication';
 
 import classnames from 'classnames';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import { Grid, Paper, Typography } from '@material-ui/core';
+import { Grid, Paper, Typography, Link, TextField, Button } from '@material-ui/core';
 import Legals from './Legals';
 import styles from '../css/public';
 import extractParamsUrl from '../validation/extractParams';
@@ -46,7 +43,7 @@ class LoginNewPassword extends Component {
         const getParams = extractParamsUrl(this.props.location.search);
         const user = {
             username: getParams.username,
-            token: getParams.key,
+            token: getParams.key
         }
         console.log(getParams);
         this.props.loginCheckNewPasswordUser(user);

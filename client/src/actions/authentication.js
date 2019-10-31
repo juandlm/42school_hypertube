@@ -5,7 +5,7 @@ import {
     GET_ERRORS, 
     SET_CURRENT_USER, 
     GET_SEND
-} from './types';
+} from './types'
 
 export const registerUser = (user, history) => dispatch => {
     axios.post('/api/users/register', user)
@@ -17,6 +17,22 @@ export const registerUser = (user, history) => dispatch => {
                 });
             });
 }
+
+export const registerValidationUser = (user) => dispatch => {
+    axios.post('/api/users/registerValidation', user)
+            .then(res => {
+                sessionStorage.setItem('alert_success', 'Votre compte a été confirmé !');
+                window.location.href = '/login'
+            })
+            .catch(err => {
+                dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data
+                });
+            });
+}
+
+
 
 export const loginUser = (user) => dispatch => {
     axios.post('/api/users/login', user)

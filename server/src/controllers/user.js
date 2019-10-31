@@ -22,43 +22,24 @@ module.exports = {
 		const firstName = htmlspecialchars(req.body.firstName);
 		const lastName = htmlspecialchars(req.body.lastName);
 		const password = htmlspecialchars(req.body.password);
-		// const password_confirm = htmlspecialchars(req.body.password_confirm);
 
-		User.find({$or: [{ username: username }, { email: email }]}).then(user => {
+		User.find({$or: [{ username: username }, { email: email }]}).then(async user => {
 			if (user == '') {
+				const mail_token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 				const newUser = new User({
 					username: username,
 					email: email,
 					firstName: firstName,
 					lastName: lastName,
 					password: password,
-					// password_confirm: password_confirm,
+					register_token: mail_token
 				});
-
-				// Plus simple ?
-				// newUser.password = bcrypt.hashSync(password, 10);
-
-				// Envoi du mail
-				// token du mail ?
-				// page comfirmation ?
-
-				bcrypt.genSalt(10, (err, salt) => {
-					if (err) console.error('There was an error', err);
-					else {
-						bcrypt.hash(newUser.password, salt, async (err, hash) => {
-							if (err) console.error('There was an error', err);
-							else {
-								newUser.password = hash;
-								const token = await newUser.generateAuthToken()
-								newUser
-								.save()
-								.then(user => {
-									res.status(201).json({ user, token })
-								});
-							}
-						});
-					}
+				newUser.password = bcrypt.hashSync(password, 10);
+				const token = await newUser.generateAuthToken()
+				newUser.save().then(user => {
+					res.status(201).json({ user, token })
 				});
+				Mail.mailSignup(email, username, mail_token, res);
 			}
 			else if (user[0].email == email) {
 				return res.status(400).json({
@@ -70,6 +51,27 @@ module.exports = {
 				});
 			}
 		}).catch(err => console.error(err));
+	},
+
+	registerValidation: (req, res) => {
+
+		const username = htmlspecialchars(req.body.username);
+		const token = htmlspecialchars(req.body.token);
+
+		User.findOne({ username: username }).then(async user => {
+
+			if (user && user.register_token === token) {
+				user.confirmed = true
+				user.register_token = null
+				user.save().then(user => {
+					res.status(201).json({ user, token })
+				})
+			} else {
+				console.log("no");
+			}
+
+		});
+
 	},
 
 	login: (req, res) => {

@@ -11,6 +11,7 @@ import createRouteMiddleware from "./createRouteMiddleware";
 
 //import Navbar from './components/Navbar2';
 import Register from './components/Register';
+import RegisterValidation from './components/RegisterValidation';
 import Login from './components/Login';
 import LoginForgotten from './components/LoginForgotten';
 import LoginNewPassword from './components/LoginNewPassword';
@@ -19,6 +20,9 @@ import NoMatch from './components/NoMatch';
 import Home from './components/home';
 import VideoView from './components/videoView';
 import User from './components/User';
+
+import '@material/react-snackbar/dist/snackbar.css';
+import {Snackbar} from '@material/react-snackbar';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -40,15 +44,35 @@ const privateRoute = process.env.REACT_APP_IS_PRIVATE_ROUTE;
 const publicRoute = process.env.REACT_APP_IS_PUBLIC_ROUTE;
 
 class App extends Component {
+	
+	handleAlert() {
+		let data
+		if ((data = sessionStorage.getItem('alert_success'))) {
+			sessionStorage.removeItem('alert_success')
+			return (<Snackbar message={data} actionText="x" />)
+		}
+		if ((data = sessionStorage.getItem('alert_warning'))) {
+			sessionStorage.removeItem('alert_warning')
+			return (<Snackbar message={data} actionText="x"  />)
+		}
+		if ((data = sessionStorage.getItem('alert_danger'))) {
+			sessionStorage.removeItem('alert_danger')
+			return (<Snackbar message={data} actionText="x"  />)
+		}
+	}
+
 	render() {
 		return (
 			<Provider store = { store }>
 				<Router>
 					<Switch>
-
 						<Route exact path="/register"
 							{...createRouteMiddleware({
 								component: Register
+							}, publicRoute)} />
+						<Route exact path="/registerValidation"
+							{...createRouteMiddleware({
+								component: RegisterValidation
 							}, publicRoute)} />
 						<Route exact path="/login"
 							{...createRouteMiddleware({
@@ -78,11 +102,16 @@ class App extends Component {
 							{...createRouteMiddleware({
 								component: User
 							}, privateRoute)} />
+						{/* <Route path="/user/me"
+							{...createRouteMiddleware({
+								component: User
+							}, privateRoute)} /> */}
 							
 						<Route component={NoMatch} />
 
 					</Switch>
 				</Router>
+				{this.handleAlert()}
 			</Provider>
 		);
 	}

@@ -43,7 +43,7 @@ const sendMail = (mail, res) => {
 */
 
 const mailSignup = (dest, username, token, res) => {
-    const link = `${mailLink}signupValidation?username=${username}&key=${token}`;
+    const link = `${mailLink}registerValidation?username=${username}&key=${token}`;
     const message = 
         `<html>
             <body>

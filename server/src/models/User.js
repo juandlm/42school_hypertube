@@ -25,7 +25,16 @@ const userSchema = mongoose.Schema({
     lastName : {type : String, required:true, max:50, min:3},
 	lang:{type : String, default:'en', max:10, min:3},
 	githubId:{type: Number, min:1, max:100000000},
-	avatar: {type : String, max:256, min:10},
+    avatar: {type : String, max:256, min:10},
+    confirmed: {type: Boolean, required:true, default: false},
+    register_token: {
+        type: String,
+        required: false
+    },
+    fpwd_token: {
+        type: String,
+        required: false
+    },
     tokens: [{
         token: {
             type: String,

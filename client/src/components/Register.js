@@ -7,16 +7,10 @@ import { withRouter } from 'react-router-dom';
 import { registerUser } from '../actions/authentication';
 import classnames from 'classnames';
 
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import { Grid, Paper, Typography } from '@material-ui/core';
-
-import Legals from './Legals';
+import { Button, TextField, FormControlLabel, Checkbox, Link, Grid, Paper, Typography } from '@material-ui/core';
 import styles from '../css/public';
+import Legals from './Legals';
 
 const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
@@ -224,7 +218,6 @@ class Register extends Component {
                                         value={consent}
                                     />}
                                 label={label}
-                                className="mt-5"
                             />
                             {errors.remember_me && (<div className="invalid-feedback">{errors.remember_me}</div>)}
                             <Button

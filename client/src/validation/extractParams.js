@@ -10,4 +10,4 @@ const extractParamsUrl = (getString) => {
     return (result);
 }
 
-export default extractParamsUrl;
+export default extractParamsUrl
