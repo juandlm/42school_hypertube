@@ -47,7 +47,7 @@ class VideoView extends React.Component {
     console.log(this.props)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
       //console.log(nextProps)
       if (nextProps.settings){
         console.log(nextProps.settings)

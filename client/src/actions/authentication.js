@@ -40,7 +40,6 @@ export const loginForgottenUser = (user) => dispatch => {
     axios.post('/api/users/loginForgotten', user)
             .then(res => {
                 console.log(res.data);
-               
                 dispatch({
                     type: GET_SEND,
                     payload: true
@@ -67,6 +66,21 @@ export const loginNewPasswordUser = (user) => dispatch => {
             });
 }
 
+export const loginCheckNewPasswordUser = (user) => dispatch => {
+    axios.post('/api/users/loginCheckNewPassword', user)
+            .then(res => {
+                console.log(res);
+                if (res.data === 'KO')
+                    window.location.href = '/login';
+            })
+            .catch(err => {
+                dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data
+                });
+            });
+}
+
 export const setCurrentUser = decoded => {
     return {
         type: SET_CURRENT_USER,
@@ -78,5 +92,6 @@ export const logoutUser = (history) => dispatch => {
     localStorage.removeItem('jwtToken');
     setAuthToken(false);
     dispatch(setCurrentUser({}));
-    history.push('/login');
+    // history.push('/login');
+    window.location.href = '/login';
 }

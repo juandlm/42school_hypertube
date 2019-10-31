@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { loginNewPasswordUser } from '../actions/authentication';
+import { loginCheckNewPasswordUser, loginNewPasswordUser } from '../actions/authentication';
 
 import classnames from 'classnames';
 import Button from '@material-ui/core/Button';
@@ -12,44 +12,8 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import Legals from './Legals';
-
-const styles = theme => ({
-    root: {
-        height: '100vh'
-    },
-    image: {
-        height: '100vh',
-        width: '100%',
-        opacity: '0.8',
-        objectFit: 'cover',
-        objectPosition: 'center',
-    },
-    paper: {
-        margin: theme.spacing(8, 4),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100vw'
-    },
-    legals: {
-        margin: theme.spacing(0, 4),
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
-        width: '100vw'
-    },
-    form: {
-        width: '100%',
-        marginTop: theme.spacing(1)
-    },
-    submit: {
-        margin: theme.spacing(7, 0, 2)
-    },
-    subtitle: {
-        margin: theme.spacing(4, 0, 0, 0)
-    }
-});
+import styles from '../css/public';
+import extractParamsUrl from '../validation/extractParams';
 
 const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
@@ -62,23 +26,10 @@ class LoginNewPassword extends Component {
             password_confirm: '',
             errors: {}
         }
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleInputChange(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        const user = {
-            password: this.state.password,
-            password_confirm: this.state.password_confirm,
-        }
-        this.props.loginNewPasswordUser(user);
+    UcomponentDidMount = () => {
+        this.checkNewPassword();
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -91,20 +42,38 @@ class LoginNewPassword extends Component {
         }
     }
 
+    checkNewPassword = () => {
+        const getParams = extractParamsUrl(this.props.location.search);
+        const user = {
+            username: getParams.username,
+            token: getParams.key,
+        }
+        console.log(getParams);
+        this.props.loginCheckNewPasswordUser(user);
+    }
+
+    handleInputChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        const user = {
+            password: this.state.password,
+            password_confirm: this.state.password_confirm,
+        }
+        this.props.loginNewPasswordUser(user);
+    }
+
     render() {
         const { classes } = this.props;
         const { password, password_confirm, errors } = this.state;
 
         return (
-            <Grid container component="main" className={classes.root} >
-
-                <Grid item xs={false} sm={4} md={7} className="bgGradient">
-                    <img
-                        src="https://source.unsplash.com/collection/1736993"
-                        alt="Movie"
-                        className={classes.image}
-                    />
-                </Grid>
+            <Grid container component="main" className={classes.root}>
+                <Grid item xs={false} sm={4} md={7} className={classes.image}></Grid>
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square container>
                     <div className={classes.paper}>
                         <img
@@ -191,6 +160,7 @@ class LoginNewPassword extends Component {
 
 LoginNewPassword.propTypes = {
     loginNewPasswordUser: PropTypes.func.isRequired,
+    loginCheckNewPasswordUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 }
@@ -200,4 +170,4 @@ const mapStateToProps = (state) => ({
     errors: state.errors
 })
 
-export default connect(mapStateToProps, { loginNewPasswordUser })(withStyles(styles)(LoginNewPassword))
+export default connect(mapStateToProps, { loginCheckNewPasswordUser, loginNewPasswordUser })(withStyles(styles)(LoginNewPassword))

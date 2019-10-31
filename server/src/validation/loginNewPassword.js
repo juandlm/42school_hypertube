@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 
-module.exports = function validateRegisterInput(data) {
+module.exports = validateRegisterInput = (data) => {
     let errors = {};
     const regex = /^(?=.*[a-z])(?=.*[A-Z]).{7,}$/;
 

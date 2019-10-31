@@ -12,6 +12,8 @@ const validateSettingsInput = require('../validation/settings');
 module.exports = {
 
 	register: (req, res) => {
+
+		console.log(req.body)
 		const { errors, isValid } = validateRegisterInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
 
@@ -20,7 +22,7 @@ module.exports = {
 		const firstName = htmlspecialchars(req.body.firstName);
 		const lastName = htmlspecialchars(req.body.lastName);
 		const password = htmlspecialchars(req.body.password);
-		const password_confirm = htmlspecialchars(req.body.password_confirm);
+		// const password_confirm = htmlspecialchars(req.body.password_confirm);
 
 		User.find({$or: [{ username: username }, { email: email }]}).then(user => {
 			if (user == '') {
@@ -30,8 +32,15 @@ module.exports = {
 					firstName: firstName,
 					lastName: lastName,
 					password: password,
-					password_confirm: password_confirm,
+					// password_confirm: password_confirm,
 				});
+
+				// Plus simple ?
+				// newUser.password = bcrypt.hashSync(password, 10);
+
+				// Envoi du mail
+				// token du mail ?
+				// page comfirmation ?
 
 				bcrypt.genSalt(10, (err, salt) => {
 					if (err) console.error('There was an error', err);
@@ -98,7 +107,7 @@ module.exports = {
 	// Work in Progress
 	loginForgotten: (req, res) => {
 		const { errors, isValid } = validateLoginForgottenInput(req.body);
-		if(!isValid) return res.status(400).json(errors);
+		if (!isValid) return res.status(400).json(errors);
 		
 		const email = htmlspecialchars(req.body.email);
 
@@ -108,9 +117,26 @@ module.exports = {
 				errors.email = 'User not found';
 				return res.status(404).json(errors);
 			}
+			// Generation d'un token
+			// Enregistrement de celui-ci dans la bdd
 			Mail.mailLoginForgotten(email, user.username, 'token123', res);
-			res.send('OK');
+			res.send(`Email send to ${email}`);
 		});
+	},
+
+	// Work in Progress
+	loginCheckNewPassword: (req, res) => {
+		const username = htmlspecialchars(req.body.username);
+		const token = htmlspecialchars(req.body.token);
+
+		console.log(req.body);
+
+		// Checker que le token de l'user dans la bdd est le meme que celui receptionné
+		// Si oui
+			// res.send('OK'); 
+		// Sinon
+		// res.send('KO');
+
 	},
 
 	// Work in Progress
@@ -118,10 +144,17 @@ module.exports = {
 		console.log(req.body);
 
 		const { errors, isValid } = validateLoginNewPasswordInput(req.body);
-		if(!isValid) return res.status(400).json(errors);
+		if (!isValid) return res.status(400).json(errors);
 
 		const password = htmlspecialchars(req.body.password);
+		const newPassword = bcrypt.hashSync(password, 10);
 
+		// Hash du password
+		// Enregistrement du password dans la bdd
+
+
+
+		res.send('OK');
 	},
 
 	me: (req, res) => {

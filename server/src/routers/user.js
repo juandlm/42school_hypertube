@@ -9,6 +9,7 @@ router.post('/register', userController.register)
 router.post('/login', userController.login)
 router.post('/loginForgotten', userController.loginForgotten)
 router.post('/loginNewPassword', userController.loginNewPassword)
+router.post('/loginCheckNewPassword', userController.loginCheckNewPassword)
 
 //Protected
 router.get('/me', passport.authenticate('jwt', { session: false }), userController.me);

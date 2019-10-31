@@ -1,14 +1,14 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 
-module.exports = function validateLoginForgottenInput(data) {
+module.exports = validateLoginForgottenInput = (data) => {
     let errors = {};
     data.email = !isEmpty(data.email) ? data.email : '';
 
-    if(!Validator.isEmail(data.email))
+    if (!Validator.isEmail(data.email))
         errors.email = 'Email is invalid';
 
-    if(Validator.isEmpty(data.email))
+    if (Validator.isEmpty(data.email))
         errors.email = 'Email is required';
 
     return {

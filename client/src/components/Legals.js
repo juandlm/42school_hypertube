@@ -9,7 +9,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { IconButton, Typography } from '@material-ui/core';
 
 export default function Legals() {
-    const [open, setOpen] = React.useState(false);
+    const [ open, setOpen ] = React.useState(false);
     const websiteName = 'HYPERTUBE';
 
     const handleClickOpen = () => {
@@ -19,8 +19,6 @@ export default function Legals() {
     const handleClose = () => {
         setOpen(false);
     }
-
-    // ************************************************
 
     return (
         <div>
