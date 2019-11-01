@@ -19,13 +19,14 @@ class LoginNewPassword extends Component {
     constructor() {
         super();
         this.state = {
+            username: '',
             password: '',
             password_confirm: '',
             errors: {}
         }
     }
 
-    UcomponentDidMount = () => {
+    UNSAFE_componentWillMount = () => {
         this.checkNewPassword();
     }
 
@@ -45,19 +46,21 @@ class LoginNewPassword extends Component {
             username: getParams.username,
             token: getParams.key
         }
-        console.log(getParams);
         this.props.loginCheckNewPasswordUser(user);
+        this.setState({ username: user.username });
     }
 
     handleInputChange = (e) => {
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
+            errors: {}
         });
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
         const user = {
+            username: this.state.username,
             password: this.state.password,
             password_confirm: this.state.password_confirm,
         }

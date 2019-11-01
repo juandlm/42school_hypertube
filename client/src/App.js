@@ -20,9 +20,7 @@ import NoMatch from './components/NoMatch';
 import Home from './components/home';
 import VideoView from './components/videoView';
 import User from './components/User';
-
-import '@material/react-snackbar/dist/snackbar.css';
-import {Snackbar} from '@material/react-snackbar';
+import Alert from './components/Alert';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -46,18 +44,23 @@ const publicRoute = process.env.REACT_APP_IS_PUBLIC_ROUTE;
 class App extends Component {
 	
 	handleAlert() {
-		let data
+		let data;
+
 		if ((data = sessionStorage.getItem('alert_success'))) {
-			sessionStorage.removeItem('alert_success')
-			return (<Snackbar message={data} actionText="x" />)
+			sessionStorage.removeItem('alert_success');
+			return (<Alert message={data} variant="success" />);
 		}
 		if ((data = sessionStorage.getItem('alert_warning'))) {
-			sessionStorage.removeItem('alert_warning')
-			return (<Snackbar message={data} actionText="x"  />)
+			sessionStorage.removeItem('alert_warning');
+			return (<Alert message={data} variant="warning" />);
 		}
-		if ((data = sessionStorage.getItem('alert_danger'))) {
-			sessionStorage.removeItem('alert_danger')
-			return (<Snackbar message={data} actionText="x"  />)
+		if ((data = sessionStorage.getItem('alert_error'))) {
+			sessionStorage.removeItem('alert_error');
+			return (<Alert message={data} variant="error" />);
+		}
+		if ((data = sessionStorage.getItem('alert_info'))) {
+			sessionStorage.removeItem('alert_info');
+			return (<Alert message={data} variant="info" />);
 		}
 	}
 

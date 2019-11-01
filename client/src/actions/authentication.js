@@ -5,11 +5,14 @@ import {
     GET_ERRORS, 
     SET_CURRENT_USER, 
     GET_SEND
-} from './types'
+} from './types';
 
 export const registerUser = (user, history) => dispatch => {
     axios.post('/api/users/register', user)
-            .then(res => history.push('/login'))
+            .then(res => {
+                sessionStorage.setItem('alert_info', 'Un mail viens de vous être envoyé, suivez les instructions pour confirmer votre inscription.');
+                window.location.href = '/login';
+            })
             .catch(err => {
                 dispatch({
                     type: GET_ERRORS,
@@ -21,18 +24,17 @@ export const registerUser = (user, history) => dispatch => {
 export const registerValidationUser = (user) => dispatch => {
     axios.post('/api/users/registerValidation', user)
             .then(res => {
-                sessionStorage.setItem('alert_success', 'Votre compte a été confirmé !');
-                window.location.href = '/login'
+                if (res.data.message === 'Confirmed')
+                    sessionStorage.setItem('alert_success', 'Votre compte a été confirmé !');
+                else
+                    sessionStorage.setItem('alert_info', 'Votre compte est déjà activé');
+                window.location.href = '/login';
             })
             .catch(err => {
-                dispatch({
-                    type: GET_ERRORS,
-                    payload: err.response.data
-                });
+                sessionStorage.setItem('alert_error', 'Les données transmises sont erronées');
+                window.location.href = '/login';
             });
 }
-
-
 
 export const loginUser = (user) => dispatch => {
     axios.post('/api/users/login', user)
@@ -44,6 +46,10 @@ export const loginUser = (user) => dispatch => {
                 dispatch(setCurrentUser(decoded));
             })
             .catch(err => {
+                if (err.response.data.confirmed) {
+                    sessionStorage.setItem('alert_info', 'Un mail viens de vous être envoyé, suivez les instructions pour confirmer votre inscription.');
+                    window.location.href = '/login';
+                }
                 dispatch({
                     type: GET_ERRORS,
                     payload: err.response.data
@@ -51,11 +57,10 @@ export const loginUser = (user) => dispatch => {
             });
 }
 
-
 export const loginForgottenUser = (user) => dispatch => {
     axios.post('/api/users/loginForgotten', user)
             .then(res => {
-                console.log(res.data);
+                console.log(res);
                 dispatch({
                     type: GET_SEND,
                     payload: true
@@ -72,7 +77,9 @@ export const loginForgottenUser = (user) => dispatch => {
 export const loginNewPasswordUser = (user) => dispatch => {
     axios.post('/api/users/loginNewPassword', user)
             .then(res => {
-				console.log(res);
+                console.log(res);
+                sessionStorage.setItem('alert_success', 'Mot de passe modifié avec succès !');
+                window.location.href = '/login';
             })
             .catch(err => {
                 dispatch({
@@ -86,14 +93,10 @@ export const loginCheckNewPasswordUser = (user) => dispatch => {
     axios.post('/api/users/loginCheckNewPassword', user)
             .then(res => {
                 console.log(res);
-                if (res.data === 'KO')
-                    window.location.href = '/login';
             })
             .catch(err => {
-                dispatch({
-                    type: GET_ERRORS,
-                    payload: err.response.data
-                });
+                sessionStorage.setItem('alert_error', 'Ce lien n\'est pas valide');
+                window.location.href = '/login';
             });
 }
 
@@ -108,6 +111,5 @@ export const logoutUser = (history) => dispatch => {
     localStorage.removeItem('jwtToken');
     setAuthToken(false);
     dispatch(setCurrentUser({}));
-    // history.push('/login');
     window.location.href = '/login';
 }

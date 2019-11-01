@@ -62,6 +62,8 @@ function PrimarySearchAppBar(props) {
     setAnchorEl(null);
     handleMobileMenuClose();
     //setLocation(props.location)
+
+    // Why refresh ??
     if (typeof props.refresh == 'function'){
       props.refresh(true)
       console.log('refresh')

@@ -4,7 +4,7 @@ const styles = theme => ({
     },
     image: {
         // backgroundImage: 'url(https://source.unsplash.com/collection/1736993)',
-        backgroundImage: 'url(https://source.unsplash.com/collection/3327473)',
+        // backgroundImage: 'url(https://source.unsplash.com/collection/3327473)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

@@ -3,11 +3,8 @@ import extractParamsUrl from '../validation/extractParams';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-
-
 import { registerValidationUser } from '../actions/authentication';
 import styles from '../css/public';
-
 
 class RegisterValidation extends React.Component {
 
@@ -28,7 +25,7 @@ class RegisterValidation extends React.Component {
     render() {
         return (
             <div className="RegisterValidation">
-                <h1>Veuillez patienter...</h1>
+                <h1>Please wait...</h1>
             </div>
         );
     }
