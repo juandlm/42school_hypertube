@@ -1,23 +1,16 @@
 import React from 'react';
-import GetApiData from '../models/getApiData'
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import PrimarySearchAppBar from './navBar';
-import { Link } from 'react-router-dom'
-import circularStyle from '../css/circular';
-import ListFilter from './dropdown';
+import axios from 'axios'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import axios from 'axios'
+import { withRouter, Link } from 'react-router-dom';
+import InfoIcon from '@material-ui/icons/Info';
+import { IconButton, GridList, GridListTile, GridListTileBar } from '@material-ui/core/';
 
-const circular = circularStyle;
+import GetApiData from '../models/getApiData'
+
+import ListFilter from './dropdown';
+import PrimarySearchAppBar from './navBar';
+import Loader from './Loader';
 
 class Home extends React.Component {
 
@@ -27,8 +20,16 @@ class Home extends React.Component {
     super(props)
     this.handleScroll = this.handleScroll.bind(this);
     this.api = new GetApiData()
-    this.state = {films:'', isLoading:false,
-    isBottom:false, page:1, filter:null, query:'', needPage:true, isSeen:[]}
+    this.state = {
+      films: '', 
+      isLoading: false,
+      isBottom: false, 
+      page:1, 
+      filter: null, 
+      query: '', 
+      needPage: true, 
+      isSeen: []
+    }
     this.isFiltered = false
   }
 
@@ -65,10 +66,10 @@ class Home extends React.Component {
       if (!results)
         results = await this.api.getMovies({page:page, limit:40, sort_by:'download_count'})
     }
-    console.log(results.data.movies)
+    // console.log(results.data.movies)
     if (!results.data.movies)
       return ;
-    console.log(results.data.movies)
+    // console.log(results.data.movies)
     if (page > 1){
         this.setState(prevState => ({
           films: [...prevState.films, ...results.data.movies],
@@ -101,25 +102,6 @@ class Home extends React.Component {
                 isBottom: false
             });*/
         }
-    }
-
-    displayLoading(isLoading){
-      if (!isLoading){
-        return (
-          <div style={{height: '100%',  backgroundColor: 'rgba(29,29,29,1)'}} >
-          <Container>
-          <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          >
-              <CircularProgress className={circular.progress} />
-          </Grid>
-          </Container>
-          </div>
-        )
-      }
     }
 
     storeFilm(title, torrent, id, summary, imdbCode, serieInfo){
@@ -170,8 +152,8 @@ class Home extends React.Component {
           this.setState({isSeen:data})
           console.log(data)
         }
-      }catch(e){
-
+      } catch(e) {
+        // console.log(e);
       }
     }
 
@@ -236,42 +218,41 @@ class Home extends React.Component {
   render(){
     const {films, isLoading} = this.state
 
-    if (!films){
-      return this.displayLoading(isLoading);
-    }
+    if (!films) return Loader(isLoading);
+
     return (
       <div>
-      <PrimarySearchAppBar 
-        searchBar={true} 
-        refresh={this.refreshComponent.bind(this)} 
-        updateFilms={this.updateFilms.bind(this)} 
-      />
-      <ListFilter filterData={this.filterData.bind(this)}></ListFilter>
-      <GridList spacing={8} cols={5} style={{ display:'flex', justifyContent: 'flex-start', alignItems:'center', flexDirection:'row', backgroundColor: 'rgba(29,29,29,1)'}}>
-        {this.state.films.map((film, index) => (
-          <GridListTile key={index} cols={-1} rows={2}
-          style={
-          this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ?
-          {cursor:'pointer', backdropFilter: 'drop-shadow(16px 16px 20px red) invert(75%)'} : {cursor:'pointer', backdropFilter: ''}}
-          component={Link} to={this.storeFilm(film.filename || film.title, this.getBestTorrent(film.torrents) || film, film.id, film.summary || '',
-          film.imdb_code || film.imdb_id || film.imdbCode, {season:film.season || '', episode:film.episode || ''})}>
-            <img src={film.medium_cover_image || film.small_screenshot || film.posterLink} onError={() => console.log('img error')} alt={film.title}
+        <PrimarySearchAppBar 
+          searchBar={true} 
+          refresh={this.refreshComponent.bind(this)} 
+          updateFilms={this.updateFilms.bind(this)} 
+        />
+        <ListFilter filterData={this.filterData.bind(this)}></ListFilter>
+        <GridList spacing={8} cols={5} style={{ display:'flex', justifyContent: 'flex-start', alignItems:'center', flexDirection:'row', backgroundColor: 'rgba(29,29,29,1)'}}>
+          {this.state.films.map((film, index) => (
+            <GridListTile key={index} cols={-1} rows={2}
             style={
             this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ?
-            {filter: 'grayscale(100%)'} : {filter:''}}/>
-            <GridListTileBar
-              title={film.title}
-              subtitle={<span>{film.summary}</span>}
-              actionIcon={
-                <IconButton aria-label={`info about ${film.title}`} style={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                  <InfoIcon />
-                </IconButton>
-              }
-            />
-          </GridListTile>
-        ))}
-        {this.displayLoading(isLoading)}
-      </GridList>
+            {cursor:'pointer', backdropFilter: 'drop-shadow(16px 16px 20px red) invert(75%)'} : {cursor:'pointer', backdropFilter: ''}}
+            component={Link} to={this.storeFilm(film.filename || film.title, this.getBestTorrent(film.torrents) || film, film.id, film.summary || '',
+            film.imdb_code || film.imdb_id || film.imdbCode, {season:film.season || '', episode:film.episode || ''})}>
+              <img src={film.medium_cover_image || film.small_screenshot || film.posterLink} onError={() => console.log('img error')} alt={film.title}
+              style={
+              this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ?
+              {filter: 'grayscale(100%)'} : {filter:''}}/>
+              <GridListTileBar
+                title={film.title}
+                subtitle={<span>{film.summary}</span>}
+                actionIcon={
+                  <IconButton aria-label={`info about ${film.title}`} style={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                    <InfoIcon />
+                  </IconButton>
+                }
+              />
+            </GridListTile>
+          ))}
+          {Loader(isLoading)}
+        </GridList>
       </div>
     );
   }

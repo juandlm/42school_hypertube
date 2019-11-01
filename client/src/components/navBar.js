@@ -10,16 +10,16 @@ import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
-import PersonIcon from '@material-ui/icons/Person';
+// import PersonIcon from '@material-ui/icons/Person';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+// import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import Divider from '@material-ui/core/Divider';
+// import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
+// import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -31,16 +31,19 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../actions/authentication';
 import { withRouter } from 'react-router-dom';
 
-
 const useStyles = navBar;
 
 function PrimarySearchAppBar(props) {
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(null);
+  const username = props.auth.user.username;
 
-  const {isAuthenticated, user} = props.auth;
+  const {
+    // isAuthenticated, 
+    user} = props.auth;
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -64,10 +67,10 @@ function PrimarySearchAppBar(props) {
     //setLocation(props.location)
 
     // Why refresh ??
-    if (typeof props.refresh == 'function'){
-      props.refresh(true)
-      console.log('refresh')
-    }
+    // if (typeof props.refresh == 'function'){
+    //   props.refresh(true)
+    //   console.log('refresh')
+    // }
   }
 
   function handleMobileMenuOpen(event) {
@@ -81,25 +84,25 @@ function PrimarySearchAppBar(props) {
     setOpen(flag)
   };
 
-  const userLogin = (
-  <div>
-    <List>
-      <ListItem button key={'Register'} component={Link} to='/register'>
-        <ListItemIcon>
-          <PersonAddIcon />
-        </ListItemIcon>
-        <ListItemText primary={'Register'} />
-      </ListItem>
-      <Divider />
-      <ListItem button key={'Login'} component={Link} to='/login'>
-        <ListItemIcon>
-          <PersonIcon />
-        </ListItemIcon>
-        <ListItemText primary={'Login'} />
-      </ListItem>
-    </List>
-  </div>
-)
+//   const userLogin = (
+//   <div>
+//     <List>
+//       <ListItem button key={'Register'} component={Link} to='/register'>
+//         <ListItemIcon>
+//           <PersonAddIcon />
+//         </ListItemIcon>
+//         <ListItemText primary={'Register'} />
+//       </ListItem>
+//       <Divider />
+//       <ListItem button key={'Login'} component={Link} to='/login'>
+//         <ListItemIcon>
+//           <PersonIcon />
+//         </ListItemIcon>
+//         <ListItemText primary={'Login'} />
+//       </ListItem>
+//     </List>
+//   </div>
+// )
 
   const userLogout = (
     <div>
@@ -117,19 +120,21 @@ function PrimarySearchAppBar(props) {
   )
 
   const side = side => {
-     return (
+    return (
       <div
-      className={classes.list}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-     >
-      {isAuthenticated && user ? userLogout : userLogin}
-    </div>
-     );
+        className={classes.list}
+        role="presentation"
+        onClick={toggleDrawer(false)}
+        onKeyDown={toggleDrawer(false)}
+      >
+        {/* {isAuthenticated && user ? userLogout : userLogin} */}
+        {userLogout}
+      </div>
+    );
   }
 
   const menuId = 'primary-search-account-menu';
+  
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -140,7 +145,7 @@ function PrimarySearchAppBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem component={Link} to='/users/me' onClick={handleMenuClose}>Profil</MenuItem>
+      <MenuItem component={Link} to={`/user/${username}`} onClick={handleMenuClose}>Profil</MenuItem>
       <MenuItem component={Link} to='/settings' onClick={handleMenuClose}>Settings</MenuItem>
     </Menu>
   );

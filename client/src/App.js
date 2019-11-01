@@ -105,10 +105,6 @@ class App extends Component {
 							{...createRouteMiddleware({
 								component: User
 							}, privateRoute)} />
-						{/* <Route path="/user/me"
-							{...createRouteMiddleware({
-								component: User
-							}, privateRoute)} /> */}
 							
 						<Route component={NoMatch} />
 

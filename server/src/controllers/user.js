@@ -12,8 +12,6 @@ const validateSettingsInput = require('../validation/settings');
 module.exports = {
 
 	register: (req, res) => {
-
-		console.log(req.body)
 		const { errors, isValid } = validateRegisterInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
 
@@ -54,109 +52,119 @@ module.exports = {
 	},
 
 	registerValidation: (req, res) => {
-
 		const username = htmlspecialchars(req.body.username);
 		const token = htmlspecialchars(req.body.token);
 
 		User.findOne({ username: username }).then(async user => {
 
-			if (user && user.register_token === token) {
-				user.confirmed = true
-				user.register_token = null
+			if (user && user.register_token === token && user.confirmed === false) {
+				user.confirmed = true;
+				user.register_token = null;
 				user.save().then(user => {
-					res.status(201).json({ user, token })
+					res.status(201).json({ user, token, message: 'Confirmed' });
 				})
+			} else if (user && user.confirmed === true) {
+				res.status(201).json({ user, token, message: 'Already activated' });
 			} else {
-				console.log("no");
+				return res.status(400).end();
 			}
-
 		});
 
 	},
 
 	login: (req, res) => {
 		const { errors, isValid } = validateLoginInput(req.body);
-		if(!isValid) return res.status(400).json(errors);
+		if (!isValid) return res.status(400).json(errors);
 
 		const email = htmlspecialchars(req.body.email);
 		const password = htmlspecialchars(req.body.password);
 
-		User.findOne({email})
-		.then(user => {
+		User.findOne({email}).then(user => {
+
 			if (!user) {
 				errors.email = 'User not found'
 				return res.status(404).json(errors);
 			}
-			bcrypt.compare(password, user.password)
-			.then(async isMatch => {
-				if (isMatch) {
-					await user.generateAuthToken().then((token) => {
-						res.json({
-							user: user,
-							success: true,
-							token: `Bearer ${token}`
-						});
-					}).catch(err => console.error('There was some error with the token', err));
-				}
-				else {
-					errors.password = 'Incorrect Password';
-					return res.status(400).json(errors);
-				}
-			});
+			if (user.confirmed === true) {
+				bcrypt.compare(password, user.password)
+				.then(async isMatch => {
+					if (isMatch) {
+						await user.generateAuthToken().then((token) => {
+							res.json({
+								user: user,
+								success: true,
+								token: `Bearer ${token}`
+							});
+						}).catch(err => console.error('There was some error with the token', err));
+					}
+					else {
+						errors.password = 'Incorrect Password';
+						return res.status(400).json(errors);
+					}
+				});
+			} else {
+				errors.confirmed = 'Account not confirmed';
+				Mail.mailSignup(user.email, user.username, user.register_token, res);
+				return res.status(400).json(errors);
+			}
 		});
 	},
 
-	// Work in Progress
 	loginForgotten: (req, res) => {
 		const { errors, isValid } = validateLoginForgottenInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
 		
 		const email = htmlspecialchars(req.body.email);
 
-		User.findOne({ email })
-		.then(user => {
+		User.findOne({ email }).then(user => {
 			if (!user) {
 				errors.email = 'User not found';
 				return res.status(404).json(errors);
-			}
-			// Generation d'un token
-			// Enregistrement de celui-ci dans la bdd
-			Mail.mailLoginForgotten(email, user.username, 'token123', res);
-			res.send(`Email send to ${email}`);
+			} 
+			const mail_token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+			user.fpwd_token = mail_token;
+			user.save().then(user => {
+				res.status(201).json({ user });
+			})
+			Mail.mailLoginForgotten(email, user.username, mail_token, res);
 		});
 	},
 
-	// Work in Progress
 	loginCheckNewPassword: (req, res) => {
 		const username = htmlspecialchars(req.body.username);
 		const token = htmlspecialchars(req.body.token);
 
-		console.log(req.body);
-
-		// Checker que le token de l'user dans la bdd est le meme que celui receptionné
-		// Si oui
-			// res.send('OK'); 
-		// Sinon
-		// res.send('KO');
-
+		User.findOne({ username }).then(user => {
+			if (!user) {
+				errors.email = 'User not found';
+				return res.status(404).json(errors);
+			}
+			if (user && token === user.fpwd_token)
+				return res.status(201).end();
+			else
+				return res.status(400).end();
+		});
 	},
 
-	// Work in Progress
 	loginNewPassword: (req, res) => {
-		console.log(req.body);
-
 		const { errors, isValid } = validateLoginNewPasswordInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
 
+		const username = htmlspecialchars(req.body.username);
 		const password = htmlspecialchars(req.body.password);
 		const newPassword = bcrypt.hashSync(password, 10);
 
-		// Hash du password
-		// Enregistrement du password dans la bdd
-
-
-
-		res.send('OK');
+		User.findOne({ username }).then(user => {
+			if (!user) {
+				errors.email = 'User not found';
+				return res.status(404).json(errors);
+			}
+			user.password = newPassword;
+			user.fpwd_token = null;
+			user.save().then(user => {
+				res.status(201).json({ user });
+			});
+		});
 	},
 
 	me: (req, res) => {
@@ -192,7 +200,7 @@ module.exports = {
 
 	modifySettings: (req, res) => {
 		const { errors, isValid } = validateSettingsInput(req.body);
-		if(!isValid) return res.status(400).json(errors);
+		if (!isValid) return res.status(400).json(errors);
 		const { userId, settings } = req.body;
 	
 		Object.keys(settings).forEach((key) => (settings[key] == null || settings[key] == '' || key == 'password_confirm') && delete settings[key]);
@@ -224,7 +232,7 @@ module.exports = {
 
 		User.findOne({ username: username }, ['username', 'firstName', 'lastName', 'avatar'], (err, data) => {
 
-			console.log(data._id);
+			// console.log(data._id);
 			if (err)
 				res.status(500).send(err);
 			else

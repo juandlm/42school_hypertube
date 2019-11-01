@@ -3,12 +3,12 @@ const styles = theme => ({
         height: '100vh'
     },
     image: {
-        // backgroundImage: 'url(https://source.unsplash.com/collection/1736993)',
-        // backgroundImage: 'url(https://source.unsplash.com/collection/3327473)',
+        // backgroundImage: 'url(https://source.unsplash.com/collection/1736993/)',
+        backgroundImage: 'url(https://source.unsplash.com/R1J6Z1cnJZc/)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        opacity: 0.8
+        // opacity: 0.8
     },
     paper: {
         margin: theme.spacing(8, 4),

@@ -5,11 +5,15 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { registerValidationUser } from '../actions/authentication';
 import styles from '../css/public';
+import Loader from './Loader';
 
 class RegisterValidation extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            isLoading: false
+        }
         this.validationAccount();
     }
 
@@ -23,9 +27,11 @@ class RegisterValidation extends React.Component {
     }
 
     render() {
+        const { isLoading } = this.state;
+
         return (
             <div className="RegisterValidation">
-                <h1>Please wait...</h1>
+                {Loader(isLoading)}
             </div>
         );
     }
