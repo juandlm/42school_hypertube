@@ -56,7 +56,6 @@ class Login extends Component {
 
         return (
             <Grid container component="main" className={classes.root} >
-
                 <Grid item xs={false} sm={4} md={7} className={classes.image}></Grid>
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square container>
                     <div className={classes.paper}>
@@ -73,7 +72,7 @@ class Login extends Component {
                         <form className={classes.form} onSubmit={ this.handleSubmit }>
                             <TextField
                                 name="email"
-                                label="Adresse email"
+                                label="Nom d'utilisateur (ou email)"
                                 value={email}
                                 onChange={this.handleInputChange}
                                 inputProps={{

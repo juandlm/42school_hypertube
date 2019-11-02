@@ -14,19 +14,52 @@ const userSchema = mongoose.Schema({
             }
         }
     },
+    username : {
+        type : String, 
+        required: true, 
+        unique: true,
+        min: 3,
+        max: 50
+    },
     password: {
         type: String,
         required: true,
         minLength: 7,
         maxLength: 30
 	},
-    username : {type : String, required:true, max:50, min:3},
-    firstName : {type : String, required:true, max:50, min:3},
-    lastName : {type : String, required:true, max:50, min:3},
-	lang:{type : String, default:'en', max:10, min:3},
-	githubId:{type: Number, min:1, max:100000000},
-    avatar: {type : String, max:256, min:10},
-    confirmed: {type: Boolean, required:true, default: false},
+    firstName : {
+        type : String, 
+        required: true, 
+        min: 3,
+        max: 50
+    },
+    lastName : {
+        type : String, 
+        required: true,
+        min: 3, 
+        max: 50
+    },
+	lang:{
+        type : String, 
+        default: 'en',
+        min:3,
+        max: 10
+    },
+	githubId:{
+        type: Number, 
+        min: 1, 
+        max: 100000000
+    },
+    avatar: {
+        type : String,
+        min:10,
+        max:256
+    },
+    confirmed: {
+        type: Boolean, 
+        required: true, 
+        default: false
+    },
     register_token: {
         type: String,
         required: false

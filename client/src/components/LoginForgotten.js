@@ -57,7 +57,7 @@ class LoginForgotten extends Component {
                 </Typography>
                 <TextField
                     name="email"
-                    label="Adresse email"
+                    label="Email"
                     value={email}
                     onChange={this.handleInputChange}
                     inputProps={{

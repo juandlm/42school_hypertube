@@ -13,6 +13,7 @@ class User extends Component {
         this.state = {
             username: props.match.params.user,
             userInfo: [],
+            films: '',
             isUserExist: false,
             isLoading: false
         }
@@ -26,7 +27,7 @@ class User extends Component {
         axios.post('/api/users/getUserInfo', { 'username': username }, { 'Content-Type': 'application/json' })
         .then((res) => {
             if (res.data != null) {
-                console.log('data', res.data)
+                console.log(res.data)
                 this.setState({
                     userInfo: res.data,
                     isLoading: true,
@@ -41,6 +42,11 @@ class User extends Component {
         });
     }
 
+    // getFilms
+    // Les infos des 10 derniers films vu par l'user sont dans this.state.userInfo.films_seen !
+    // Gerer la recup des infos des films avec getFilms
+    // Gerer l'affichage
+
     render() {
         const { classes } = this.props;
         const { userInfo, isUserExist, isLoading } = this.state;
@@ -52,9 +58,9 @@ class User extends Component {
             <div className="User">
                 <div>
                     <PrimarySearchAppBar 
-                        // searchBar={true} 
+                        searchBar={false}
                         // refresh={this.refreshComponent.bind(this)} 
-                        //  updateFilms={this.updateFilms.bind(this)} 
+                        // updateFilms={this.updateFilms.bind(this)} 
                     />
 
                     <Container maxWidth="lg">
@@ -71,8 +77,12 @@ class User extends Component {
                             </Typography>
 
                             <Typography variant="subtitle1">
-                            <br /><br /><strong>Peux être rajouter les derniers films vu...</strong>
+                                <br /><br />Derniers films vus:<br /><br />
                             </Typography>
+
+                            {this.state.userInfo.films_seen.map((film, index) => (
+                                <p key={index}>{film.title}</p>
+                            ))}
                         </Paper>
                     </Container>
                 </div>

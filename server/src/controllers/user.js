@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Mail = require('../models/Mails');
+const Film = require('../models/Film');
 
 const bcrypt = require('bcryptjs');
 const htmlspecialchars = require('htmlspecialchars');
@@ -8,6 +9,9 @@ const validateLoginInput = require('../validation/login');
 const validateLoginForgottenInput = require('../validation/loginForgotten');
 const validateLoginNewPasswordInput = require('../validation/loginNewPassword');
 const validateSettingsInput = require('../validation/settings');
+
+// a virer
+const var_dump = require('var_dump');
 
 module.exports = {
 
@@ -79,8 +83,7 @@ module.exports = {
 		const email = htmlspecialchars(req.body.email);
 		const password = htmlspecialchars(req.body.password);
 
-		User.findOne({email}).then(user => {
-
+		User.findOne({$or: [{ username: email }, { email: email }]}).then(user => {
 			if (!user) {
 				errors.email = 'User not found'
 				return res.status(404).json(errors);
@@ -232,11 +235,18 @@ module.exports = {
 
 		User.findOne({ username: username }, ['username', 'firstName', 'lastName', 'avatar'], (err, data) => {
 
-			// console.log(data._id);
 			if (err)
-				res.status(500).send(err);
-			else
-				res.status(200).json(data);
+				return res.status(500).send(err);
+
+			Film.find({"is_seen.userId": data._id }, null, { limit: 10 }, (err, films) => {
+				if (err)
+					return res.status(500).send(err);
+				else {
+					newData = data.toObject();
+					newData.films_seen = films;
+					res.status(200).json(newData);
+				}
+			});
 		});
 	}
 }

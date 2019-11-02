@@ -68,19 +68,14 @@ export default class Search extends React.Component{
   }
 
   render(){
-    if (!this.props.displaySearch){
-      return (
-        <div style={{display:'none'}}>
+    if (!this.props.displaySearch)
+      return ( <div style={{display:'none'}}></div>);
 
+    return (
+      <div className={this.classes.search}>
+        <div className={this.classes.searchIcon}>
+          <SearchIcon />
         </div>
-      )
-    }
-
-      return (
-        <div className={this.classes.search}>
-          <div className={this.classes.searchIcon}>
-            <SearchIcon />
-          </div>
         <InputBase
           placeholder="Search…"
           classes={{
@@ -91,7 +86,7 @@ export default class Search extends React.Component{
           onChange={this.handleChange}
           value={this.searchValue}
         />
-        </div>
-      )
-    }
+      </div>
+    )
+  }
 }

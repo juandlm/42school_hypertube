@@ -1,6 +1,9 @@
 import { makeStyles, fade } from '@material-ui/core/styles';
 
 const navBarStyle = makeStyles(theme => ({
+  navlogo: {
+    width: '150px',
+  },
   list: {
     width: '300',
   },
@@ -14,12 +17,15 @@ const navBarStyle = makeStyles(theme => ({
     marginRight: theme.spacing(2),
   },
   title: {
+    borderRadius: theme.shape.borderRadius,
+    marginRight: '24px',
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
   },
   search: {
+    flexGrow: 1,
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
@@ -30,8 +36,8 @@ const navBarStyle = makeStyles(theme => ({
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
+      marginLeft: theme.spacing(1),
+      width: 'initial',
     },
   },
   searchIcon: {
@@ -44,15 +50,12 @@ const navBarStyle = makeStyles(theme => ({
     justifyContent: 'center',
   },
   inputRoot: {
+    width: '100%',
     color: 'inherit',
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
+    // width: '100%',
   },
   sectionDesktop: {
     display: 'none',
@@ -66,6 +69,16 @@ const navBarStyle = makeStyles(theme => ({
       display: 'none',
     },
   },
+  iconButton: {
+    color: 'inherit',
+    marginRight: theme.spacing(0.2),
+    '&:hover': {
+      color: 'white'
+    },
+  },
+  tooltip: {
+    marginRight: theme.spacing(0.4),
+  }
 }));
 
 export default navBarStyle;
