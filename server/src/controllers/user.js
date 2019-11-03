@@ -10,9 +10,6 @@ const validateLoginForgottenInput = require('../validation/loginForgotten');
 const validateLoginNewPasswordInput = require('../validation/loginNewPassword');
 const validateSettingsInput = require('../validation/settings');
 
-// a virer
-const var_dump = require('var_dump');
-
 module.exports = {
 
 	register: (req, res) => {
@@ -170,13 +167,13 @@ module.exports = {
 		});
 	},
 
-	me: (req, res) => {
-		return res.json({
-			id: req.user.id,
-			name: req.user.name,
-			email: req.user.email
-		});
-	},
+	// me: (req, res) => {
+	// 	return res.json({
+	// 		id: req.user.id,
+	// 		name: req.user.name,
+	// 		email: req.user.email
+	// 	});
+	// },
 
 	logout: async (req, res) => {
 		try {
@@ -204,29 +201,51 @@ module.exports = {
 	modifySettings: (req, res) => {
 		const { errors, isValid } = validateSettingsInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
-		const { userId, settings } = req.body;
+
+		const userId = htmlspecialchars(req.body.userId);
+		const settings = req.body.settings;
+
+		const lang = htmlspecialchars(settings.lang);
+		const username = htmlspecialchars(settings.username);
+		const email = htmlspecialchars(settings.email);
+		const firstName = htmlspecialchars(settings.firstName);
+		const lastName = htmlspecialchars(settings.lastName);
+		console.log(username);
 	
-		Object.keys(settings).forEach((key) => (settings[key] == null || settings[key] == '' || key == 'password_confirm') && delete settings[key]);
-		User.findOneAndUpdate({_id: userId}, {$set : settings}, {new:true}, (err, doc) => {
+		// Object.keys(settings).forEach((key) => (settings[key] == null || settings[key] == '' || key == 'password_confirm') && delete settings[key]);
+		// User.findOneAndUpdate({_id: userId}, {$set : settings}, {new:true}, (err, doc) => {
+		// 	if (err) {
+		// 		errors.settings = 'Cannot update user settings';
+		// 		res.status(400).json(errors);
+		// 	} else {
+		// 		console.log(doc);
+		// 		res.status(201).json({username: doc.name || '', email: doc.email || '', langue: doc.lang || '', avatar:doc.avatar || ''});
+		// 	}
+		// })
+		const filter = { _id: userId };
+		const update = { lang, username, email, firstName, lastName };
+
+		User.findOneAndUpdate(filter, update, { new: true }, (err, data) => {
 			if (err) {
-				errors.settings = 'Cannot update user settings';
-				res.status(400).json(errors);
+				return res.status(400).json(errors);
 			} else {
-				console.log(doc);
-				res.status(201).json({username: doc.name || '', email: doc.email || '', langue: doc.lang || '', avatar:doc.avatar || ''});
+				console.log(data);
+				res.status(201).json(data);
 			}
-		})
+		});
+
+		// todo ; Gerer le mot de passe
 	},
 
 	getSettings: (req, res) => {
 		const userId = htmlspecialchars(req.body.userId);
 
-		User.findOne({_id: userId}, (err, doc) => {
-			//console.log(doc)
+		User.findOne({ _id: userId }, ['username', 'email', 'firstName', 'lastName', 'lang', 'avatar'], (err, data) => {
+			console.log(data)
 			if (err)
 				res.status(500).send(err);
 			else
-				res.status(200).json({username: doc.name || '', email: doc.email || '', langue: doc.lang || '', avatar:doc.avatar || ''});
+				res.status(200).json(data);
 		})
 	},
 

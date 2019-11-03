@@ -14,7 +14,6 @@ class User extends Component {
             username: props.match.params.user,
             userInfo: [],
             films: '',
-            isUserExist: false,
             isLoading: false
         }
     }
@@ -30,8 +29,7 @@ class User extends Component {
                 console.log(res.data)
                 this.setState({
                     userInfo: res.data,
-                    isLoading: true,
-                    isUserExist: true
+                    isLoading: true
                 })
             } else {
                 this.props.history.push('/');
@@ -49,9 +47,9 @@ class User extends Component {
 
     render() {
         const { classes } = this.props;
-        const { userInfo, isUserExist, isLoading } = this.state;
+        const { userInfo, isLoading } = this.state;
 
-        if (!isUserExist) 
+        if (!isLoading) 
             return Loader(isLoading);
 
         return (

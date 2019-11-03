@@ -6,7 +6,7 @@ import store from './store';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
-import { getUserSettings } from './actions/settings';
+// import { getUserSettings } from './actions/settings';
 import createRouteMiddleware from "./createRouteMiddleware";
 
 //import Navbar from './components/Navbar2';
@@ -15,7 +15,7 @@ import RegisterValidation from './components/RegisterValidation';
 import Login from './components/Login';
 import LoginForgotten from './components/LoginForgotten';
 import LoginNewPassword from './components/LoginNewPassword';
-import Settings from './components/settings';
+import Settings from './components/Settings';
 import NoMatch from './components/NoMatch';
 import Home from './components/home';
 import VideoView from './components/videoView';
@@ -25,13 +25,17 @@ import Alert from './components/Alert';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+import AlertRedux from './components/AlertRedux';
+
+
 if (localStorage.jwtToken) {
+	// Un peu court ?
 	const currentTime = Date.now() / 1000;
 	const decoded = jwt_decode(localStorage.jwtToken);
 
 	setAuthToken(localStorage.jwtToken);
 	store.dispatch(setCurrentUser(decoded));
-	store.dispatch(getUserSettings(decoded._id));
+	// store.dispatch(getUserSettings(decoded._id));
 	if (decoded.exp < currentTime) {
 	  	store.dispatch(logoutUser());
 	  	window.location.href = '/login';
@@ -89,6 +93,11 @@ class App extends Component {
 							{...createRouteMiddleware({
 								component: LoginNewPassword
 							}, publicRoute)} />
+
+						<Route exact path="/"
+							{...createRouteMiddleware({
+								component: Home
+							}, privateRoute)} />
 						<Route exact path="/films"
 							{...createRouteMiddleware({
 								component: VideoView
@@ -96,10 +105,6 @@ class App extends Component {
 						<Route exact path="/settings"
 							{...createRouteMiddleware({
 								component: Settings
-							}, privateRoute)} />
-						<Route exact path="/"
-							{...createRouteMiddleware({
-								component: Home
 							}, privateRoute)} />
 						<Route path="/user/:user"
 							{...createRouteMiddleware({
@@ -110,7 +115,10 @@ class App extends Component {
 
 					</Switch>
 				</Router>
+
+				<AlertRedux />
 				{this.handleAlert()}
+
 			</Provider>
 		);
 	}

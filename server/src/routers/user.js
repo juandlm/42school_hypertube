@@ -14,7 +14,7 @@ router.post('/loginCheckNewPassword', userController.loginCheckNewPassword)
 
 
 //Protected
-router.get('/me', passport.authenticate('jwt', { session: false }), userController.me);
+// router.get('/me', passport.authenticate('jwt', { session: false }), userController.me);
 router.post('/me/logout', passport.authenticate('jwt', { session: false }), userController.logout)
 router.post('/me/logoutall', passport.authenticate('jwt', { session: false }), userController.logoutall)
 router.post('/getSettings', passport.authenticate('jwt', { session: false }), userController.getSettings)
