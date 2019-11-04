@@ -167,14 +167,6 @@ module.exports = {
 		});
 	},
 
-	// me: (req, res) => {
-	// 	return res.json({
-	// 		id: req.user.id,
-	// 		name: req.user.name,
-	// 		email: req.user.email
-	// 	});
-	// },
-
 	logout: async (req, res) => {
 		try {
 			req.user.tokens = req.user.tokens.filter((token) => {
@@ -202,19 +194,16 @@ module.exports = {
 		const { errors, isValid } = validateSettingsInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
 
-		console.log(req.body)
-
 		const userId = htmlspecialchars(req.body.userId);
 		const settings = req.body.settings;
-		const avatar = htmlspecialchars(req.body.avatar);
+		const avatar = htmlspecialchars(settings.avatar);
 		const lang = htmlspecialchars(settings.lang);
-		const username = htmlspecialchars(settings.username);
 		const email = htmlspecialchars(settings.email);
 		const firstName = htmlspecialchars(settings.firstName);
 		const lastName = htmlspecialchars(settings.lastName);
 		const password = htmlspecialchars(settings.password);
 		const filter = { _id: userId };
-		const update = { lang, username, email, firstName, lastName };
+		const update = { avatar, lang, email, firstName, lastName };
 
 		if (password != '')
 			update.password = bcrypt.hashSync(password, 10);
@@ -225,8 +214,8 @@ module.exports = {
 			} else {
 				const convertData = data.toObject();
 				const postData = {
+					avatar: convertData.avatar,
 					lang: convertData.lang,
-					username: convertData.username,
 					email: convertData.email,
 					firstName: convertData.firstName,
 					lastName: convertData.lastName
@@ -239,7 +228,7 @@ module.exports = {
 	getSettings: (req, res) => {
 		const userId = htmlspecialchars(req.body.userId);
 
-		User.findOne({ _id: userId }, ['username', 'email', 'firstName', 'lastName', 'lang', 'avatar'], (err, data) => {
+		User.findOne({ _id: userId }, ['email', 'firstName', 'lastName', 'lang', 'avatar'], (err, data) => {
 			if (err)
 				res.status(500).send(err);
 			else
@@ -250,7 +239,7 @@ module.exports = {
 	getUserInfo: (req, res) => {
 		const username = htmlspecialchars(req.body.username);
 
-		User.findOne({ username: username }, ['username', 'firstName', 'lastName', 'avatar'], (err, data) => {
+		User.findOne({ username: username }, ['avatar', 'username', 'firstName', 'lastName'], (err, data) => {
 			if (err)
 				return res.status(500).send(err);
 

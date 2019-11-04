@@ -3,14 +3,10 @@ const isEmpty = require('./is-empty');
 
 module.exports = validateSettingsInput = (data) => {
     let errors = {};
-    const { 
-        // userId, 
-        settings 
-    } = data;
+    const { settings } = data;
 
     settings.avatar = !isEmpty(settings.avatar) ? settings.avatar : '';
     settings.lang = !isEmpty(settings.lang) ? settings.lang : '';
-    settings.username = !isEmpty(settings.username) ? settings.username : '';
     settings.email = !isEmpty(settings.email) ? settings.email : '';
     settings.firstName = !isEmpty(settings.firstName) ? settings.firstName : '';
     settings.lastName = !isEmpty(settings.lastName) ? settings.lastName : '';
@@ -27,17 +23,17 @@ module.exports = validateSettingsInput = (data) => {
     if (Validator.isEmpty(settings.avatar))
         errors.avatar = 'Avatar cannot be empty';
 
+    if (settings.avatar && !Validator.isLength(settings.avatar, 1))
+        errors.avatar = 'Avatar must have 1 chars';
+    
+    if (settings.avatar < '1' && settings.avatar > '9')
+        errors.avatar = 'Avatar is incorrect';
+
     if (Validator.isEmpty(settings.lang))
         errors.lang = 'Lang field cannot be empty';
     
     if (settings.lang && !Validator.isLength(settings.lang, 2))
         errors.lang = 'Lang must have 2 chars';
-
-    if (!Validator.isLength(settings.username, { min: 3, max: 50 }))
-        errors.username = 'Username must be between 3 and 50 characters';
-    
-    if (Validator.isEmpty(settings.username))
-        errors.username = 'Username field cannot be empty';
 
     if (!Validator.isEmail(settings.email))
         errors.email = 'Email is invalid';
@@ -56,12 +52,6 @@ module.exports = validateSettingsInput = (data) => {
     
     if (Validator.isEmpty(settings.lastName))
         errors.lastName = 'Last name field cannot be empty';
-
-    // if(Validator.isEmpty(userId))
-        // errors.user = 'User bad id';
-
-    // if(userId && !Validator.isLength(userId, { min: 3, max: 50 }))
-        // errors.user = 'User bad id';
 
     return {
         errors,

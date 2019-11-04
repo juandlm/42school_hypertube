@@ -54,12 +54,16 @@ module.exports = {
   getComments:(req, res) => {
     const params = req.body
     const code = params.imdbCode
+    console.log(' yooooooooooooo ')
+    console.log(params)
     Film.findOne({imdbCode:code}, (err, itemExist) => {
+      console.log(' comment in DB ')
+      console.log(itemExist)
       if (!itemExist || !itemExist.comments){
         res.sendStatus(204)
       }
       else
-      res.json(itemExist.comments)
+       res.json(itemExist.comments)
     })
   },
 

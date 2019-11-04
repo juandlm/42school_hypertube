@@ -16,19 +16,17 @@ class Settings extends Component {
         super(props);
         this.state = {
             lang: '',
-            username: '',
             email: '',
             firstName: '',
             lastName: '',
             password: '',
             password_confirm: '',
-            avatar: '2',
+            avatar: '',
             errors: {},
             cancel: false,
             isLoading: false,
             revealPassword: false,
         }
-  
     }
 
     componentDidMount = () => {
@@ -42,7 +40,6 @@ class Settings extends Component {
         this.setState({
             avatar: data.avatar,
             lang: data.lang,
-            username: data.username,
             email: data.email,
             firstName: data.firstName,
             lastName: data.lastName,
@@ -71,16 +68,10 @@ class Settings extends Component {
             [e.target.name]: e.target.checked,
             avatar: e.target.name
         });
-        console.log('avatar checked', e.target.name);
     }
 
     handleInputCheckedAvatar = (e) => {
-        // console.log(`avatar ${num} clicked !`);
-        // this.input.click();
-        // console.log(e.target.alt);
-        const num = e.target.alt;
-        // this[num].click();
-        this[num].click();
+        this[e.target.alt].click();
     }
     
     onSubmit = (e) => {
@@ -88,7 +79,6 @@ class Settings extends Component {
         let settings = {
             avatar: this.state.avatar,
             lang: this.state.lang,
-            username: this.state.username,
             email: this.state.email,
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -129,21 +119,16 @@ class Settings extends Component {
         );
     }
 
-    // ---> modifier: OK langue, OK nom, OK prenom, OK password, OK email, (OK username ?), manque image
     render() {
         const { classes } = this.props;
-        const { lang, username, email, firstName, lastName, password, password_confirm, revealPassword, cancel, errors, isLoading } = this.state;
+        const { lang, email, firstName, lastName, password, password_confirm, revealPassword, cancel, errors, isLoading } = this.state;
 
         if (!isLoading) return Loader(isLoading);
 
         return (
             <div className="Settings">
 
-                <PrimarySearchAppBar 
-                    searchBar={false} 
-                    // location={window.location.href} 
-                    // key={Date.now()}
-                />
+                <PrimarySearchAppBar searchBar={false} />
 
                 <Container maxWidth="lg">
                     <Paper className={classes.paper}>
@@ -195,25 +180,6 @@ class Settings extends Component {
                                     <MenuItem value={'fr'}>Français</MenuItem>
                                 </TextField>
                                 {errors.lang && (<div className="invalid-feedback">{errors.lang}</div>)}
-
-                                <TextField
-                                    name="username"
-                                    label="Nom d'utilisateur"
-                                    value={username}
-                                    onChange={this.handleInputChange}
-                                    inputProps={{
-                                        minLength: 3,
-                                        maxLength: 50
-                                    }}
-                                    variant="outlined"
-                                    margin="normal"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.username
-                                    })}
-                                    fullWidth
-                                    required
-                                />
-                                {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
 
                                 <TextField
                                     name="email"
@@ -295,7 +261,6 @@ class Settings extends Component {
                                             type="password"
                                             value={password_confirm}
                                             onChange={this.handleInputChange}
-                                            // helperText="Le mot de passe doit contenir au moins 7 caractères et des lettres minuscules et majuscules"
                                             inputProps={{
                                                 minLength: 7,
                                                 maxLength: 30
@@ -345,7 +310,6 @@ class Settings extends Component {
                                 >
                                     Confirmer
                                 </Button>
-
                             </Container>
                         </form>
                     </Paper>

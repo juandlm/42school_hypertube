@@ -64,7 +64,10 @@ class User extends Component {
                     <Container maxWidth="lg">
                         <Paper className={classes.paper}>
                             <Grid container justify="center" alignItems="center">
-                                <Avatar className={classes.bigAvatar}>Avatar</Avatar>
+                                <Avatar 
+                                    alt="avatar"
+                                    src={`/avatar_pictures/${userInfo.avatar}.png`}
+                                    className={classes.bigAvatar} />
                             </Grid>
                             <hr />
                             <Typography variant="subtitle1">

@@ -22,7 +22,6 @@ function PrimarySearchAppBar(props) {
   const [ mobileMoreAnchorEl, setMobileMoreAnchorEl ] = React.useState(null);
   const username = props.auth.user.username;
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
   const mobileMenuId = 'primary-search-account-menu-mobile';
 
   const handleMobileMenuOpen = (e) => {
@@ -37,18 +36,6 @@ function PrimarySearchAppBar(props) {
     e.preventDefault();
     props.logoutUser(props.history);
   }
-
-  // const handleMenuClose = () => {
-  //   setAnchorEl(null);
-  //   handleMobileMenuClose();
-  //   //setLocation(props.location)
-
-  //   // Why refresh ??
-  //   // if (typeof props.refresh == 'function'){
-  //   //   props.refresh(true)
-  //   //   console.log('refresh')
-  //   // }
-  // }
 
   const renderMobileMenu = (
     <Menu

@@ -11,7 +11,6 @@ import { Grid, Paper, Typography, Link, Checkbox, FormControlLabel, TextField, B
 import styles from '../css/public';
 import Legals from './Legals';
 
-
 const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
 class Login extends Component {

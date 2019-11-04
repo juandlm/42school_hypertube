@@ -105,7 +105,7 @@ class VideoView extends React.Component {
     //this.setState({})
 
     this.getComments(imdbCode)
-    this.addIsSeen(this.props.auth.user._id, this.props.auth.user.name, imdbCode)
+    this.addIsSeen(this.props.auth.user._id, this.props.auth.user.username, imdbCode)
   }
 
  // --->
@@ -247,11 +247,12 @@ class VideoView extends React.Component {
 
   async addComment(imdbCode, name){
     if (this.state.comments.length > 0)
-      this.setState({comments: [...this.state.comments, {imdbCode:this.imdb, username:this.props.auth.user.name, value:this.state.comValue}]})
+      this.setState({comments: [...this.state.comments, {imdbCode:this.imdb, username:this.props.auth.user.username, value:this.state.comValue}]})
     else
-      this.setState({comments:[{imdbCode:this.imdb, username:this.props.auth.user.name, value:this.state.comValue}]})
+      this.setState({comments:[{imdbCode:this.imdb, username:this.props.auth.user.username, value:this.state.comValue}]})
     try {
-      await fetch("/api/film/addComments",
+      console.log(this.props.auth.user.username)
+      const res = await fetch("/api/film/addComments",
       {
         headers: {
           'Accept': 'application/json',
@@ -259,11 +260,12 @@ class VideoView extends React.Component {
           'Authorization': axios.defaults.headers.common['Authorization']
         },
         method: "POST",
-        body: JSON.stringify({imdbCode:this.state.imdb, name:this.props.auth.user.name, value:this.state.comValue})
+        body: JSON.stringify({imdbCode:this.state.imdb, name:this.props.auth.user.username, value:this.state.comValue})
       })
       this.setState({comValue:''})
+      console.log(res.status)
     }catch (e){
-
+      console.log('error db insert comments :'+e)
     }
   }
 
@@ -276,17 +278,24 @@ class VideoView extends React.Component {
           'Content-Type': 'application/json',
           'Authorization': axios.defaults.headers.common['Authorization']
         },
-        method: "POST"
+        method: "POST",
+        body:JSON.stringify({imdbCode:imdbCode})
       })
+      //console.log(result.status)
+      //const content = await result.json();
+      //console.log(result);
+      //console.log(content);
       if (result.status === 200){
+        
         const content = await result.json();
+        console.log(content)
         //console.log(content)
         this.setState({comments:content})
       }else{
         // no comment
       }
     }catch (e){
-
+      //console.log('error comments: '+ e)
     }
   }
 
@@ -378,7 +387,7 @@ class VideoView extends React.Component {
                   <Card style={{width:'80%', margin: '0.5em', backgroundColor:'#171717', color:'white'}} key={index}>
                       <CardContent>
                       <Typography>
-                        <Link href={'/users/'+comment.username} variant="subtitle2" style={{color:'rgba(145,145,145,1)'}}>
+                        <Link href={'/user/'+comment.username} target="_blank" variant="subtitle2" style={{color:'rgba(145,145,145,1)'}}>
                           {comment.username}
                         </Link>
                       </Typography>
