@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import { Provider } from 'react-redux';
@@ -21,15 +21,13 @@ import Home from './components/home';
 import VideoView from './components/videoView';
 import User from './components/User';
 import Alert from './components/Alert';
+import AlertRedux from './components/AlertRedux';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-import AlertRedux from './components/AlertRedux';
-
 
 if (localStorage.jwtToken) {
-	// Un peu court ?
 	const currentTime = Date.now() / 1000;
 	const decoded = jwt_decode(localStorage.jwtToken);
 
@@ -45,9 +43,9 @@ if (localStorage.jwtToken) {
 const privateRoute = process.env.REACT_APP_IS_PRIVATE_ROUTE;
 const publicRoute = process.env.REACT_APP_IS_PUBLIC_ROUTE;
 
-class App extends Component {
-	
-	handleAlert() {
+const App = () => {
+
+	const handleAlert = () => {
 		let data;
 
 		if ((data = sessionStorage.getItem('alert_success'))) {
@@ -68,60 +66,58 @@ class App extends Component {
 		}
 	}
 
-	render() {
-		return (
-			<Provider store = { store }>
-				<Router>
-					<Switch>
-						<Route exact path="/register"
-							{...createRouteMiddleware({
-								component: Register
-							}, publicRoute)} />
-						<Route exact path="/registerValidation"
-							{...createRouteMiddleware({
-								component: RegisterValidation
-							}, publicRoute)} />
-						<Route exact path="/login"
-							{...createRouteMiddleware({
-								component: Login
-							}, publicRoute)} />
-						<Route exact path="/loginForgotten"
-							{...createRouteMiddleware({
-								component: LoginForgotten
-							}, publicRoute)} />
-						<Route exact path="/loginNewPassword"
-							{...createRouteMiddleware({
-								component: LoginNewPassword
-							}, publicRoute)} />
+	return (
+		<Provider store = { store }>
+			<Router>
+				<Switch>
+					<Route exact path="/register"
+						{...createRouteMiddleware({
+							component: Register
+						}, publicRoute)} />
+					<Route exact path="/registerValidation"
+						{...createRouteMiddleware({
+							component: RegisterValidation
+						}, publicRoute)} />
+					<Route exact path="/login"
+						{...createRouteMiddleware({
+							component: Login
+						}, publicRoute)} />
+					<Route exact path="/loginForgotten"
+						{...createRouteMiddleware({
+							component: LoginForgotten
+						}, publicRoute)} />
+					<Route exact path="/loginNewPassword"
+						{...createRouteMiddleware({
+							component: LoginNewPassword
+						}, publicRoute)} />
 
-						<Route exact path="/"
-							{...createRouteMiddleware({
-								component: Home
-							}, privateRoute)} />
-						<Route exact path="/films"
-							{...createRouteMiddleware({
-								component: VideoView
-							}, privateRoute)} />
-						<Route exact path="/settings"
-							{...createRouteMiddleware({
-								component: Settings
-							}, privateRoute)} />
-						<Route path="/user/:user"
-							{...createRouteMiddleware({
-								component: User
-							}, privateRoute)} />
-							
-						<Route component={NoMatch} />
+					<Route exact path="/"
+						{...createRouteMiddleware({
+							component: Home
+						}, privateRoute)} />
+					<Route exact path="/films"
+						{...createRouteMiddleware({
+							component: VideoView
+						}, privateRoute)} />
+					<Route exact path="/settings"
+						{...createRouteMiddleware({
+							component: Settings
+						}, privateRoute)} />
+					<Route path="/user/:user"
+						{...createRouteMiddleware({
+							component: User
+						}, privateRoute)} />
+						
+					<Route component={NoMatch} />
 
-					</Switch>
-				</Router>
+				</Switch>
+			</Router>
 
-				<AlertRedux />
-				{this.handleAlert()}
+			<AlertRedux />
+			{handleAlert()}
 
-			</Provider>
-		);
-	}
+		</Provider>
+	);
 }
 
 export default App;
