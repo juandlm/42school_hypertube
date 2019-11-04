@@ -42,7 +42,7 @@ const userSchema = mongoose.Schema({
 	lang:{
         type : String, 
         default: 'en',
-        min:3,
+        min: 3,
         max: 10
     },
 	githubId:{
@@ -52,8 +52,11 @@ const userSchema = mongoose.Schema({
     },
     avatar: {
         type : String,
-        min:10,
-        max:256
+        default: () => {
+            return (Math.floor(Math.random() * 9) + 1).toString()
+        },
+        min: 10,
+        max: 256
     },
     confirmed: {
         type: Boolean, 

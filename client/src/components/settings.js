@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { modifySettings, getUserSettings } from '../actions/settings';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Container, Paper, Grid, Typography, TextField, MenuItem } from '@material-ui/core/';
+import { Button, Container, Paper, Grid, Typography, TextField, MenuItem, Avatar } from '@material-ui/core/';
 import settingsStyle from '../css/settings';
 import PrimarySearchAppBar from './navBar';
 import classnames from 'classnames';
@@ -22,22 +22,17 @@ class Settings extends Component {
             lastName: '',
             password: '',
             password_confirm: '',
-
-            avatar: '',
+            avatar: '2',
             errors: {},
-
+            cancel: false,
             isLoading: false,
             revealPassword: false,
         }
+  
     }
 
     componentDidMount = () => {
         this.getUserSettings();
-    }
-
-    getUserSettings = () => {
-        const userId = this.props.auth.user._id;
-        this.props.getUserSettings(userId);
     }
 
     UNSAFE_componentWillReceiveProps = (nextProps) => {
@@ -45,85 +40,53 @@ class Settings extends Component {
             this.setState({ errors: nextProps.errors });
         const data = nextProps.settings.data;
         this.setState({
+            avatar: data.avatar,
             lang: data.lang,
             username: data.username,
             email: data.email,
             firstName: data.firstName,
             lastName: data.lastName,
+            password: '',
+            password_confirm: '',
             isLoading: true,
+            revealPassword: false,
+            cancel: false
         });
     }
 
-	// componentDidMount(){
-	// 	this.setState({ lang: this.props.settings.data.langue || '' });
-    //     /*store.subscribe(() => {
-    //         const settings = store.getState().settings.data
-    //         console.log(this.props.settings.data)
-    //         if (this.props.settings.data !== settings){
-    //             console.log(store.getState())
-    //         }
-    //     })*/
-    // 	}
+    getUserSettings = () => {
+        const userId = this.props.auth.user._id;
+        this.props.getUserSettings(userId);
+    }
 
     handleInputChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
-       
+        this.setState({ 
+            [e.target.name]: e.target.value,
+            cancel: true 
+        });
+    }
+
+    handleInputCheckedChange = (e) => {
+        this.setState({ 
+            [e.target.name]: e.target.checked,
+            avatar: e.target.name
+        });
+        console.log('avatar checked', e.target.name);
+    }
+
+    handleInputCheckedAvatar = (e) => {
+        // console.log(`avatar ${num} clicked !`);
+        // this.input.click();
+        // console.log(e.target.alt);
+        const num = e.target.alt;
+        // this[num].click();
+        this[num].click();
     }
     
-
-    /*static getDerivedStateFromProps(props, current_state) {
-        console.log(props)
-        console.log(current_state)
-    if (props.settings.data !== current_state.settings.data) {
-            console.log('new props')
-    return {
-        value: props.value
-    }
-    }
-    }*/
-
-    // UNSAFE_componentWillReceiveProps(nextProps) {
-	// 	//console.log(nextProps)
-    //     if (nextProps.errors)
-    //         this.setState({ errors: nextProps.errors });
-	// 	if (nextProps.settings) {
-	// 		console.log(nextProps.settings)
-	// 		this.setState({
-	// 			lang:nextProps.settings.data.langue,
-	// 			settings: nextProps.settings.data
-	// 		});
-	// 	}
-    // }
-
-    // handleOpenMenu() {
-    //     this.setState({ isMenuOpen: true });
-    // }
-
-    // handleCloseMenu() {
-    //     this.setState({ isMenuOpen: false });
-    // }
-
-    // handleMenuChange(e) {
-    //     this.setState({ lang:e.target.value });
-    // }
-
-    // handleSettings(e){
-    //     //e.preventDefault()
-    //     this.props.modifySettings(this.props.auth.user._id, {
-    //         name: this.state.name,
-    //         email: this.state.email,
-    //         password: this.state.password,
-    //         password_confirm: this.state.password_confirm,
-    //         lang:this.state.lang
-    //     })
-    // }
-
-    //password
-    // $2a$10$mmDWnj3si0fVSkjwEuwmBOAmlwyyIATEyddZogqFRBP2V15BxQlrG
-
     onSubmit = (e) => {
         e.preventDefault();
         let settings = {
+            avatar: this.state.avatar,
             lang: this.state.lang,
             username: this.state.username,
             email: this.state.email,
@@ -136,19 +99,46 @@ class Settings extends Component {
     }
 
     revealPassword = () => {
-        this.setState({ revealPassword: true });
+        this.setState({ 
+            revealPassword: true,
+            cancel: true
+        });
+    }
+
+    avatarChange = (num) => {
+        const { classes } = this.props;
+        const { avatar } = this.state;
+
+        return (
+            <Grid item xs={4}>
+                <Avatar 
+                    alt={`${num}`}
+                    src={`/avatar_pictures/${num}.png`}
+                    className={(avatar === `${num}` ? classes.bigAvatarChecked : classes.bigAvatar)} 
+                    onClick={this.handleInputCheckedAvatar}
+                />
+                <input 
+                    type="checkbox"
+                    ref={checkInput => this[num] = checkInput}
+                    className={classes.checkbox}
+                    name={num}
+                    checked={avatar === `${num}`}
+                    onChange={this.handleInputCheckedChange} 
+                />
+            </Grid>
+        );
     }
 
     // ---> modifier: OK langue, OK nom, OK prenom, OK password, OK email, (OK username ?), manque image
     render() {
         const { classes } = this.props;
-        const { lang, username, email, firstName, lastName, password, password_confirm, revealPassword, errors, isLoading } = this.state;
+        const { lang, username, email, firstName, lastName, password, password_confirm, revealPassword, cancel, errors, isLoading } = this.state;
 
         if (!isLoading) return Loader(isLoading);
 
-        return(
+        return (
             <div className="Settings">
-       
+
                 <PrimarySearchAppBar 
                     searchBar={false} 
                     // location={window.location.href} 
@@ -156,7 +146,6 @@ class Settings extends Component {
                 />
 
                 <Container maxWidth="lg">
-
                     <Paper className={classes.paper}>
                         <Grid container justify="center" alignItems="center">
                             <Typography variant="h5">
@@ -167,6 +156,26 @@ class Settings extends Component {
                         <form className={classes.form} onSubmit={this.onSubmit}>
                             <Container maxWidth="sm">
 
+                                <Paper className={classes.paperAvatar}>
+                                    <Grid 
+                                        container 
+                                        spacing={3} 
+                                        justify="space-around"
+                                        direction="row"
+                                        alignItems="center"
+                                    >
+                                        {this.avatarChange(1)}
+                                        {this.avatarChange(2)}
+                                        {this.avatarChange(3)}
+                                        {this.avatarChange(4)}
+                                        {this.avatarChange(5)}
+                                        {this.avatarChange(6)}
+                                        {this.avatarChange(7)}
+                                        {this.avatarChange(8)}
+                                        {this.avatarChange(9)}
+                                    </Grid>
+                                </Paper>  
+               
                                 <TextField
                                     id="outlined-select-currency"
                                     select
@@ -274,7 +283,8 @@ class Settings extends Component {
                                             className={classnames('form-control form-control-lg', {
                                                 'is-invalid': errors.password
                                             })}
-                                            required
+                                            required={password_confirm !== ''}
+                                            
                                             fullWidth
                                         />
                                         {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
@@ -285,7 +295,7 @@ class Settings extends Component {
                                             type="password"
                                             value={password_confirm}
                                             onChange={this.handleInputChange}
-                                            // helperText="Le mot de passe doit contenir au moins 7 caractères avec des chiffres et des lettres minuscules et majuscules"
+                                            // helperText="Le mot de passe doit contenir au moins 7 caractères et des lettres minuscules et majuscules"
                                             inputProps={{
                                                 minLength: 7,
                                                 maxLength: 30
@@ -295,7 +305,7 @@ class Settings extends Component {
                                             className={classnames('form-control form-control-lg', {
                                                 'is-invalid': errors.password
                                             })}
-                                            required
+                                            required={password !== ''}
                                             fullWidth
                                         />
                                         {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
@@ -312,6 +322,19 @@ class Settings extends Component {
                                     </Button>
                                 )}
 
+                                {cancel &&
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        className={classes.button}
+                                        onClick={this.getUserSettings}
+                                        size="large"
+                                        fullWidth
+                                    >
+                                        Annuler
+                                    </Button>
+                                }
+
                                 <Button
                                     type="submit"
                                     variant="contained"
@@ -325,100 +348,9 @@ class Settings extends Component {
 
                             </Container>
                         </form>
-
-
-
-                        {/* <div className="container" style={{ marginTop: '50px', width: '700px'}}> */}
-                        {/* <CssBaseline /> */}
-                            {/* <h2 style={{marginBottom: '40px'}}>Modifier</h2>
-                            <form>
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="demo-controlled-open-select">Langue</InputLabel>
-                                    <Select
-                                        onClose={this.handleCloseMenu.bind(this)}
-                                        onOpen={this.handleOpenMenu.bind(this)}
-                                        value={this.state.lang}
-                                        onChange={this.handleMenuChange.bind(this)}
-                                        inputProps={{
-                                            name: '',
-                                            id: 'demo-controlled-open-select',
-                                        }}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={'en'}>Anglais</MenuItem>
-                                        <MenuItem value={'fr'}>Français</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            <div className="form-group">
-                                <input
-                                    type="text"
-                                    placeholder="Changer le nom d'utilisateur"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.name
-                                    })}
-                                    name="name"
-                                    onChange={ this.handleInputChange }
-                                    value={ this.state.name }
-                                />
-                                {errors.name && (<div className="invalid-feedback">{errors.name}</div>)}
-                            </div>
-                            <div className="form-group">
-                                <input
-                                    type="email"
-                                    placeholder="Changer l'email"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.email
-                                    })}
-                                    name="email"
-                                    onChange={ this.handleInputChange }
-                                    value={ this.state.email }
-                                />
-                                {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-                            </div>
-                            <div className="form-group">
-                                <input
-                                    type="password"
-                                    placeholder="Changer le mot de passe"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.password
-                                    })}
-                                    name="password"
-                                    onChange={ this.handleInputChange }
-                                    value={ this.state.password }
-                                />
-                                {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
-                            </div>
-                            <div className="form-group">
-                                <input
-                                    type="password"
-                                    placeholder="Confirmer le nouveau mot de passe"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.password_confirm
-                                    })}
-                                    name="password_confirm"
-                                    onChange={ this.handleInputChange }
-                                    value={ this.state.password_confirm }
-                                />
-                                {errors.password_confirm && (<div className="invalid-feedback">{errors.password_confirm}</div>)}
-                            </div>
-                            <div className="form-group">
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={this.handleSettings.bind(this)}
-                                    className={classes.submit}
-                                >
-                                    Confirmer
-                                </Button>
-                            </div>
-                        </form> */}
-                    {/* </div> */}
-                </Paper>
-            </Container>
-		</div>
+                    </Paper>
+                </Container>
+		    </div>
         )
     }
 }

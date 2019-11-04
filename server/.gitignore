@@ -22,5 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-./public/subtitle/English/*
-./public/subtitle/French/*
+/public/subtitle/English/*
+/public/subtitle/French/*

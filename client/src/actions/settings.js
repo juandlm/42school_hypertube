@@ -19,6 +19,7 @@ export const setUserSettings = (settings) => {
 export const modifySettings = (userId, settings) => dispatch => {
     axios.post('/api/users/modifySettings', { userId: userId, settings: settings })
         .then((res) => {
+            console.log(res.data)
             const token = res.data.token
             if (token) {
                 localStorage.setItem('jwtToken', token)

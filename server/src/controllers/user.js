@@ -202,46 +202,44 @@ module.exports = {
 		const { errors, isValid } = validateSettingsInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
 
+		console.log(req.body)
+
 		const userId = htmlspecialchars(req.body.userId);
 		const settings = req.body.settings;
-
+		const avatar = htmlspecialchars(req.body.avatar);
 		const lang = htmlspecialchars(settings.lang);
 		const username = htmlspecialchars(settings.username);
 		const email = htmlspecialchars(settings.email);
 		const firstName = htmlspecialchars(settings.firstName);
 		const lastName = htmlspecialchars(settings.lastName);
-		console.log(username);
-	
-		// Object.keys(settings).forEach((key) => (settings[key] == null || settings[key] == '' || key == 'password_confirm') && delete settings[key]);
-		// User.findOneAndUpdate({_id: userId}, {$set : settings}, {new:true}, (err, doc) => {
-		// 	if (err) {
-		// 		errors.settings = 'Cannot update user settings';
-		// 		res.status(400).json(errors);
-		// 	} else {
-		// 		console.log(doc);
-		// 		res.status(201).json({username: doc.name || '', email: doc.email || '', langue: doc.lang || '', avatar:doc.avatar || ''});
-		// 	}
-		// })
+		const password = htmlspecialchars(settings.password);
 		const filter = { _id: userId };
 		const update = { lang, username, email, firstName, lastName };
+
+		if (password != '')
+			update.password = bcrypt.hashSync(password, 10);
 
 		User.findOneAndUpdate(filter, update, { new: true }, (err, data) => {
 			if (err) {
 				return res.status(400).json(errors);
 			} else {
-				console.log(data);
-				res.status(201).json(data);
+				const convertData = data.toObject();
+				const postData = {
+					lang: convertData.lang,
+					username: convertData.username,
+					email: convertData.email,
+					firstName: convertData.firstName,
+					lastName: convertData.lastName
+				};
+				res.status(201).json(postData);
 			}
 		});
-
-		// todo ; Gerer le mot de passe
 	},
 
 	getSettings: (req, res) => {
 		const userId = htmlspecialchars(req.body.userId);
 
 		User.findOne({ _id: userId }, ['username', 'email', 'firstName', 'lastName', 'lang', 'avatar'], (err, data) => {
-			console.log(data)
 			if (err)
 				res.status(500).send(err);
 			else
@@ -253,7 +251,6 @@ module.exports = {
 		const username = htmlspecialchars(req.body.username);
 
 		User.findOne({ username: username }, ['username', 'firstName', 'lastName', 'avatar'], (err, data) => {
-
 			if (err)
 				return res.status(500).send(err);
 
