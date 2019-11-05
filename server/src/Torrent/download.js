@@ -89,10 +89,10 @@ module.exports = class Torrent {
         ext = path.extname(file.path)
         size = file.length - 1
 
-        if (isVideo(filePath)){
+        //if (isVideo(filePath)){
           this.storeFilm(filmsModel, movieName, id, hash, filePath, imdbCode, fileSize, false, need_conversion)
           this.streamVideo(res, req, file, size, 'download', ext.substring(1), filePath, null, subs)
-        }
+        //}
       });
     }).on('idle', () => {
       console.log('------------> FILM DLL')
@@ -200,7 +200,6 @@ module.exports = class Torrent {
           start: start,
           end: end
         })
-        if (isStream(stream)){
           if (!needConversion){
               pump(stream, res)
           }
@@ -214,7 +213,6 @@ module.exports = class Torrent {
               }), res)
             }
           }
-        }
       }
     }else {
       stream = fs.createReadStream(file, {
@@ -229,8 +227,7 @@ module.exports = class Torrent {
 
   // ---> attendre d'avoir dll assez
   streamVideo(res, req, path, fileSize, type, format, filePath, load_conversion = null, subs){
-    console.log('the sub')
-    console.log(subs)
+
     const range = req.headers.range
     let needConversion = false
     let videoFormat = ''
@@ -240,7 +237,6 @@ module.exports = class Torrent {
     }
     else
       videoFormat = format
-    console.log('format : '+videoFormat+' needConversion: '+needConversion);
     if (req.headers['range'] && range) {
 
       const parts = range.replace(/bytes=/, "").split("-")
@@ -250,7 +246,6 @@ module.exports = class Torrent {
         : fileSize
 
       if (start > end || end === 0){
-        console.log('probleme la!!')
         return ;
       }
       const chunksize = (end - start) + 1

@@ -23,6 +23,8 @@ const classes = registerStyle;
 
 class VideoView extends React.Component {
 
+  controller = new AbortController();
+
   constructor(props){
     super(props)
     console.log(props)
@@ -115,7 +117,7 @@ class VideoView extends React.Component {
       let diff = this.duration - this.downloadSpeed
       if (diff < 0) {
         let waitingTime = -diff
-        console.log('Need to wait time before loading video :'+waitingTime)
+        //console.log('Need to wait time before loading video :'+waitingTime)
         setTimeout(() => this.setState({playing:true, controls:true}, waitingTime))
       }else {
         this.setState({playing:true, controls:true})
@@ -126,6 +128,10 @@ class VideoView extends React.Component {
   componentDidMount(){
     this.getFilm()
     this.setState({lang:this.props.settings.data.langue || ''})
+  }
+
+  componentWillUnmount(){
+    this.controller.abort();
   }
 
   addIsSeen(id, username, imdbCode){
@@ -216,29 +222,34 @@ class VideoView extends React.Component {
           serie: serie ? {season: serie.season, episode: serie.episode} : '', hash:hash, size:size})
       })
       const content = await result.json();
-      //console.log(content)
-      console.log(content)
       if (content && Array.isArray(content.path)){
-        const en = content.path[0].path.split('/')
-        const fr = content.path[1].path.split('/')
-        const frPath = '/getSub/'+fr[fr.length - 3]+'/'+fr[fr.length - 2]+'/'+fr[fr.length - 1]
-        const enPath = '/getSub/'+en[en.length - 3]+'/'+en[en.length - 2]+'/'+en[en.length - 1]
-        console.log(frPath)
-        this.addSubtitleToPlayer(frPath, enPath, this.state.lang)
+        let en, fr, frPath, enPath = ''
+        if (content[0] && content[0].lang){
+          en = content.path[0].path.split('/')
+          enPath = '/getSub/'+en[en.length - 3]+'/'+en[en.length - 2]+'/'+en[en.length - 1]
+        }
+        if (content[1] && content[1].lang){
+          fr = content.path[1].path.split('/')
+          frPath = '/getSub/'+fr[fr.length - 3]+'/'+fr[fr.length - 2]+'/'+fr[fr.length - 1]
+        }
+        this.addSubtitleToPlayer(frPath || '', enPath || '', this.state.lang)
         this.setState({isSubSet:true})
         this.setState({subtitleEn:encodeURI(enPath), subtitleFr:encodeURI(frPath), isLoaded:true})
       }else if(Array.isArray(content)){
-        const en = content[0].lang === 'English' ? content[0].path.split('/') : content[1].path.split('/')
-        const fr = content[1].lang === 'French' ? content[1].path.split('/') : content[0].path.split('/')
-        const frPath = '/getSub/'+fr[fr.length - 3]+'/'+fr[fr.length - 2]+'/'+fr[fr.length - 1]
-        const enPath = '/getSub/'+en[en.length - 3]+'/'+en[en.length - 2]+'/'+en[en.length - 1]
-        console.log(frPath)
-        this.addSubtitleToPlayer(frPath, enPath, this.state.lang)
+        let en, fr, frPath, enPath = ''
+        if (content[0] && content[0].lang){
+          en = content[0].lang === 'English' ? content[0].path.split('/') : content[1].path.split('/')
+          enPath = '/getSub/'+en[en.length - 3]+'/'+en[en.length - 2]+'/'+en[en.length - 1]
+        }
+        if (content[1] && content[1].lang){
+          fr = content[1].lang === 'French' ? content[1].path.split('/') : content[0].path.split('/')
+          frPath = '/getSub/'+fr[fr.length - 3]+'/'+fr[fr.length - 2]+'/'+fr[fr.length - 1]
+        }
+        this.addSubtitleToPlayer(frPath || '', enPath || '', this.state.lang)
         this.setState({isSubSet:true})
         this.setState({subtitleEn:encodeURI(enPath), subtitleFr:encodeURI(frPath), isLoaded:true})
       }
     } catch (e){
-      //console.log(e)
       this.setState({subtitleEn:true, subtitleFr:true, isLoaded:true})
     }
   }
@@ -281,15 +292,8 @@ class VideoView extends React.Component {
         method: "POST",
         body:JSON.stringify({imdbCode:imdbCode})
       })
-      //console.log(result.status)
-      //const content = await result.json();
-      //console.log(result);
-      //console.log(content);
       if (result.status === 200){
-        
         const content = await result.json();
-        console.log(content)
-        //console.log(content)
         this.setState({comments:content})
       }else{
         // no comment

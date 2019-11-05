@@ -12,6 +12,8 @@ import ListFilter from './dropdown';
 import PrimarySearchAppBar from './navBar';
 import Loader from './Loader';
 
+import Trailer from './Trailer'
+
 class Home extends React.Component {
 
   controller = new AbortController();
@@ -20,15 +22,18 @@ class Home extends React.Component {
     super(props)
     this.handleScroll = this.handleScroll.bind(this);
     this.api = new GetApiData()
+    this.mouseFilmId = []
     this.state = {
-      films: '', 
+      films: '',
       isLoading: false,
-      isBottom: false, 
-      page:1, 
-      filter: null, 
-      query: '', 
-      needPage: true, 
-      isSeen: []
+      isBottom: false,
+      page:1,
+      filter: null,
+      query: '',
+      needPage: true,
+      isSeen: [],
+      openTrailer:false,
+      selectedFilm:''
     }
     this.isFiltered = false
   }
@@ -89,7 +94,6 @@ class Home extends React.Component {
         if (windowBottom >= docHeight && this.state.isLoading === true) {
           if (!this.state.needPage)
             return ;
-          //console.log('relog')
           const page = this.state.page
           this.setState(prevState => ({
                 isLoading:false,
@@ -110,7 +114,6 @@ class Home extends React.Component {
       let url = `/films?${title}=${title}&id=${id}&hash=${hash}&imdbCode=${imdbCode}&size=${size}&title=${title}`
       if (serieInfo.season && serieInfo.episode)
         url+= `&season=${serieInfo.season}&episode=${serieInfo.episode}`
-      //console.log(url)
       return (
         url
       )
@@ -122,6 +125,7 @@ class Home extends React.Component {
       let tmpSeeds = 0
       let tmpPeers = 0
       let targetIndex = 0
+      // NB: si besoin, charger 720p de preference = ameliore le temps de chargement du player.
       torrents.forEach((value, index) => {
         if (value.quality !== "3D" && value.seeds > tmpSeeds && value.peers > tmpPeers){
           targetIndex = index
@@ -179,13 +183,19 @@ class Home extends React.Component {
     }
 
     componentWillUnmount() {
+        // cancel async requests
         this.controller.abort();
         window.removeEventListener("scroll", this.handleScroll, false);
     }
 
 
     updateFilms(results, query, type){
-      //console.log(results)
+      if (results && results.data && results.data.movie_count > 0){
+        results.data.movies = results.data.movies.filter(film => {
+          const best = this.getBestTorrent(film.torrents)
+          return best.seeds > 15 && best.peers > 10
+       })
+      }
       if (!query || !results){
         this.setState({query:query, page:1})
         this.getFilms(1, false, true)
@@ -208,34 +218,52 @@ class Home extends React.Component {
     refreshComponent(param = null){
       if (param === null)
         return ;
-      //console.log('refresh compo')
       this.setState({films:'', isLoading:false, isBottom:false, page:1, filter:null, query:'', needPage:true, isSeen:[]})
       this.isFiltered = false
       this.getFilms(1)
       this.getIsSeen(this.props.auth.user._id, this.props.auth.user.name)
     }
 
+    // si on a pas de trailer ...
+    handleMouseClick(film){
+      if (this.setState.openTrailer === true)
+        return ;
+      // ---> film <---
+      film["url"] = this.storeFilm(film.filename || film.title, this.getBestTorrent(film.torrents) || film, film.id, film.summary || '',
+      film.imdb_code || film.imdb_id || film.imdbCode, {season:film.season || '', episode:film.episode || ''})
+      this.setState({openTrailer:true, selectedFilm: film})
+    }
+
+    closeTrailer(){
+      this.setState({openTrailer: false})
+    }
+
+  // ------> set l'url, la note, le summary dans trailer
+  // qd on est over => afficher, si on passe sur un autre close le current et affiche un autre
   render(){
     const {films, isLoading} = this.state
 
     if (!films) return Loader(isLoading);
 
+    console.log(films)
     return (
       <div>
-        <PrimarySearchAppBar 
-          searchBar={true} 
-          refresh={this.refreshComponent.bind(this)} 
-          updateFilms={this.updateFilms.bind(this)} 
+        <PrimarySearchAppBar
+          searchBar={true}
+          refresh={this.refreshComponent.bind(this)}
+          updateFilms={this.updateFilms.bind(this)}
         />
+        <Trailer isOpen={this.state.openTrailer} closeTrailer={this.closeTrailer.bind(this)} film={this.state.selectedFilm} />
         <ListFilter filterData={this.filterData.bind(this)}></ListFilter>
         <GridList spacing={8} cols={5} style={{ display:'flex', justifyContent: 'flex-start', alignItems:'center', flexDirection:'row', backgroundColor: 'rgba(29,29,29,1)'}}>
+
           {this.state.films.map((film, index) => (
             <GridListTile key={index} cols={-1} rows={2}
             style={
             this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ?
             {cursor:'pointer', backdropFilter: 'drop-shadow(16px 16px 20px red) invert(75%)'} : {cursor:'pointer', backdropFilter: ''}}
-            component={Link} to={this.storeFilm(film.filename || film.title, this.getBestTorrent(film.torrents) || film, film.id, film.summary || '',
-            film.imdb_code || film.imdb_id || film.imdbCode, {season:film.season || '', episode:film.episode || ''})}>
+            onClick={this.handleMouseClick.bind(this, film)}>
+
               <img src={film.medium_cover_image || film.small_screenshot || film.posterLink} onError={() => console.log('img error')} alt={film.title}
               style={
               this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ?

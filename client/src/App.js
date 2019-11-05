@@ -46,7 +46,7 @@ const privateRoute = process.env.REACT_APP_IS_PRIVATE_ROUTE;
 const publicRoute = process.env.REACT_APP_IS_PUBLIC_ROUTE;
 
 class App extends Component {
-	
+
 	handleAlert() {
 		let data;
 
@@ -110,7 +110,7 @@ class App extends Component {
 							{...createRouteMiddleware({
 								component: User
 							}, privateRoute)} />
-							
+
 						<Route component={NoMatch} />
 
 					</Switch>

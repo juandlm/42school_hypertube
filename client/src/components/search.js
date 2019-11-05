@@ -30,8 +30,9 @@ export default class Search extends React.Component{
         },
         method: "GET"
       })
+
     const results = await response.json()
-    //console.log(results)
+
     if (results.data.movie_count === 0){
       try {
         const dataSearch = await fetch('/api/film/search', {
@@ -43,20 +44,13 @@ export default class Search extends React.Component{
           method: "POST",
           body: JSON.stringify({name:query})
         })
-        // ----> data sort by names !
-
         if (dataSearch.status === 200){
           const datares = await dataSearch.json()
-          console.log('DATA RES: ')
-          console.log(datares)
-          //console.log(datares)
-          // type === serie
           this.props.updateFilms(datares, query, 'serie')
         }
       }catch(e){
-        console.log(e)
+        //console.log(e)
       }
-      //const datares = await dataSearch.json()
     }else
       this.props.updateFilms(results, query)
   }
