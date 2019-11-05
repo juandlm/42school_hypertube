@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import InfoIcon from '@material-ui/icons/Info';
 import { IconButton, GridList, GridListTile, GridListTileBar } from '@material-ui/core/';
 

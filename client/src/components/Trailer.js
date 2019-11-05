@@ -1,28 +1,12 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { Dialog, DialogContent, DialogContentText, DialogTitle, IconButton, Typography, Chip, Fab } from  '@material-ui/core/';
 import CloseIcon from '@material-ui/icons/Close';
-import Fab from '@material-ui/core/Fab';
-import Chip from '@material-ui/core/Chip';
 import VideocamIcon from '@material-ui/icons/Videocam';
-import { IconButton, Typography } from '@material-ui/core';
-import ReactPlayer from 'react-player';
+import Rating from '@material-ui/lab/Rating';
 
 export default function Trailer(props) {
-    // NB : on aime le calcul yolo du responsif !
-    const websiteName = 'HYPERTUBE';
-    let dx, factor, ratio = 0;
-    dx = document.body.offsetWidth / 200
-    ratio = document.body.offsetWidth / document.body.offsetHeight
-    factor = 0.5 + (0.17 * dx * ratio)
-    const scale = (ratio) / factor
-
-    const url = props.film.yt_trailer_code ? 'https://www.youtube.com/embed/'+props.film.yt_trailer_code+'?modestbranding=1&autoplay=1&playsinline=0&controls=2&origin=http%3A%2F%2Flocalhost:3000' : ''
-    console.log(props)
+    const url = props.film.yt_trailer_code ? `https://www.youtube.com/embed/${props.film.yt_trailer_code}?modestbranding=1&autoplay=1&playsinline=0&controls=2&origin=http%3A%2F%2Flocalhost:3000` : '';
+    
     return (
         <React.Fragment>
             <Dialog
@@ -49,17 +33,34 @@ export default function Trailer(props) {
                   ))
                 }
                 <DialogContent dividers style={{width:'100%', height:'100%'}}>
-                  <iframe id="ytplayer" type="text/html" src={url || ''}
-                    frameBorder="0"
-                    allowFullScreen
-                    width={Math.floor(document.body.offsetWidth * (scale * (document.body.offsetWidth < 600 ? 0.8 : 1)))}
-                    height={Math.floor(document.body.offsetHeight * (scale * (document.body.offsetWidth < 600 ? 0.8 : 1.1)))}>
-                  </iframe>
+                  <div className="embedresize">
+                    <div>
+                      <iframe 
+                        title="ytplayer"
+                        id="ytplayer"
+                        src={url || ''}
+                        frameBorder="0"
+                        allowFullScreen
+                        width="560"
+                        height="315">
+                      </iframe>
+                    </div>
+                  </div>
                   <DialogTitle>Synopsis</DialogTitle>
                   <DialogContentText>
                     {props.film.summary || ''}
                   </DialogContentText>
-                  <DialogTitle>Note : {props.film.rating || ''}</DialogTitle>
+                  <DialogTitle>
+                    Note : 
+                    <Chip
+                      label={props.film.rating || ''}
+                      color="default"
+                      style={{marginLeft:'1em'}}
+                    />
+                  </DialogTitle>
+                  <DialogContentText>
+                    <Rating value={props.film.rating || ''} max={10} precision={0.1} size="large" readOnly />
+                  </DialogContentText>
                   <DialogContentText style={{textAlign:'center'}}>
                     <Fab
                       variant="extended"
@@ -73,7 +74,6 @@ export default function Trailer(props) {
                    </Fab>
                   </DialogContentText>
                 </DialogContent>
-
             </Dialog>
         </React.Fragment>
     );

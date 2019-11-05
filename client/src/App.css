@@ -59,3 +59,35 @@ video:focus {
   color: var(--main-color);
   text-decoration: underline;
 }
+
+
+/* Adaptation responsive pour le iframe youtube du modal Trailer */
+.embedresize {
+  max-width: 100%;
+  margin: auto;
+}
+.embedresize div {
+  position: relative;
+  height: 0;
+  padding-bottom: 56.25%;
+}
+.embedresize iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.intro #intro .embedresize iframe,
+.exit .quizz .embedresize iframe,
+.alreadyplayed #intro .embedresize iframe,
+.identityset #intro .embedresize iframe,
+#notabene .embedresize iframe,
+#message_intro .embedresize iframe,
+.fancybox_body .embedresize iframe,
+#comments .embedresize iframe,
+#description .embedresize iframe,
+.alreadyplayed .embedresize iframe,
+#adserver .embedresize iframe {
+  max-width: none !important;
+}
