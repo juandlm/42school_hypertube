@@ -9,7 +9,7 @@ import settingsStyle from '../css/settings';
 import PrimarySearchAppBar from './navBar';
 import classnames from 'classnames';
 import Loader from './Loader';
-//S
+
 class Settings extends Component {
 
     constructor(props) {
