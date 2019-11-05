@@ -1,15 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
 import { Provider } from 'react-redux';
 import store from './store';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
-// import { getUserSettings } from './actions/settings';
-import createRouteMiddleware from "./createRouteMiddleware";
-
-//import Navbar from './components/Navbar2';
+import { getUserSettings } from './actions/settings';
+import createRouteMiddleware from './createRouteMiddleware';
 import Register from './components/Register';
 import RegisterValidation from './components/RegisterValidation';
 import Login from './components/Login';
@@ -17,12 +14,11 @@ import LoginForgotten from './components/LoginForgotten';
 import LoginNewPassword from './components/LoginNewPassword';
 import Settings from './components/Settings';
 import NoMatch from './components/NoMatch';
-import Home from './components/home';
-import VideoView from './components/videoView';
+import Home from './components/Home';
+import VideoView from './components/VideoView';
 import User from './components/User';
 import Alert from './components/Alert';
 import AlertRedux from './components/AlertRedux';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -33,10 +29,10 @@ if (localStorage.jwtToken) {
 
 	setAuthToken(localStorage.jwtToken);
 	store.dispatch(setCurrentUser(decoded));
-	// store.dispatch(getUserSettings(decoded._id));
+	store.dispatch(getUserSettings(decoded._id));
 	if (decoded.exp < currentTime) {
-	  	store.dispatch(logoutUser());
-	  	window.location.href = '/login';
+		store.dispatch(logoutUser());
+		window.location.href = '/login';
 	}
 }
 
@@ -67,7 +63,7 @@ const App = () => {
 	}
 
 	return (
-		<Provider store = { store }>
+		<Provider store={store}>
 			<Router>
 				<Switch>
 					<Route exact path="/register"
@@ -90,7 +86,6 @@ const App = () => {
 						{...createRouteMiddleware({
 							component: LoginNewPassword
 						}, publicRoute)} />
-
 					<Route exact path="/"
 						{...createRouteMiddleware({
 							component: Home
@@ -107,15 +102,11 @@ const App = () => {
 						{...createRouteMiddleware({
 							component: User
 						}, privateRoute)} />
-
 					<Route component={NoMatch} />
-
 				</Switch>
 			</Router>
-
 			<AlertRedux />
 			{handleAlert()}
-
 		</Provider>
 	);
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import PrimarySearchAppBar from './navBar';
+import PrimarySearchAppBar from './PrimarySearchAppBar';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Container, Avatar, Typography, Paper } from '@material-ui/core';
 import userStyle from '../css/user';
@@ -55,12 +55,7 @@ class User extends Component {
         return (
             <div className="User">
                 <div>
-                    <PrimarySearchAppBar 
-                        searchBar={false}
-                        // refresh={this.refreshComponent.bind(this)} 
-                        // updateFilms={this.updateFilms.bind(this)} 
-                    />
-
+                    <PrimarySearchAppBar searchBar={false} />
                     <Container maxWidth="lg">
                         <Paper className={classes.paper}>
                             <Grid container justify="center" alignItems="center">

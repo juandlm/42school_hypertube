@@ -6,7 +6,7 @@ import { modifySettings, getUserSettings } from '../actions/settings';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Container, Paper, Grid, Typography, TextField, MenuItem, Avatar } from '@material-ui/core/';
 import settingsStyle from '../css/settings';
-import PrimarySearchAppBar from './navBar';
+import PrimarySearchAppBar from './PrimarySearchAppBar';
 import classnames from 'classnames';
 import Loader from './Loader';
 

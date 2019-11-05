@@ -55,7 +55,6 @@ const navBarStyle = makeStyles(theme => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
-    // width: '100%',
   },
   sectionDesktop: {
     display: 'none',

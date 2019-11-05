@@ -5,8 +5,8 @@ import VideocamIcon from '@material-ui/icons/Videocam';
 import Rating from '@material-ui/lab/Rating';
 
 export default function Trailer(props) {
-    const url = props.film.yt_trailer_code ? `https://www.youtube.com/embed/${props.film.yt_trailer_code}?modestbranding=1&autoplay=1&playsinline=0&controls=2&origin=http%3A%2F%2Flocalhost:3000` : '';
-    
+    const url = props.film.yt_trailer_code ? `https://www.youtube.com/embed/${props.film.yt_trailer_code}?modestbranding=1&autoplay=1&playsinline=0&controls=2&origin=http://localhost:3000` : '';
+
     return (
         <React.Fragment>
             <Dialog

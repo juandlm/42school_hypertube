@@ -9,7 +9,7 @@ import { indigo } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
     palette: {
-        // type: 'light', // Change this to dark theme
+        type: 'light', // Change this to dark theme
         primary: {
             main: indigo['500'],
         },
