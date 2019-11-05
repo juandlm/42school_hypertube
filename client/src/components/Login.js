@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
+import extractParamsUrl from '../validation/extractParams';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authentication';
 
@@ -33,6 +34,13 @@ class Login extends Component {
             this.setState({ password: '' });
     }
 
+    componentDidMount() {
+        const getParams = extractParamsUrl(this.props.location.search)
+        if (getParams.oauth) { 
+            localStorage.setItem('jwtToken', decodeURIComponent(getParams.oauth));
+        }
+    }
+
     handleInputChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value,
@@ -47,6 +55,15 @@ class Login extends Component {
             password: this.state.password,
         }
         this.props.loginUser(user);
+    }
+
+    handleFortyTwo = (e) => {
+        e.preventDefault();
+        // const user = {
+        //     email: this.state.email,
+        //     password: this.state.password,
+        // }
+        this.props.fortyTwo();
     }
 
     render() {
@@ -113,6 +130,17 @@ class Login extends Component {
                                     />}
                                 label="Se souvenir de moi"
                             />
+                            {/* <Button
+                            variant="contained"
+                            color="default"
+                            className={classes.button}
+                            onClick={this.handleFortyTwo}
+                            >
+                            OAuth 42
+                            </Button> */}
+                            <a href="http://localhost:5000/api/oauth/42">
+                            OAuth 42
+                            </a>
                             <Button
                                 type="submit"
                                 variant="contained"

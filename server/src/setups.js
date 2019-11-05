@@ -5,9 +5,11 @@ const mongoose = require('../config/database');
 const path = require('path');
 const bodyParser = require('body-parser');
 const passport = require('./middleware/passport')
+const cookieParser = require("cookie-parser")
 
 const app = express();
 
+const authRouter = require('./routers/auth');
 const userRouter = require('./routers/user');
 const filmRouter = require('./routers/film');
 
@@ -18,20 +20,19 @@ mongoose.connection.then(
     err => { console.log('Cannot connect to the DB', err)}
 );
 
-app.use(passport.initialize());
-// Serve the static files from the React app
-app.use(express.static(path.join(__dirname, 'src')));
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+app.use(express.static(path.join(__dirname, 'src')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require('morgan')('combined'));
-app.use(require('cookie-parser')());
+app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
 
 filmController.cronFilms();
 
-// passport.authenticate('jwt', { session: false })
+app.use('/api/oauth', authRouter)
 app.use('/api/users', userRouter)
-// passport.authenticate('jwt', { session: false })
 app.use('/api/film', passport.authenticate('jwt', { session: false }), filmRouter)
 
 app.get("/getSub/:lang/:dir/:file", (req, res) => {
@@ -46,7 +47,6 @@ app.get("/getSub/:lang/:dir/:file", (req, res) => {
 app.get('/', (req, res) => {
 	res.json({"Hypertube" : "Stream movies VERY legally"});
   });
-
 
 // handle 404 error
 app.use((req, res, next) => {

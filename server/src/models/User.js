@@ -50,6 +50,15 @@ const userSchema = mongoose.Schema({
         min: 1, 
         max: 100000000
     },
+    fortyTwoId:{
+        type: Number, 
+        min: 1, 
+        max: 100000000
+    },
+    oAuth: {
+        type: Boolean,
+        default: false
+    },
     avatar: {
         type : String,
         default: () => {
