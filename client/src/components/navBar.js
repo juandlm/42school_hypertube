@@ -37,6 +37,11 @@ function PrimarySearchAppBar(props) {
     props.logoutUser(props.history);
   }
 
+  const refreshHome = () => {
+    if (typeof props.refresh == 'function')
+      props.refresh(true);
+  }
+
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -83,11 +88,12 @@ function PrimarySearchAppBar(props) {
   );
 
   return (
+    
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar>
 
-          <MenuItem component={Link} to='/' className={classes.title}> 
+          <MenuItem component={Link} to='/' className={classes.title} onClick={refreshHome}> 
             <img src="/logonav.png" alt="logo" className={classes.navlogo} />
           </MenuItem>
 
