@@ -45,15 +45,23 @@ const userSchema = mongoose.Schema({
         min: 3,
         max: 10
     },
+    fortyTwoId:{
+        type: Number, 
+        min: 1, 
+        max: 100000000
+    },
 	githubId:{
         type: Number, 
         min: 1, 
         max: 100000000
     },
-    fortyTwoId:{
-        type: Number, 
-        min: 1, 
-        max: 100000000
+    googleId:{
+        type: String, 
+        min: 1
+    },
+    facebookId:{
+        type: String, 
+        min: 1
     },
     oAuth: {
         type: Boolean,

@@ -6,7 +6,11 @@ const passport = require('passport');
 const passportJwt = require("passport-jwt");
 const JwtStrategy = passportJwt.Strategy;
 const ExtractJwt = passportJwt.ExtractJwt;
+
 const FortyTwoStrategy = require('passport-42').Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new JwtStrategy({
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -23,35 +27,6 @@ passport.use(new JwtStrategy({
 		}
 	}).catch(err => console.error(err));
 }))
-
-//   passport.use(
-// 	new TwitterStrategy(
-// 	  {
-// 		consumerKey: keys.TWITTER_CONSUMER_KEY,
-// 		consumerSecret: keys.TWITTER_CONSUMER_SECRET,
-// 		callbackURL: "/auth/twitter/redirect"
-// 	  },
-// 	  async (token, tokenSecret, profile, done) => {
-// 		// find current user in UserModel
-// 		const currentUser = await User.findOne({
-// 		  twitterId: profile._json.id_str
-// 		});
-// 		// create new user if the database doesn't have this user
-// 		if (!currentUser) {
-// 		  const newUser = await new User({
-// 			name: profile._json.name,
-// 			screenName: profile._json.screen_name,
-// 			twitterId: profile._json.id_str,
-// 			profileImageUrl: profile._json.profile_image_url
-// 		  }).save();
-// 		  if (newUser) {
-// 			done(null, newUser);
-// 		  }
-// 		}
-// 		done(null, currentUser);
-// 	  }
-// 	)
-//   );
   
 passport.use(new FortyTwoStrategy({
     clientID: '915bcdfa1ddb27ed58cf0d2119fbf917319a5f5c81239d5c7874e69dacba47ce',
@@ -63,10 +38,11 @@ passport.use(new FortyTwoStrategy({
 		fortyTwoId: profile._json.id
 	});
 	if (!currentUser) {
-	  const clear_password = Math.random().toString(36).substring(2, 15)
+	  const clear_password = Math.random().toString(36).substring(2, 15),
+			username = profile._json.login + String(profile._json.id).substr(1, 3)
 	  const newUser = await new User({
-		username: profile._json.login,
-		email: profile._json.email,
+		username: username,
+		email: profile._json.email.replace('@', '+42@'),
 		firstName: profile._json.first_name,
 		lastName: profile._json.last_name,
 		password: bcrypt.hashSync(clear_password, 10),
@@ -74,9 +50,139 @@ passport.use(new FortyTwoStrategy({
 		oAuth: true,
 		confirmed: true
 	  })
-		await newUser.generateAuthToken()
-		newUser.save().then(user => {
-			return done(null, user)
+		await newUser.generateAuthToken().then((token) => {
+			return done(null, {
+				newUser,
+				success: true,
+				token: `Bearer ${token}`
+			})
+		})
+	} else {
+		await currentUser.generateAuthToken().then((token) => {
+			return done(null, {
+				currentUser,
+				success: true,
+				token: `Bearer ${token}`
+			})
+		})
+	}
+  }
+));
+
+passport.use(new GitHubStrategy({
+    clientID: 'a99fbfdca16dae0b69ff',
+    clientSecret: '827aed7d85ccfc5963a3749821ad33261381e276',
+	callbackURL: "http://localhost:5000/api/oauth/github/redirect",
+	scope: 'user:email'
+  },
+  async (accessToken, refreshToken, profile, done) => {
+	const currentUser = await User.findOne({
+		githubId: profile._json.id
+	});
+	if (!currentUser) {
+	  const clear_password = Math.random().toString(36).substring(2, 15),
+	  		username = profile._json.login + String(profile._json.id).substr(1, 3)
+	  const newUser = await new User({
+		username: username,
+		email: profile.emails[0].value.replace('@', '+git@'),
+		firstName: profile._json.name,
+		lastName: profile._json.name,
+		password: bcrypt.hashSync(clear_password, 10),
+		githubId: profile._json.id,
+		oAuth: true,
+		confirmed: true
+	  })
+		await newUser.generateAuthToken().then((token) => {
+			return done(null, {
+				newUser,
+				success: true,
+				token: `Bearer ${token}`
+			})
+		})
+	} else {
+		await currentUser.generateAuthToken().then((token) => {
+			return done(null, {
+				currentUser,
+				success: true,
+				token: `Bearer ${token}`
+			})
+		})
+	}
+  }
+));
+
+passport.use(new GoogleStrategy({
+    clientID: '477375834167-2movcjr1ih3sf8sclgu0hkiacljdbruu.apps.googleusercontent.com',
+    clientSecret: 'TtkE2UXETza6cmuXCn5ZdUSR',
+	callbackURL: "http://localhost:5000/api/oauth/google/redirect",
+	scope: ['email', 'profile']
+  },
+  async (accessToken, refreshToken, profile, done) => {
+	const currentUser = await User.findOne({
+		googleId: profile._json.sub
+	});
+	if (!currentUser) {
+	  const clear_password = Math.random().toString(36).substring(2, 15),
+			username = profile._json.name.split(' ')[0] + profile._json.sub.substr(1, 5)
+	  const newUser = await new User({
+		username: username,
+		email: profile._json.email.replace('@', '+goog@'),
+		firstName: profile._json.given_name,
+		lastName: profile._json.family_name,
+		password: bcrypt.hashSync(clear_password, 10),
+		googleId: profile._json.sub,
+		oAuth: true,
+		confirmed: true
+	  })
+		await newUser.generateAuthToken().then((token) => {
+			return done(null, {
+				newUser,
+				success: true,
+				token: `Bearer ${token}`
+			})
+		})
+	} else {
+		await currentUser.generateAuthToken().then((token) => {
+			return done(null, {
+				currentUser,
+				success: true,
+				token: `Bearer ${token}`
+			})
+		})
+	}
+  }
+));
+
+passport.use(new FacebookStrategy({
+    clientID: '697157987426399',
+    clientSecret: '6e5d1dc629979d3bd0481f052270a2e2',
+	callbackURL: "http://localhost:5000/api/oauth/facebook/redirect",
+	scope: ['email'],
+	profileFields: ['email', 'name', 'displayName']
+  },
+  async (accessToken, refreshToken, profile, done) => {
+	const currentUser = await User.findOne({
+		facebookId: profile._json.id
+	});
+	if (!currentUser) {
+	  const clear_password = Math.random().toString(36).substring(2, 15),
+			username = profile.displayName.split(' ')[0] + profile._json.id.substr(1, 5)
+	  const newUser = await new User({
+		username: username,
+		email: profile._json.email.replace('@', '+fb@'),
+		firstName: profile._json.first_name,
+		lastName: profile._json.last_name,
+		password: bcrypt.hashSync(clear_password, 10),
+		facebookId: profile._json.id,
+		oAuth: true,
+		confirmed: true
+	  })
+		await newUser.generateAuthToken().then((token) => {
+			return done(null, {
+				newUser,
+				success: true,
+				token: `Bearer ${token}`
+			})
 		})
 	} else {
 		await currentUser.generateAuthToken().then((token) => {

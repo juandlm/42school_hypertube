@@ -5,14 +5,45 @@ import PropTypes from 'prop-types';
 import extractParamsUrl from '../validation/extractParams';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authentication';
+import jsonwebtoken from 'jsonwebtoken'
 
 import classnames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography, Link, Checkbox, FormControlLabel, TextField, Button } from '@material-ui/core';
+import { Grid, Paper, Typography, Link, TextField, Button } from '@material-ui/core';
 import styles from '../css/public';
 import Legals from './Legals';
 
 const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
+
+const GitHubButton = withStyles(theme => ({
+    root: {
+      color: '#FFFFFF',
+      backgroundColor: '#24292e',
+      '&:hover': {
+        backgroundColor: '#000000',
+      },
+    },
+  }))(Button);
+
+const FacebookButton = withStyles(theme => ({
+    root: {
+      color: '#FFFFFF',
+      backgroundColor: '#3b5998',
+      '&:hover': {
+        backgroundColor: '#2f477a',
+      },
+    },
+  }))(Button);
+
+const GoogleButton = withStyles(theme => ({
+    root: {
+      color: '#FFFFFF',
+      backgroundColor: '#db3236',
+      '&:hover': {
+        backgroundColor: '#b72024',
+      },
+    },
+  }))(Button);
 
 class Login extends Component {
 
@@ -36,8 +67,20 @@ class Login extends Component {
 
     componentDidMount() {
         const getParams = extractParamsUrl(this.props.location.search)
-        if (getParams.oauth) { 
-            localStorage.setItem('jwtToken', decodeURIComponent(getParams.oauth));
+        
+        if (getParams.oauth) {
+            var decoded = new Buffer.from(decodeURIComponent(getParams.oauth), 'base64').toString('utf8'),
+                verified
+            jsonwebtoken.verify(decoded.replace('Bearer ', ''), 'LeStageApproche2019', function(err, token) {
+                if (!err)
+                    verified = token
+            })
+            if (verified) {
+                localStorage.setItem('jwtToken', decoded)
+                window.location.reload()
+            } else {
+                return false
+            }
         }
     }
 
@@ -120,27 +163,7 @@ class Login extends Component {
                                 required
                                 fullWidth
                             />
-                            {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        name="rememberMe"
-                                        onChange={this.handleInputCheckedChange}
-                                        color="primary"
-                                    />}
-                                label="Se souvenir de moi"
-                            />
-                            {/* <Button
-                            variant="contained"
-                            color="default"
-                            className={classes.button}
-                            onClick={this.handleFortyTwo}
-                            >
-                            OAuth 42
-                            </Button> */}
-                            <a href="http://localhost:5000/api/oauth/42">
-                            OAuth 42
-                            </a>
+                            {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}     
                             <Button
                                 type="submit"
                                 variant="contained"
@@ -163,6 +186,47 @@ class Login extends Component {
                                 </Grid>
                             </Grid>
                         </form>
+                        <div className="text-center mt-4 w-75">
+                        <h6 className="font-weight-bold">Vous pouvez également vous connecter à travers de</h6>
+                        <div className="d-flex justify-content-between mt-3">
+                            <a href="http://localhost:5000/api/oauth/42" style={{ textDecoration: 'none' }}>
+                                <Button
+                                variant="contained"
+                                color="default"
+                                className={classes.button}
+                                >
+                                <img with="35px" height="28px" src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" alt="42" />
+                                </Button>
+                            </a>
+                            <a href="http://localhost:5000/api/oauth/github" style={{ textDecoration: 'none' }}>
+                                <GitHubButton
+                                variant="contained"
+                                color="default"
+                                className={classes.button}
+                                >
+                                <i className="fab fa-github fa-2x fa-fw"></i>
+                                </GitHubButton>
+                            </a>
+                            <a href="http://localhost:5000/api/oauth/google" style={{ textDecoration: 'none' }}>
+                                <GoogleButton
+                                variant="contained"
+                                color="secondary"
+                                className={classes.button}
+                                >
+                                <i className="fab fa-google fa-2x fa-fw"></i>
+                                </GoogleButton>
+                            </a>      
+                            <a href="http://localhost:5000/api/oauth/facebook" style={{ textDecoration: 'none' }}>
+                                <FacebookButton
+                                variant="contained"
+                                color="primary"
+                                className={classes.button}
+                                >
+                                <i className="fab fa-facebook-f fa-2x fa-fw"></i>
+                                </FacebookButton>
+                            </a>
+                            </div>
+                        </div>
                     </div>
                     <div className={classes.legals}>
                         <Legals />
