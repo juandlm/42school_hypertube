@@ -7,7 +7,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { Button, Container, Paper, Grid, Typography, TextField, MenuItem, Avatar } from '@material-ui/core/';
 import settingsStyle from '../css/settings';
 import PrimarySearchAppBar from './PrimarySearchAppBar';
-import classnames from 'classnames';
 import Loader from './Loader';
 
 class Settings extends Component {
@@ -15,6 +14,7 @@ class Settings extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            oAuth: '',
             lang: '',
             email: '',
             firstName: '',
@@ -22,7 +22,6 @@ class Settings extends Component {
             password: '',
             password_confirm: '',
             avatar: '',
-            errors: {},
             cancel: false,
             isLoading: false,
             revealPassword: false,
@@ -34,10 +33,9 @@ class Settings extends Component {
     }
 
     UNSAFE_componentWillReceiveProps = (nextProps) => {
-        if (nextProps.errors)
-            this.setState({ errors: nextProps.errors });
         const data = nextProps.settings.data;
         this.setState({
+            oAuth: Boolean(data.oAuth),
             avatar: data.avatar,
             lang: data.lang,
             email: data.email,
@@ -57,14 +55,14 @@ class Settings extends Component {
     }
 
     handleInputChange = (e) => {
-        this.setState({ 
+        this.setState({
             [e.target.name]: e.target.value,
-            cancel: true 
+            cancel: true
         });
     }
 
     handleInputCheckedChange = (e) => {
-        this.setState({ 
+        this.setState({
             [e.target.name]: e.target.checked,
             avatar: e.target.name
         });
@@ -72,24 +70,34 @@ class Settings extends Component {
 
     handleInputCheckedAvatar = (e) => {
         this[e.target.alt].click();
+        this.setState({ cancel: true });
     }
-    
+
     onSubmit = (e) => {
         e.preventDefault();
-        let settings = {
-            avatar: this.state.avatar,
-            lang: this.state.lang,
-            email: this.state.email,
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            password: this.state.password,
-            password_confirm: this.state.password_confirm
-        }
+        let settings = {};
+        if (!this.state.oAuth)
+            settings = {
+                oAuth: false,
+                avatar: this.state.avatar,
+                lang: this.state.lang,
+                email: this.state.email,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                password: this.state.password,
+                password_confirm: this.state.password_confirm
+            }
+        else
+            settings = {
+                oAuth: true,
+                avatar: this.state.avatar,
+                lang: this.state.lang
+            }
         this.props.modifySettings(this.props.auth.user._id, settings);
     }
 
     revealPassword = () => {
-        this.setState({ 
+        this.setState({
             revealPassword: true,
             cancel: true
         });
@@ -101,19 +109,19 @@ class Settings extends Component {
 
         return (
             <Grid item xs={4}>
-                <Avatar 
+                <Avatar
                     alt={`${num}`}
                     src={`/avatar_pictures/${num}.png`}
-                    className={(avatar === `${num}` ? classes.bigAvatarChecked : classes.bigAvatar)} 
+                    className={(avatar === `${num}` ? classes.bigAvatarChecked : classes.bigAvatar)}
                     onClick={this.handleInputCheckedAvatar}
                 />
-                <input 
+                <input
                     type="checkbox"
                     ref={checkInput => this[num] = checkInput}
                     className={classes.checkbox}
                     name={num}
                     checked={avatar === `${num}`}
-                    onChange={this.handleInputCheckedChange} 
+                    onChange={this.handleInputCheckedChange}
                 />
             </Grid>
         );
@@ -121,7 +129,7 @@ class Settings extends Component {
 
     render() {
         const { classes } = this.props;
-        const { lang, email, firstName, lastName, password, password_confirm, revealPassword, cancel, errors, isLoading } = this.state;
+        const { oAuth, lang, email, firstName, lastName, password, password_confirm, revealPassword, cancel, isLoading } = this.state;
 
         if (!isLoading) return Loader(isLoading);
 
@@ -142,9 +150,9 @@ class Settings extends Component {
                             <Container maxWidth="sm">
 
                                 <Paper className={classes.paperAvatar}>
-                                    <Grid 
-                                        container 
-                                        spacing={3} 
+                                    <Grid
+                                        container
+                                        spacing={3}
                                         justify="space-around"
                                         direction="row"
                                         alignItems="center"
@@ -159,8 +167,8 @@ class Settings extends Component {
                                         {this.avatarChange(8)}
                                         {this.avatarChange(9)}
                                     </Grid>
-                                </Paper>  
-               
+                                </Paper>
+
                                 <TextField
                                     id="outlined-select-currency"
                                     select
@@ -170,122 +178,101 @@ class Settings extends Component {
                                     onChange={this.handleInputChange}
                                     margin="normal"
                                     variant="outlined"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.lang
-                                    })}
                                     fullWidth
                                     required
                                 >
                                     <MenuItem value={'en'}>Anglais</MenuItem>
                                     <MenuItem value={'fr'}>Français</MenuItem>
                                 </TextField>
-                                {errors.lang && (<div className="invalid-feedback">{errors.lang}</div>)}
 
-                                <TextField
-                                    name="email"
-                                    label="Email"
-                                    value={email}
-                                    type="email"
-                                    onChange={this.handleInputChange}
-                                    variant="outlined"
-                                    margin="normal"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.email
-                                    })}
-                                    fullWidth
-                                    required
-                                />
-                                {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-
-                                <TextField
-                                    name="firstName"
-                                    label="Prénom"
-                                    value={firstName}
-                                    onChange={this.handleInputChange}
-                                    inputProps={{ maxLength: 50 }}
-                                    variant="outlined"
-                                    margin="normal"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.firstName
-                                    })}
-                                    fullWidth
-                                    required
-                                />
-                                {errors.firstName && (<div className="invalid-feedback">{errors.firstName}</div>)}
-                        
-                                <TextField
-                                    name="lastName"
-                                    label="Nom"
-                                    value={lastName}
-                                    onChange={this.handleInputChange}
-                                    inputProps={{ maxLength: 50 }}
-                                    variant="outlined"
-                                    margin="normal"
-                                    className={classnames('form-control form-control-lg', {
-                                        'is-invalid': errors.lastName
-                                    })}
-                                    fullWidth
-                                    required
-                                />
-                                {errors.lastName && (<div className="invalid-feedback">{errors.lastName}</div>)}
-
-                                {revealPassword ? (
-                                    <div className={classes.revealPassword}>
-                                        <Typography variant="h6">
-                                            Nouveau mot de passe
-                                        </Typography>
+                                {!oAuth &&
+                                    <div>
                                         <TextField
-                                            name="password"
-                                            label="Mot de passe"
-                                            type="password"
-                                            value={password}
+                                            name="email"
+                                            label="Email"
+                                            value={email}
+                                            type="email"
                                             onChange={this.handleInputChange}
-                                            inputProps={{
-                                                minLength: 7,
-                                                maxLength: 30
-                                            }}
                                             variant="outlined"
                                             margin="normal"
-                                            className={classnames('form-control form-control-lg', {
-                                                'is-invalid': errors.password
-                                            })}
-                                            required={password_confirm !== ''}
-                                            
                                             fullWidth
+                                            required
                                         />
-                                        {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
 
                                         <TextField
-                                            name="password_confirm"
-                                            label="Confirmation mot de passe"
-                                            type="password"
-                                            value={password_confirm}
+                                            name="firstName"
+                                            label="Prénom"
+                                            value={firstName}
                                             onChange={this.handleInputChange}
-                                            inputProps={{
-                                                minLength: 7,
-                                                maxLength: 30
-                                            }}
+                                            inputProps={{ maxLength: 50 }}
                                             variant="outlined"
                                             margin="normal"
-                                            className={classnames('form-control form-control-lg', {
-                                                'is-invalid': errors.password
-                                            })}
-                                            required={password !== ''}
                                             fullWidth
+                                            required
                                         />
-                                        {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
+
+                                        <TextField
+                                            name="lastName"
+                                            label="Nom"
+                                            value={lastName}
+                                            onChange={this.handleInputChange}
+                                            inputProps={{ maxLength: 50 }}
+                                            variant="outlined"
+                                            margin="normal"
+                                            fullWidth
+                                            required
+                                        />
+
+                                        {revealPassword ? (
+                                            <div className={classes.revealPassword}>
+                                                <Typography variant="h6">
+                                                    Nouveau mot de passe
+                                                </Typography>
+                                                <TextField
+                                                    name="password"
+                                                    label="Mot de passe"
+                                                    type="password"
+                                                    value={password}
+                                                    onChange={this.handleInputChange}
+                                                    inputProps={{
+                                                        minLength: 7,
+                                                        maxLength: 30
+                                                    }}
+                                                    variant="outlined"
+                                                    margin="normal"
+                                                    required={password_confirm !== ''}
+                                                    fullWidth
+                                                />
+
+                                                <TextField
+                                                    name="password_confirm"
+                                                    label="Confirmation mot de passe"
+                                                    type="password"
+                                                    value={password_confirm}
+                                                    onChange={this.handleInputChange}
+                                                    inputProps={{
+                                                        minLength: 7,
+                                                        maxLength: 30
+                                                    }}
+                                                    variant="outlined"
+                                                    margin="normal"
+                                                    required={password !== ''}
+                                                    fullWidth
+                                                />
+                                            </div>
+                                        ) : (
+                                                <Button
+                                                    variant="outlined"
+                                                    color="primary"
+                                                    fullWidth
+                                                    onClick={this.revealPassword}
+                                                    className={classes.revealPassword && classes.button}
+                                                >
+                                                    Modifier mot de passe
+                                            </Button>
+                                            )}
                                     </div>
-                                ) : (
-                                    <Button 
-                                        variant="outlined" 
-                                        color="primary" 
-                                        fullWidth
-                                        onClick={this.revealPassword}
-                                        className={classes.revealPassword && classes.button}
-                                    >
-                                        Modifier mot de passe
-                                    </Button>
-                                )}
+                                }
 
                                 {cancel &&
                                     <Button
@@ -314,7 +301,7 @@ class Settings extends Component {
                         </form>
                     </Paper>
                 </Container>
-		    </div>
+            </div>
         )
     }
 }
@@ -322,7 +309,7 @@ class Settings extends Component {
 Settings.propTypes = {
     modifySettings: PropTypes.func.isRequired,
     settings: PropTypes.object.isRequired,
-	auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

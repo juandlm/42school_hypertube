@@ -4,11 +4,13 @@ import authReducer from './authReducer';
 import settingsReducer from './settingsReducer'
 import sendReducer from './sendReducer';
 import uiReducer from './uiReducer';
+import themeReducer from './themeReducer';
 
 export default combineReducers({
     errors: errorReducer,
     auth: authReducer,
     settings:settingsReducer,
     send: sendReducer,
-    ui: uiReducer
+    ui: uiReducer,
+    theme: themeReducer
 });

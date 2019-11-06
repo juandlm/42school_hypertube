@@ -9,7 +9,7 @@ import {
 
 export const registerUser = (user, history) => dispatch => {
     axios.post('/api/users/register', user)
-            .then(res => {
+            .then(() => {
                 sessionStorage.setItem('alert_info', 'Un mail viens de vous être envoyé, suivez les instructions pour confirmer votre inscription.');
                 window.location.href = '/login';
             })
@@ -107,8 +107,9 @@ export const setCurrentUser = decoded => {
     }
 }
 
-export const logoutUser = (history) => dispatch => {
+export const logoutUser = () => dispatch => {
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem('theme');
     setAuthToken(false);
     dispatch(setCurrentUser({}));
     window.location.href = '/login';

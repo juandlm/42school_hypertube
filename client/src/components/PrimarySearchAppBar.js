@@ -10,6 +10,9 @@ import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import Search from './Search';
 import navBar from '../css/navBar';
 import { logoutUser } from '../actions/authentication';
+import Brightness2Icon from '@material-ui/icons/Brightness2';
+
+import { changeTheme } from '../actions/themeAction';
 
 const useStyles = navBar;
 
@@ -37,6 +40,10 @@ const PrimarySearchAppBar = (props) => {
   const refreshHome = () => {
     if (typeof props.refresh == 'function')
       props.refresh(true);
+  }
+
+  const switchTheme = () => {
+    props.changeTheme(props.theme.theme)
   }
 
   const renderMobileMenu = (
@@ -105,6 +112,18 @@ const PrimarySearchAppBar = (props) => {
           {!props.hideButtons &&
             <div>
               <div className={classes.sectionDesktop}>
+
+              <Tooltip title="Toggle light/dark theme">
+                  <IconButton
+                    edge="end"
+                    aria-label="switch theme"
+                    className={classes.iconButton}
+                    onClick={switchTheme}
+                  >
+                    <Brightness2Icon />
+                  </IconButton>
+                </Tooltip>
+
                 <Tooltip title="Profile">
                   <IconButton
                     component={Link}
@@ -163,11 +182,13 @@ const PrimarySearchAppBar = (props) => {
 
 PrimarySearchAppBar.propTypes = {
   logoutUser: PropTypes.func.isRequired,
+  changeTheme: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  theme: state.theme
 })
 
-export default connect(mapStateToProps, { logoutUser })(withRouter(PrimarySearchAppBar));
+export default connect(mapStateToProps, { logoutUser, changeTheme })(withRouter(PrimarySearchAppBar));

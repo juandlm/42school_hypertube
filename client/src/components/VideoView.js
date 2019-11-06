@@ -331,14 +331,12 @@ class VideoView extends React.Component {
       return (
         <div>
           <PrimarySearchAppBar searchBar={false} />
-          {/* <div style={{ minHeight: '100%', backgroundColor: 'rgba(29,29,29,1)' }}> */}
           <Grid
             container
             spacing={0}
             direction="column"
             justify="center"
             alignItems="center"
-            // style={{ minHeight: '100vh' }}
             style={{ marginBottom: '2%' }}
 
           >
@@ -346,7 +344,6 @@ class VideoView extends React.Component {
               <CircularProgress className={circular.progress} />
             </Grid>
           </Grid>
-          {/* </div> */}
         </div>
       )
     }
@@ -356,16 +353,6 @@ class VideoView extends React.Component {
     return (
       <div className="VideoView">
         <PrimarySearchAppBar searchBar={false} />
-        {/* <div style={{ */}
-
-        {/* // minHeight: '100%', */}
-        {/* // backgroundColor: 'rgba(29,29,29,1)',  */}
-
-
-        {/* paddingTop: '3.25%' */}
-        {/* }} > */}
-        {/* <div style={{ position: 'relative', paddingTop: '40.25%' }}> */}
-        {/* <Container maxWidth="xl"> */}
         <Grid
           container
           direction="column"
@@ -375,22 +362,17 @@ class VideoView extends React.Component {
           style={{ marginBottom: '2%' }}
         >
           <ReactPlayer
-            // style={{ position: 'absolute', top: '0', left: '10%' }}
             controls={true}
             url={this.state.src}
             width='100%'
             height='100%'
             onError={(err) => console.log(err)}
             onProgress={this.loadPlayer}
-            // onBuffer={() => console.log('load buffer')}
             onDuration={this.setDuration.bind(this)}
             onReady={() => this.findSubtitle(query.imdbCode, query.title,
               query.serie.season && query.serie.episode ? { season: query.season, episode: query.episode } : '', query.hash, query.size)}
           />
         </Grid>
-        {/* </Container> */}
-
-        {/* </div> */}
         <Container maxWidth="md">
           <Typography style={{ marginBottom: '1%' }}>
             Commentaires
@@ -401,13 +383,10 @@ class VideoView extends React.Component {
             justify="center"
             alignItems="center"
           >
-
             {this.state.comments.map((comment, index) => (
               <Card style={{
                 width: '100%',
                 marginBottom: '0.5em',
-                // backgroundColor: '#171717',
-                // color: 'white'
               }} key={index}>
                 <CardContent>
                   <Typography>
@@ -421,17 +400,6 @@ class VideoView extends React.Component {
                 </CardContent>
               </Card>
             ))}
-            {/* <textarea
-                style={{
-                  height: '100px', overflow: 'hidden', width: '80%', backgroundColor: '#171717',
-                  border: '6px solid #556677', outlineColor: 'transparent', color: 'white', marginTop: '1em'
-                }} name="body"
-                onChange={this.handleChange.bind(this)}
-                value={this.state.comValue}
-                placeholder='Ajoutez un commentaire'
-                required
-              /> */}
-
             <hr />
             <TextField
               placeholder="Ajoutez un commentaire"
@@ -465,7 +433,6 @@ class VideoView extends React.Component {
           </Grid>
         </Container>
       </div>
-      // </div>
     )
   }
 }

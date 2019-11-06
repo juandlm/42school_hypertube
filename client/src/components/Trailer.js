@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogContentText, DialogTitle, IconButton, Typo
 import CloseIcon from '@material-ui/icons/Close';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import Rating from '@material-ui/lab/Rating';
+import { Link } from 'react-router-dom';
 
 export default function Trailer(props) {
     const url = props.film.yt_trailer_code ? `https://www.youtube.com/embed/${props.film.yt_trailer_code}?modestbranding=1&autoplay=1&playsinline=0&controls=2&origin=http://localhost:3000` : '';
@@ -62,12 +63,15 @@ export default function Trailer(props) {
                     <Rating value={props.film.rating || ''} max={10} precision={0.1} size="large" readOnly />
                   </DialogContentText>
                   <DialogContentText style={{textAlign:'center'}}>
+
                     <Fab
                       variant="extended"
                       size="medium"
                       color="primary"
                       aria-label="add"
-                      href={props.film.url}
+                      // href={props.film.url}
+                      component={Link} 
+                      to={props.film.url}
                     >
                       <VideocamIcon style={{marginRight:'0.4em'}}/>
                         Voir le film

@@ -1,26 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
+import { Provider } from 'react-redux';
+import store from './store';
+import './index.css';
 //import * as serviceWorker from './serviceWorker';
-import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { indigo } from '@material-ui/core/colors';
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'light', // Change this to dark theme
-        primary: {
-            main: indigo['500'],
-        },
-    }
-});
 
 const Hypertube = () => (
-    <MuiThemeProvider theme={theme}>
-        <CssBaseline />
+    <Provider store={store}>
         <App />
-    </MuiThemeProvider>
+    </Provider>
 );
 
 ReactDOM.render(<Hypertube />, document.getElementById('root'));

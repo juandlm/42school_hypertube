@@ -22,7 +22,7 @@ module.exports = {
 		const lastName = htmlspecialchars(req.body.lastName);
 		const password = htmlspecialchars(req.body.password);
 
-		User.find({$or: [{ username: username }, { email: email }]}).then(async user => {
+		User.find({ $or: [{ username: username }, { email: email }] }).then(async user => {
 			if (user == '') {
 				const mail_token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 				const newUser = new User({
@@ -80,28 +80,28 @@ module.exports = {
 		const email = htmlspecialchars(req.body.email);
 		const password = htmlspecialchars(req.body.password);
 
-		User.findOne({$or: [{ username: email }, { email: email }]}).then(user => {
+		User.findOne({ $or: [{ username: email }, { email: email }] }).then(user => {
 			if (!user) {
 				errors.email = 'User not found'
 				return res.status(404).json(errors);
 			}
 			if (user.confirmed === true) {
 				bcrypt.compare(password, user.password)
-				.then(async isMatch => {
-					if (isMatch) {
-						await user.generateAuthToken().then((token) => {
-							res.json({
-								user: user,
-								success: true,
-								token: `Bearer ${token}`
-							});
-						}).catch(err => console.error('There was some error with the token', err));
-					}
-					else {
-						errors.password = 'Incorrect Password';
-						return res.status(400).json(errors);
-					}
-				});
+					.then(async isMatch => {
+						if (isMatch) {
+							await user.generateAuthToken().then((token) => {
+								res.json({
+									user: user,
+									success: true,
+									token: `Bearer ${token}`
+								});
+							}).catch(err => console.error('There was some error with the token', err));
+						}
+						else {
+							errors.password = 'Incorrect Password';
+							return res.status(400).json(errors);
+						}
+					});
 			} else {
 				errors.confirmed = 'Account not confirmed';
 				Mail.mailSignup(user.email, user.username, user.register_token, res);
@@ -113,14 +113,14 @@ module.exports = {
 	loginForgotten: (req, res) => {
 		const { errors, isValid } = validateLoginForgottenInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
-		
+
 		const email = htmlspecialchars(req.body.email);
 
 		User.findOne({ email }).then(user => {
 			if (!user) {
 				errors.email = 'User not found';
 				return res.status(404).json(errors);
-			} 
+			}
 			const mail_token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 			user.fpwd_token = mail_token;
 			user.save().then(user => {
@@ -180,7 +180,6 @@ module.exports = {
 	},
 
 	logoutall: async (req, res) => {
-		// Log user out of all devices
 		try {
 			req.user.tokens.splice(0, req.user.tokens.length)
 			await req.user.save()
@@ -194,32 +193,47 @@ module.exports = {
 		const { errors, isValid } = validateSettingsInput(req.body);
 		if (!isValid) return res.status(400).json(errors);
 
+		let update = {};
 		const userId = htmlspecialchars(req.body.userId);
+		const filter = { _id: userId };
 		const settings = req.body.settings;
+		const oAuth = settings.oAuth;
 		const avatar = htmlspecialchars(settings.avatar);
 		const lang = htmlspecialchars(settings.lang);
-		const email = htmlspecialchars(settings.email);
-		const firstName = htmlspecialchars(settings.firstName);
-		const lastName = htmlspecialchars(settings.lastName);
-		const password = htmlspecialchars(settings.password);
-		const filter = { _id: userId };
-		const update = { avatar, lang, email, firstName, lastName };
 
-		if (password != '')
-			update.password = bcrypt.hashSync(password, 10);
+		if (!oAuth) {
+			const email = htmlspecialchars(settings.email);
+			const firstName = htmlspecialchars(settings.firstName);
+			const lastName = htmlspecialchars(settings.lastName);
+			const password = htmlspecialchars(settings.password);
+
+			update = { avatar, lang, email, firstName, lastName };
+			if (password != '')
+				update.password = bcrypt.hashSync(password, 10);
+		} else
+			update = { avatar, lang };
 
 		User.findOneAndUpdate(filter, update, { new: true }, (err, data) => {
 			if (err) {
 				return res.status(400).json(errors);
 			} else {
 				const convertData = data.toObject();
-				const postData = {
-					avatar: convertData.avatar,
-					lang: convertData.lang,
-					email: convertData.email,
-					firstName: convertData.firstName,
-					lastName: convertData.lastName
-				};
+				let postData = {};
+				if (!oAuth)
+					postData = {
+						oAuth: oAuth,
+						avatar: convertData.avatar,
+						lang: convertData.lang,
+						email: convertData.email,
+						firstName: convertData.firstName,
+						lastName: convertData.lastName
+					};
+				else
+					postData = {
+						oAuth: oAuth,
+						avatar: convertData.avatar,
+						lang: convertData.lang
+					}
 				res.status(201).json(postData);
 			}
 		});
@@ -228,7 +242,7 @@ module.exports = {
 	getSettings: (req, res) => {
 		const userId = htmlspecialchars(req.body.userId);
 
-		User.findOne({ _id: userId }, ['email', 'firstName', 'lastName', 'lang', 'avatar'], (err, data) => {
+		User.findOne({ _id: userId }, ['email', 'firstName', 'lastName', 'lang', 'avatar', 'oAuth'], (err, data) => {
 			if (err)
 				res.status(500).send(err);
 			else
@@ -243,7 +257,7 @@ module.exports = {
 			if (err)
 				return res.status(500).send(err);
 
-			Film.find({"is_seen.userId": data._id }, null, { limit: 10 }, (err, films) => {
+			Film.find({ "is_seen.userId": data._id }, null, { limit: 10 }, (err, films) => {
 				if (err)
 					return res.status(500).send(err);
 				else {

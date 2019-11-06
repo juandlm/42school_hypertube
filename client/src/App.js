@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Provider } from 'react-redux';
-import store from './store';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
@@ -21,27 +21,62 @@ import Alert from './components/Alert';
 import AlertRedux from './components/AlertRedux';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { CssBaseline } from '@material-ui/core';
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { indigo } from '@material-ui/core/colors';
+import { changeTheme } from './actions/themeAction';
 
 
-if (localStorage.jwtToken) {
-	const currentTime = Date.now() / 1000;
-	const decoded = jwt_decode(localStorage.jwtToken);
-
-	setAuthToken(localStorage.jwtToken);
-	store.dispatch(setCurrentUser(decoded));
-	store.dispatch(getUserSettings(decoded._id));
-	if (decoded.exp < currentTime) {
-		store.dispatch(logoutUser());
-		window.location.href = '/login';
+const lightTheme = createMuiTheme({
+	palette: {
+		type: 'light',
+		primary: {
+			main: indigo['500'],
+		},
 	}
-}
+});
+
+const darkTheme = createMuiTheme({
+	palette: {
+		type: 'dark',
+		primary: {
+			main: indigo['500'],
+		},
+	}
+});
+
 
 const privateRoute = process.env.REACT_APP_IS_PRIVATE_ROUTE;
 const publicRoute = process.env.REACT_APP_IS_PUBLIC_ROUTE;
 
-const App = () => {
+class App extends React.Component {
+	constructor(props) {
+		super(props);
 
-	const handleAlert = () => {
+		if (localStorage.jwtToken) {
+			const currentTime = Date.now() / 3600;
+			const decoded = jwt_decode(localStorage.jwtToken);
+
+			setAuthToken(localStorage.jwtToken);
+			props.setCurrentUser(decoded);
+			props.getUserSettings(decoded._id);
+			if (decoded.exp < currentTime) {
+				props.logoutUser();
+				window.location.href = '/login';
+			}
+		}
+		// console.log(localStorage.theme)
+		// if (localStorage.getItem('theme') === 'false')
+		// 	this.props.changeTheme(false)
+	}
+
+	// componentWillUnmount() {
+	// 	if (localStorage.getItem('theme') === 'false')
+	// 		this.props.changeTheme(false)
+	// }
+
+
+	handleAlert = () => {
 		let data;
 
 		if ((data = sessionStorage.getItem('alert_success'))) {
@@ -62,53 +97,79 @@ const App = () => {
 		}
 	}
 
-	return (
-		<Provider store={store}>
-			<Router>
-				<Switch>
-					<Route exact path="/register"
-						{...createRouteMiddleware({
-							component: Register
-						}, publicRoute)} />
-					<Route exact path="/registerValidation"
-						{...createRouteMiddleware({
-							component: RegisterValidation
-						}, publicRoute)} />
-					<Route exact path="/login"
-						{...createRouteMiddleware({
-							component: Login
-						}, publicRoute)} />
-					<Route exact path="/loginForgotten"
-						{...createRouteMiddleware({
-							component: LoginForgotten
-						}, publicRoute)} />
-					<Route exact path="/loginNewPassword"
-						{...createRouteMiddleware({
-							component: LoginNewPassword
-						}, publicRoute)} />
-					<Route exact path="/"
-						{...createRouteMiddleware({
-							component: Home
-						}, privateRoute)} />
-					<Route exact path="/films"
-						{...createRouteMiddleware({
-							component: VideoView
-						}, privateRoute)} />
-					<Route exact path="/settings"
-						{...createRouteMiddleware({
-							component: Settings
-						}, privateRoute)} />
-					<Route path="/user/:user"
-						{...createRouteMiddleware({
-							component: User
-						}, privateRoute)} />
-					<Route component={NoMatch} />
-				</Switch>
-			</Router>
-			<AlertRedux />
-			{handleAlert()}
-		</Provider>
-	);
+	test = () => {
+		if (localStorage.getItem('theme') === 'false')
+			return (darkTheme);
+		if (this.props.theme.theme)
+			return (lightTheme);
+		return (darkTheme);
+	}
+
+	render() {
+		
+
+
+
+		return (
+			<MuiThemeProvider theme={this.test()}>
+				<CssBaseline />
+				<Router>
+					<Switch>
+						<Route exact path="/register"
+							{...createRouteMiddleware({
+								component: Register
+							}, publicRoute)} />
+						<Route exact path="/registerValidation"
+							{...createRouteMiddleware({
+								component: RegisterValidation
+							}, publicRoute)} />
+						<Route exact path="/login"
+							{...createRouteMiddleware({
+								component: Login
+							}, publicRoute)} />
+						<Route exact path="/loginForgotten"
+							{...createRouteMiddleware({
+								component: LoginForgotten
+							}, publicRoute)} />
+						<Route exact path="/loginNewPassword"
+							{...createRouteMiddleware({
+								component: LoginNewPassword
+							}, publicRoute)} />
+						<Route exact path="/"
+							{...createRouteMiddleware({
+								component: Home
+							}, privateRoute)} />
+						<Route exact path="/films"
+							{...createRouteMiddleware({
+								component: VideoView
+							}, privateRoute)} />
+						<Route exact path="/settings"
+							{...createRouteMiddleware({
+								component: Settings
+							}, privateRoute)} />
+						<Route path="/user/:user"
+							{...createRouteMiddleware({
+								component: User
+							}, privateRoute)} />
+						<Route component={NoMatch} />
+					</Switch>
+				</Router>
+				<AlertRedux />
+				{this.handleAlert()}
+			</MuiThemeProvider>
+		);
+	}
 }
 
-export default App;
+App.propTypes = {
+	setCurrentUser: PropTypes.func.isRequired,
+	getUserSettings: PropTypes.func.isRequired,
+	logoutUser: PropTypes.func.isRequired,
+	changeTheme: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+	theme: state.theme
+});
+
+export default connect(mapStateToProps, { setCurrentUser, getUserSettings, logoutUser, changeTheme })(App);

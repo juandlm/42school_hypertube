@@ -8,6 +8,7 @@ import { IconButton, GridList, GridListTile, GridListTileBar } from '@material-u
 import GetApiData from '../models/getApiData'
 import ListFilter from './Dropdown';
 import PrimarySearchAppBar from './PrimarySearchAppBar';
+import LoaderScroll from './LoaderScroll';
 import Loader from './Loader';
 import Trailer from './Trailer'
 
@@ -33,6 +34,8 @@ class Home extends React.Component {
       selectedFilm: ''
     }
     this.isFiltered = false
+
+    console.log(props)
   }
 
   filterData(filter) {
@@ -276,8 +279,8 @@ class Home extends React.Component {
               />
             </GridListTile>
           ))}
-          {Loader(isLoading)}
         </GridList>
+        {LoaderScroll(!isLoading)}
       </div>
     );
   }

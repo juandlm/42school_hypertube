@@ -13,7 +13,6 @@ export const setUserSettings = (settings) => {
 export const modifySettings = (userId, settings) => dispatch => {
     axios.post('/api/users/modifySettings', { userId: userId, settings: settings })
         .then((res) => {
-            // console.log('modifySettings / result', res.data);
             const token = res.data.token
             if (token) {
                 localStorage.setItem('jwtToken', token)
@@ -24,11 +23,11 @@ export const modifySettings = (userId, settings) => dispatch => {
             dispatch(showAlert("success", "Informations modifiés avec succès !"));
         })
         .catch(err => {
+            console.log(err.response)
             if (err.response.status === 400)
                 dispatch(showAlert("error", "Cet utilisateur ou cette email sont indisponibles"));
             else
                 dispatch(showAlert("error", "La modification de vos informations a échoué"));
-            // console.log('modifySettings / error', err.response);
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data
@@ -39,7 +38,6 @@ export const modifySettings = (userId, settings) => dispatch => {
 export const getUserSettings = (user) => dispatch => {
     axios.post('/api/users/getSettings', { userId: user })
         .then((res) => {
-            // console.log('getSettings / result', res);
             dispatch(setUserSettings(res.data))
         })
         .catch(err => {
