@@ -6,11 +6,15 @@ import {
     SET_CURRENT_USER,
     GET_SEND
 } from './types';
+import { alertTranslate } from '../translate';
+
+const ReactLanguage = require('react-language');
+ReactLanguage.setLanguage('xxx');
 
 export const registerUser = (user, history) => dispatch => {
     axios.post('/api/users/register', user)
         .then(() => {
-            sessionStorage.setItem('alert_info', 'Un mail viens de vous être envoyé, suivez les instructions pour confirmer votre inscription.');
+            sessionStorage.setItem('alert_info', alertTranslate('mailSend'));
             window.location.href = '/login';
         })
         .catch(err => {
@@ -25,13 +29,13 @@ export const registerValidationUser = (user) => dispatch => {
     axios.post('/api/users/registerValidation', user)
         .then(res => {
             if (res.data.message === 'Confirmed')
-                sessionStorage.setItem('alert_success', 'Votre compte a été confirmé !');
+                sessionStorage.setItem('alert_success', alertTranslate('accountConfirmed'));
             else
-                sessionStorage.setItem('alert_info', 'Votre compte est déjà activé');
+                sessionStorage.setItem('alert_info', alertTranslate('accountAlreadyActived'));
             window.location.href = '/login';
         })
         .catch(err => {
-            sessionStorage.setItem('alert_error', 'Les données transmises sont erronées');
+            sessionStorage.setItem('alert_error', alertTranslate('dataFailed'));
             window.location.href = '/login';
         });
 }
@@ -47,7 +51,7 @@ export const loginUser = (user) => dispatch => {
         })
         .catch(err => {
             if (err.response.data.confirmed) {
-                sessionStorage.setItem('alert_info', 'Un mail viens de vous être envoyé, suivez les instructions pour confirmer votre inscription.');
+                sessionStorage.setItem('alert_info', alertTranslate('mailSend'));
                 window.location.href = '/login';
             }
             dispatch({
@@ -76,7 +80,7 @@ export const loginForgottenUser = (user) => dispatch => {
 export const loginNewPasswordUser = (user) => dispatch => {
     axios.post('/api/users/loginNewPassword', user)
         .then(res => {
-            sessionStorage.setItem('alert_success', 'Mot de passe modifié avec succès !');
+            sessionStorage.setItem('alert_success', alertTranslate('pwdSuccess'));
             window.location.href = '/login';
         })
         .catch(err => {
@@ -93,7 +97,7 @@ export const loginCheckNewPasswordUser = (user) => dispatch => {
             return true
         })
         .catch(err => {
-            sessionStorage.setItem('alert_error', 'Ce lien n\'est pas valide');
+            sessionStorage.setItem('alert_error', alertTranslate('linkFailed'));
             window.location.href = '/login';
         });
 }
@@ -108,6 +112,7 @@ export const setCurrentUser = decoded => {
 export const logoutUser = () => dispatch => {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('theme');
+    sessionStorage.removeItem('lang');
     setAuthToken(false);
     dispatch(setCurrentUser({}));
     window.location.href = '/login';

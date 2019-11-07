@@ -34,6 +34,22 @@ const styles = theme => ({
     },
     subtitle: {
         margin: theme.spacing(4, 0, 0, 0)
+    },
+    gitHubButton: {
+        color: '#FFFFFF',
+        backgroundColor: '#24292e',
+        '&:hover': {
+            backgroundColor: '#000000',
+            color: '#FFFFFF',
+        },
+    },
+    googleButton: {
+        color: '#FFFFFF',
+        backgroundColor: '#db3236',
+        '&:hover': {
+            backgroundColor: '#b72024',
+            color: '#FFFFFF',
+        },
     }
 });
 

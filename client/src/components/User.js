@@ -5,6 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { Grid, Container, Avatar, Typography, Paper } from '@material-ui/core';
 import userStyle from '../css/user';
 import Loader from '../components/Loader';
+import { userTranslate } from '../translate';
+
+const ReactLanguage = require('react-language');
+ReactLanguage.setLanguage('xxx');
 
 class User extends Component {
 
@@ -65,14 +69,14 @@ class User extends Component {
                             </Grid>
                             <hr />
                             <Typography variant="subtitle1">
-                                Username : {userInfo.username}
+                                {userTranslate('username')} : {userInfo.username}
                             </Typography>
                             <Typography variant="subtitle1">
-                                Full name : {userInfo.firstName} {userInfo.lastName}
+                                {userTranslate('name')} : {userInfo.firstName} {userInfo.lastName}
                             </Typography>
 
                             <Typography variant="subtitle1">
-                                <br /><br />Derniers films vus:<br /><br />
+                                {userTranslate('lastMovies')}  :<br /><br />
                             </Typography>
 
                             {this.state.userInfo.films_seen.map((film, index) => (

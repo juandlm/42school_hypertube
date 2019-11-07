@@ -2,6 +2,10 @@ import axios from 'axios';
 import { GET_ERRORS, SET_SETTINGS } from './types';
 import setAuthToken from '../setAuthToken';
 import { showAlert } from '../actions/alertAction';
+import { alertTranslate } from '../translate';
+
+const ReactLanguage = require('react-language');
+ReactLanguage.setLanguage('xxx');
 
 export const setUserSettings = (settings) => {
     return {
@@ -20,13 +24,13 @@ export const modifySettings = (userId, settings) => dispatch => {
                 dispatch(setUserSettings(res.data.settings))
             } else
                 dispatch(setUserSettings(res.data))
-            dispatch(showAlert("success", "Informations modifiés avec succès !"));
+            dispatch(showAlert("success", alertTranslate('infoSuccess')));
         })
         .catch(err => {
             if (err.response.status === 400)
-                dispatch(showAlert("error", "Cet utilisateur ou cette email sont indisponibles"));
+                dispatch(showAlert("error", alertTranslate('infoIndisp')));
             else
-                dispatch(showAlert("error", "La modification de vos informations a échoué"));
+                dispatch(showAlert("error", alertTranslate('infoError')));
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data

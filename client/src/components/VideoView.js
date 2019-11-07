@@ -8,10 +8,13 @@ import { Container, CircularProgress, Grid, Link, Typography, CardContent, Card,
 import PrimarySearchAppBar from './PrimarySearchAppBar';
 import circularStyle from '../css/circular';
 import registerStyle from '../css/register';
-import '../css/global.css'
+import { movieViewTranslate } from '../translate';
+import '../css/global.css';
 
 const circular = circularStyle;
 const classes = registerStyle;
+const ReactLanguage = require('react-language');
+ReactLanguage.setLanguage('xxx');
 
 class VideoView extends React.Component {
 
@@ -350,7 +353,7 @@ class VideoView extends React.Component {
             url={this.state.src}
             width='100%'
             height='100%'
-            onError={(err) => false}
+            onError={() => false}
             onProgress={this.loadPlayer}
             onDuration={this.setDuration.bind(this)}
             onReady={() => this.findSubtitle(query.imdbCode, query.title,
@@ -359,7 +362,7 @@ class VideoView extends React.Component {
         </Grid>
         <Container maxWidth="md">
           <Typography style={{ marginBottom: '1%' }}>
-            Commentaires
+            {movieViewTranslate('comments')}
           </Typography>
           <Grid
             container
@@ -386,7 +389,7 @@ class VideoView extends React.Component {
             ))}
             <hr />
             <TextField
-              placeholder="Ajoutez un commentaire"
+              placeholder={sessionStorage.lang === 'fr' ? "Ajoutez un commentaire" : "Add a comment"}
               multiline={true}
               rows={4}
               rowsMax={4}
@@ -412,7 +415,7 @@ class VideoView extends React.Component {
               onClick={this.saveComment}
               fullWidth
             >
-              Poster
+              {movieViewTranslate('post')}
               </Button>
           </Grid>
         </Container>

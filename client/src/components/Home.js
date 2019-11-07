@@ -5,12 +5,16 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import InfoIcon from '@material-ui/icons/Info';
 import { IconButton, GridList, GridListTile, GridListTileBar } from '@material-ui/core/';
+import { getUserSettings } from '../actions/settings';
+
 import GetApiData from '../models/getApiData'
 import ListFilter from './Dropdown';
 import PrimarySearchAppBar from './PrimarySearchAppBar';
 import LoaderScroll from './LoaderScroll';
 import Loader from './Loader';
 import Trailer from './Trailer'
+
+const ReactLanguage = require('react-language');
 
 class Home extends React.Component {
 
@@ -34,6 +38,16 @@ class Home extends React.Component {
       selectedFilm: ''
     }
     this.isFiltered = false
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.settings.data.lang) {
+      ReactLanguage.setLanguage(nextProps.settings.data.lang);
+      sessionStorage.setItem('lang', nextProps.settings.data.lang);
+    } else {
+      ReactLanguage.setLanguage('en');
+      sessionStorage.setItem('lang', 'en');
+    }
   }
 
   filterData(filter) {
@@ -154,7 +168,6 @@ class Home extends React.Component {
   }
 
   isSeen(imdbCode, hash) {
-
     if (this.state.isSeen.length === 0)
       return;
     const cmpHash = typeof hash === 'object' ? hash.hash : hash
@@ -168,10 +181,16 @@ class Home extends React.Component {
     return (false)
   }
 
+  getUserSettings = () => {
+    const userId = this.props.auth.user._id;
+    this.props.getUserSettings(userId);
+  }
+
   componentDidMount() {
     this.getFilms(1)
     this.getIsSeen(this.props.auth.user._id, this.props.auth.user.name)
     window.addEventListener("scroll", this.handleScroll, false);
+    this.getUserSettings();
   }
 
   componentWillUnmount() {
@@ -282,7 +301,8 @@ Home.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  settings: state.settings
 })
 
-export default connect(mapStateToProps, {})(withRouter(Home));
+export default connect(mapStateToProps, { getUserSettings })(withRouter(Home));

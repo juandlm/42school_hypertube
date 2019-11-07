@@ -12,7 +12,10 @@ import Search from './Search';
 import navBar from '../css/navBar';
 import { logoutUser } from '../actions/authentication';
 import { changeTheme } from '../actions/themeAction';
+import { navbarTranslate } from '../translate';
 
+const ReactLanguage = require('react-language');
+ReactLanguage.setLanguage('xxx');
 const useStyles = navBar;
 
 const PrimarySearchAppBar = (props) => {
@@ -59,28 +62,28 @@ const PrimarySearchAppBar = (props) => {
         <ListItemIcon className={classes.listItemIcon}>
           <Brightness4Icon fontSize="default" />
         </ListItemIcon>
-        <ListItemText primary="Switch theme" />
+        <ListItemText primary={navbarTranslate('theme')} />
       </MenuItem>
 
       <MenuItem component={Link} to={`/user/${username}`}>
         <ListItemIcon className={classes.listItemIcon}>
           <AccountCircle fontSize="default" />
         </ListItemIcon>
-        <ListItemText primary="Profile" />
+        <ListItemText primary={navbarTranslate('profile')} />
       </MenuItem>
 
       <MenuItem component={Link} to='/settings'>
         <ListItemIcon className={classes.listItemIcon}>
           <SettingsIcon fontSize="default" />
         </ListItemIcon>
-        <ListItemText primary="Settings" />
+        <ListItemText primary={navbarTranslate('settings')} />
       </MenuItem>
 
       <MenuItem onClick={logOut}>
         <ListItemIcon className={classes.listItemIcon}>
           <PowerSettingsNewIcon fontSize="default" />
         </ListItemIcon>
-        <ListItemText primary="Logout" />
+        <ListItemText primary={navbarTranslate('logout')} />
       </MenuItem>
     </Menu>
   );
@@ -110,7 +113,7 @@ const PrimarySearchAppBar = (props) => {
             <div>
               <div className={classes.sectionDesktop}>
 
-                <Tooltip title="Toggle light/dark theme">
+                <Tooltip title={navbarTranslate('theme')}>
                   <IconButton
                     edge="end"
                     aria-label="switch theme"
@@ -121,7 +124,7 @@ const PrimarySearchAppBar = (props) => {
                   </IconButton>
                 </Tooltip>
 
-                <Tooltip title="Profile">
+                <Tooltip title={navbarTranslate('profile')}>
                   <IconButton
                     component={Link}
                     to={`/user/${username}`}
@@ -133,7 +136,7 @@ const PrimarySearchAppBar = (props) => {
                   </IconButton>
                 </Tooltip>
 
-                <Tooltip title="Settings" className={classes.tooltip}>
+                <Tooltip title={navbarTranslate('settings')} className={classes.tooltip}>
                   <IconButton
                     component={Link}
                     to={`/settings`}
@@ -145,7 +148,7 @@ const PrimarySearchAppBar = (props) => {
                   </IconButton>
                 </Tooltip>
 
-                <Tooltip title="Logout" className={classes.tooltip}>
+                <Tooltip title={navbarTranslate('logout')} className={classes.tooltip}>
                   <IconButton
                     onClick={logOut}
                     edge="end"

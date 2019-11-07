@@ -1,6 +1,10 @@
 import React from 'react';
 import { InputLabel, MenuItem, Typography, FormControl, Select, Grid, Box, Button, Hidden } from '@material-ui/core/';
 import PrettoSlider from '../css/slider';
+import { listFilterTranslate } from '../translate';
+
+const ReactLanguage = require('react-language');
+ReactLanguage.setLanguage('xxx');
 
 export default class ListFilter extends React.Component {
 
@@ -49,7 +53,7 @@ export default class ListFilter extends React.Component {
       <React.Fragment>
         <Box mt={0} mb={0} mx={5} width="100%">
           <Typography gutterBottom>
-            Note IMDB
+            {listFilterTranslate('imdb')}
           </Typography>
           <PrettoSlider
             valueLabelDisplay="auto"
@@ -76,26 +80,26 @@ export default class ListFilter extends React.Component {
               }}
             >
               <MenuItem value="">
-                <em>Aucun</em>
+                <em>{listFilterTranslate('none')}</em>
               </MenuItem>
               <MenuItem value={'action'}>Action</MenuItem>
-              <MenuItem value={'adventure'}>Aventure</MenuItem>
+              <MenuItem value={'adventure'}>{listFilterTranslate('adventure')}</MenuItem>
               <MenuItem value={'animation'}>Animation</MenuItem>
               <MenuItem value={'crime'}>Crime</MenuItem>
-              <MenuItem value={'documentary'}>Documentaire</MenuItem>
-              <MenuItem value={'drama'}>Drame</MenuItem>
-              <MenuItem value={'history'}>Histoire</MenuItem>
-              <MenuItem value={'horror'}>Epouvante</MenuItem>
+              <MenuItem value={'documentary'}>{listFilterTranslate('documentary')}</MenuItem>
+              <MenuItem value={'drama'}>{listFilterTranslate('drama')}</MenuItem>
+              <MenuItem value={'history'}>{listFilterTranslate('history')}</MenuItem>
+              <MenuItem value={'horror'}>{listFilterTranslate('history')}</MenuItem>
               <MenuItem value={'superhero'}>SuperHero</MenuItem>
               <MenuItem value={'thriller'}>Thriller</MenuItem>
-              <MenuItem value={'war'}>Guerre</MenuItem>
+              <MenuItem value={'war'}>{listFilterTranslate('war')}</MenuItem>
               <MenuItem value={'western'}>Western</MenuItem>
             </Select>
           </FormControl>
         </Box>
         <Box mt={1} mb={5} mx={5} width="100%">
           <FormControl style={{ minWidth: '100%' }}>
-            <InputLabel htmlFor="demo-controlled-open-select">Trier</InputLabel>
+            <InputLabel htmlFor="demo-controlled-open-select">{listFilterTranslate('sort')}</InputLabel>
             <Select
               open={this.state.openSort}
               onClose={this.handleClose.bind(this, 'openSort')}
@@ -108,11 +112,11 @@ export default class ListFilter extends React.Component {
               }}
             >
               <MenuItem value="">
-                <em>Aucun</em>
+                <em>{listFilterTranslate('none')}</em>
               </MenuItem>
-              <MenuItem value={'year'}>Date de sortie</MenuItem>
-              <MenuItem value={'title'}>Titre</MenuItem>
-              <MenuItem value={'rating'}>Note</MenuItem>
+              <MenuItem value={'year'}>{listFilterTranslate('date')}</MenuItem>
+              <MenuItem value={'title'}>{listFilterTranslate('title')}</MenuItem>
+              <MenuItem value={'rating'}>{listFilterTranslate('rating')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -125,7 +129,7 @@ export default class ListFilter extends React.Component {
       <React.Fragment>
         <Box my={3} mx={6} width={300}>
           <Typography gutterBottom>
-            Note IMDB
+            {listFilterTranslate('imdb')}
           </Typography>
           <PrettoSlider
             valueLabelDisplay="auto"
@@ -152,26 +156,26 @@ export default class ListFilter extends React.Component {
               }}
             >
               <MenuItem value="">
-                <em>Aucun</em>
+                <em>{listFilterTranslate('none')}</em>
               </MenuItem>
               <MenuItem value={'action'}>Action</MenuItem>
-              <MenuItem value={'adventure'}>Aventure</MenuItem>
+              <MenuItem value={'adventure'}>{listFilterTranslate('adventure')}</MenuItem>
               <MenuItem value={'animation'}>Animation</MenuItem>
               <MenuItem value={'crime'}>Crime</MenuItem>
-              <MenuItem value={'documentary'}>Documentaire</MenuItem>
-              <MenuItem value={'drama'}>Drame</MenuItem>
-              <MenuItem value={'history'}>Histoire</MenuItem>
-              <MenuItem value={'horror'}>Epouvante</MenuItem>
+              <MenuItem value={'documentary'}>{listFilterTranslate('documentary')}</MenuItem>
+              <MenuItem value={'drama'}>{listFilterTranslate('drama')}</MenuItem>
+              <MenuItem value={'history'}>{listFilterTranslate('history')}</MenuItem>
+              <MenuItem value={'horror'}>{listFilterTranslate('horror')}</MenuItem>
               <MenuItem value={'superhero'}>SuperHero</MenuItem>
               <MenuItem value={'thriller'}>Thriller</MenuItem>
-              <MenuItem value={'war'}>Guerre</MenuItem>
+              <MenuItem value={'war'}>{listFilterTranslate('war')}</MenuItem>
               <MenuItem value={'western'}>Western</MenuItem>
             </Select>
           </FormControl>
         </Box>
         <Box pb={2.5} my={2} mx={2} width={230}>
           <FormControl style={{ minWidth: '100%' }}>
-            <InputLabel htmlFor="demo-controlled-open-select">Trier</InputLabel>
+            <InputLabel htmlFor="demo-controlled-open-select">{listFilterTranslate('sort')}</InputLabel>
             <Select
               open={this.state.openSort}
               onClose={this.handleClose.bind(this, 'openSort')}
@@ -184,11 +188,11 @@ export default class ListFilter extends React.Component {
               }}
             >
               <MenuItem value="">
-                <em>Aucun</em>
+                <em>{listFilterTranslate('none')}</em>
               </MenuItem>
-              <MenuItem value={'year'}>Date de sortie</MenuItem>
-              <MenuItem value={'title'}>Titre</MenuItem>
-              <MenuItem value={'rating'}>Note</MenuItem>
+              <MenuItem value={'year'}>{listFilterTranslate('date')}</MenuItem>
+              <MenuItem value={'title'}>{listFilterTranslate('title')}</MenuItem>
+              <MenuItem value={'rating'}>{listFilterTranslate('rating')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -211,7 +215,7 @@ export default class ListFilter extends React.Component {
         <Hidden mdUp>
           <Box m={4}>
             <Button variant="contained" onClick={this.displaySmallMenu}>
-              Filters & sorts
+              {listFilterTranslate('filter')}
           </Button>
           </Box>
         </Hidden>

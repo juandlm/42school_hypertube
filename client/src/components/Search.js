@@ -1,14 +1,16 @@
 import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
-import axios from 'axios'
-// IS LOGGED ?
+import axios from 'axios';
 
 export default class Search extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { searchValue: '', results: '' }
+    this.state = {
+      searchValue: '',
+      results: ''
+    }
     this.handleChange = this.handleChange.bind(this)
     this.classes = this.props.classes
   }
@@ -70,7 +72,7 @@ export default class Search extends React.Component {
           <SearchIcon />
         </div>
         <InputBase
-          placeholder="Search…"
+          placeholder={sessionStorage.lang === 'fr' ? 'Recherche...' : 'Search...'}
           classes={{
             root: this.classes.inputRoot,
             input: this.classes.inputInput,

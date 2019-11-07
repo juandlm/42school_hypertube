@@ -7,41 +7,11 @@ import { loginUser } from '../actions/authentication';
 import jsonwebtoken from 'jsonwebtoken'
 import classnames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography, Link, TextField, Button } from '@material-ui/core';
+import { Grid, Paper, Typography, Link, TextField, Button, ButtonGroup } from '@material-ui/core';
 import styles from '../css/public';
 import Legals from './Legals';
 
 const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
-
-const GitHubButton = withStyles(theme => ({
-    root: {
-        color: '#FFFFFF',
-        backgroundColor: '#24292e',
-        '&:hover': {
-            backgroundColor: '#000000',
-        },
-    },
-}))(Button);
-
-// const FacebookButton = withStyles(theme => ({
-//     root: {
-//         color: '#FFFFFF',
-//         backgroundColor: '#3b5998',
-//         '&:hover': {
-//             backgroundColor: '#2f477a',
-//         },
-//     },
-// }))(Button);
-
-const GoogleButton = withStyles(theme => ({
-    root: {
-        color: '#FFFFFF',
-        backgroundColor: '#db3236',
-        '&:hover': {
-            backgroundColor: '#b72024',
-        },
-    },
-}))(Button);
 
 class Login extends Component {
 
@@ -114,18 +84,18 @@ class Login extends Component {
                     <div className={classes.paper}>
                         <img
                             src="/logo.png"
-                            alt="Logo Hypertube"
+                            alt="Hypertube logo"
                             height="80px"
                             width="auto"
                             className="mb-5"
                         />
                         <Typography component="h1" variant="h5">
-                            Connexion
+                            Connection
                         </Typography>
                         <form className={classes.form} onSubmit={this.handleSubmit}>
                             <TextField
                                 name="email"
-                                label="Nom d'utilisateur (ou email)"
+                                label="Username (or email)"
                                 value={email}
                                 onChange={this.handleInputChange}
                                 inputProps={{
@@ -144,7 +114,7 @@ class Login extends Component {
                             {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
                             <TextField
                                 name="password"
-                                label="Mot de passe"
+                                label="Password"
                                 type="password"
                                 className={classnames('form-control form-control-lg', {
                                     'is-invalid': errors.password
@@ -165,62 +135,57 @@ class Login extends Component {
                                 className={classes.submit}
                                 fullWidth
                             >
-                                Connexion
+                                Connection
                             </Button>
                             <Grid container>
                                 <Grid item xs>
                                     <Link component={AdapterLink} to="/loginForgotten" color="primary">
-                                        Mot de passe oublié ?
+                                        Forgotten password ?
                                     </Link>
                                 </Grid>
                                 <Grid item>
                                     <Link component={AdapterLink} to="/register" color="primary">
-                                        Pas encore membre ? Inscrivez-vous
+                                        Not yet a member ? Sign up
                                     </Link>
                                 </Grid>
                             </Grid>
                         </form>
-                        <div className="text-center mt-4 w-75">
-                            <h6 className="font-weight-bold">Vous pouvez également vous connecter à travers de</h6>
-                            <div className="d-flex justify-content-between mt-3">
-                                <a href="http://localhost:5000/api/oauth/42" style={{ textDecoration: 'none' }}>
+                        <Grid container spacing={5} className="mt-3">
+                            <Grid item xl={12} >
+                                <Typography variant="h6" className="d-flex justify-content-center mb-4">
+                                    You can also connect via
+                                </Typography>
+
+                                <ButtonGroup fullWidth>
                                     <Button
+                                        href="http://localhost:5000/api/oauth/42"
                                         variant="contained"
                                         color="default"
                                         className={classes.button}
                                     >
                                         <img with="35px" height="28px" src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" alt="42" />
                                     </Button>
-                                </a>
-                                <a href="http://localhost:5000/api/oauth/github" style={{ textDecoration: 'none' }}>
-                                    <GitHubButton
+
+                                    <Button
+                                        href="http://localhost:5000/api/oauth/github"
                                         variant="contained"
                                         color="default"
-                                        className={classes.button}
+                                        className={classes.button + ' ' + classes.gitHubButton}
                                     >
                                         <i className="fab fa-github fa-2x fa-fw"></i>
-                                    </GitHubButton>
-                                </a>
-                                <a href="http://localhost:5000/api/oauth/google" style={{ textDecoration: 'none' }}>
-                                    <GoogleButton
+                                    </Button>
+
+                                    <Button
+                                        href="http://localhost:5000/api/oauth/google"
                                         variant="contained"
                                         color="secondary"
-                                        className={classes.button}
+                                        className={classes.button + ' ' + classes.googleButton}
                                     >
                                         <i className="fab fa-google fa-2x fa-fw"></i>
-                                    </GoogleButton>
-                                </a>
-                                {/* <a href="http://localhost:5000/api/oauth/facebook" style={{ textDecoration: 'none' }}>
-                                    <FacebookButton
-                                        variant="contained"
-                                        color="primary"
-                                        className={classes.button}
-                                    >
-                                        <i className="fab fa-facebook-f fa-2x fa-fw"></i>
-                                    </FacebookButton>
-                                </a> */}
-                            </div>
-                        </div>
+                                    </Button>
+                                </ButtonGroup>
+                            </Grid>
+                        </Grid>
                     </div>
                     <div className={classes.legals}>
                         <Legals />

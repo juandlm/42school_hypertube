@@ -8,6 +8,9 @@ import { Button, Container, Paper, Grid, Typography, TextField, MenuItem, Avatar
 import settingsStyle from '../css/settings';
 import PrimarySearchAppBar from './PrimarySearchAppBar';
 import Loader from './Loader';
+import { settingsTranslate } from '../translate';
+
+const ReactLanguage = require('react-language');
 
 class Settings extends Component {
 
@@ -47,6 +50,14 @@ class Settings extends Component {
             revealPassword: false,
             cancel: false
         });
+        if (this.state.lang === 'fr') {
+            ReactLanguage.setLanguage('fr');
+            sessionStorage.setItem('lang', 'fr');
+        }
+        else if (this.state.lang === 'en') {
+            ReactLanguage.setLanguage('en');
+            sessionStorage.setItem('lang', 'en');
+        }
     }
 
     getUserSettings = () => {
@@ -142,7 +153,7 @@ class Settings extends Component {
                     <Paper className={classes.paper}>
                         <Grid container justify="center" alignItems="center">
                             <Typography variant="h5">
-                                Settings
+                                {settingsTranslate('title')}
                             </Typography>
                         </Grid>
                         <hr />
@@ -172,7 +183,7 @@ class Settings extends Component {
                                 <TextField
                                     id="outlined-select-currency"
                                     select
-                                    label="Langue des sous-titres"
+                                    label={settingsTranslate('lang')}
                                     name="lang"
                                     value={lang}
                                     onChange={this.handleInputChange}
@@ -181,8 +192,12 @@ class Settings extends Component {
                                     fullWidth
                                     required
                                 >
-                                    <MenuItem value={'en'}>Anglais</MenuItem>
-                                    <MenuItem value={'fr'}>Français</MenuItem>
+                                    <MenuItem value={'en'}>
+                                        {settingsTranslate('en')}
+                                    </MenuItem>
+                                    <MenuItem value={'fr'}>
+                                        {settingsTranslate('fr')}
+                                    </MenuItem>
                                 </TextField>
 
                                 {!oAuth &&
@@ -201,7 +216,7 @@ class Settings extends Component {
 
                                         <TextField
                                             name="firstName"
-                                            label="Prénom"
+                                            label={settingsTranslate('firstName')}
                                             value={firstName}
                                             onChange={this.handleInputChange}
                                             inputProps={{ maxLength: 50 }}
@@ -213,7 +228,7 @@ class Settings extends Component {
 
                                         <TextField
                                             name="lastName"
-                                            label="Nom"
+                                            label={settingsTranslate('lastName')}
                                             value={lastName}
                                             onChange={this.handleInputChange}
                                             inputProps={{ maxLength: 50 }}
@@ -226,11 +241,11 @@ class Settings extends Component {
                                         {revealPassword ? (
                                             <div className={classes.revealPassword}>
                                                 <Typography variant="h6">
-                                                    Nouveau mot de passe
+                                                    {settingsTranslate('newPwd')}
                                                 </Typography>
                                                 <TextField
                                                     name="password"
-                                                    label="Mot de passe"
+                                                    label={settingsTranslate('pwd')}
                                                     type="password"
                                                     value={password}
                                                     onChange={this.handleInputChange}
@@ -246,7 +261,7 @@ class Settings extends Component {
 
                                                 <TextField
                                                     name="password_confirm"
-                                                    label="Confirmation mot de passe"
+                                                    label={settingsTranslate('confPwd')}
                                                     type="password"
                                                     value={password_confirm}
                                                     onChange={this.handleInputChange}
@@ -268,7 +283,7 @@ class Settings extends Component {
                                                     onClick={this.revealPassword}
                                                     className={classes.revealPassword && classes.button}
                                                 >
-                                                    Modifier mot de passe
+                                                    {settingsTranslate('modifPwd')}
                                             </Button>
                                             )}
                                     </div>
@@ -283,7 +298,7 @@ class Settings extends Component {
                                         size="large"
                                         fullWidth
                                     >
-                                        Annuler
+                                        {settingsTranslate('cancel')}
                                     </Button>
                                 }
 
@@ -295,7 +310,7 @@ class Settings extends Component {
                                     size="large"
                                     fullWidth
                                 >
-                                    Confirmer
+                                    {settingsTranslate('ok')}
                                 </Button>
                             </Container>
                         </form>
