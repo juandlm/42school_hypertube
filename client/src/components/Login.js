@@ -23,15 +23,15 @@ const GitHubButton = withStyles(theme => ({
     },
 }))(Button);
 
-const FacebookButton = withStyles(theme => ({
-    root: {
-        color: '#FFFFFF',
-        backgroundColor: '#3b5998',
-        '&:hover': {
-            backgroundColor: '#2f477a',
-        },
-    },
-}))(Button);
+// const FacebookButton = withStyles(theme => ({
+//     root: {
+//         color: '#FFFFFF',
+//         backgroundColor: '#3b5998',
+//         '&:hover': {
+//             backgroundColor: '#2f477a',
+//         },
+//     },
+// }))(Button);
 
 const GoogleButton = withStyles(theme => ({
     root: {
@@ -210,7 +210,7 @@ class Login extends Component {
                                         <i className="fab fa-google fa-2x fa-fw"></i>
                                     </GoogleButton>
                                 </a>
-                                <a href="http://localhost:5000/api/oauth/facebook" style={{ textDecoration: 'none' }}>
+                                {/* <a href="http://localhost:5000/api/oauth/facebook" style={{ textDecoration: 'none' }}>
                                     <FacebookButton
                                         variant="contained"
                                         color="primary"
@@ -218,7 +218,7 @@ class Login extends Component {
                                     >
                                         <i className="fab fa-facebook-f fa-2x fa-fw"></i>
                                     </FacebookButton>
-                                </a>
+                                </a> */}
                             </div>
                         </div>
                     </div>

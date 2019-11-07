@@ -146,7 +146,7 @@ class VideoView extends React.Component {
           method: "POST",
           body: JSON.stringify({ imdbCode: imdbCode, id: id, username: username })
         })
-      const data = await result.json()
+      await result.json()
     } catch (e) {
       return false
     }
@@ -241,7 +241,7 @@ class VideoView extends React.Component {
     else
       this.setState({ comments: [{ imdbCode: this.imdb, username: this.props.auth.user.username, value: this.state.comValue }] })
     try {
-      const res = await fetch("/api/film/addComments",
+      await fetch("/api/film/addComments",
         {
           headers: {
             'Accept': 'application/json',
