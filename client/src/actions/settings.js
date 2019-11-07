@@ -23,7 +23,6 @@ export const modifySettings = (userId, settings) => dispatch => {
             dispatch(showAlert("success", "Informations modifiés avec succès !"));
         })
         .catch(err => {
-            console.log(err.response)
             if (err.response.status === 400)
                 dispatch(showAlert("error", "Cet utilisateur ou cette email sont indisponibles"));
             else

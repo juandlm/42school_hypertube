@@ -26,7 +26,6 @@ class User extends Component {
         axios.post('/api/users/getUserInfo', { 'username': username }, { 'Content-Type': 'application/json' })
         .then((res) => {
             if (res.data != null) {
-                console.log(res.data)
                 this.setState({
                     userInfo: res.data,
                     isLoading: true
@@ -36,7 +35,7 @@ class User extends Component {
             }
         })
         .catch((error) => {
-            console.log(error);
+            return false
         });
     }
 

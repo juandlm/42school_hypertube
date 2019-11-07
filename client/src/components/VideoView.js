@@ -130,7 +130,7 @@ class VideoView extends React.Component {
           body: JSON.stringify({ imdbCode: imdbCode, id: id, username: username })
         })
     } catch (e) {
-      // console.log(e)
+      return false
     }
   }
 
@@ -147,10 +147,8 @@ class VideoView extends React.Component {
           body: JSON.stringify({ imdbCode: imdbCode, id: id, username: username })
         })
       const data = await result.json()
-      // si imdbCode == imdbCode && hash == hash => oui
-      console.log(data)
     } catch (e) {
-      // console.log(e)
+      return false
     }
   }
 
@@ -179,13 +177,13 @@ class VideoView extends React.Component {
     }
     firstTrack.addEventListener("load", function () {
       this.mode = "showing";
-      video.textTracks[0].mode = "showing"; // thanks Firefox mdr
+      video.textTracks[0].mode = "showing";
     });
     video.appendChild(firstTrack);
     video.appendChild(secondTrack);
     secondTrack.addEventListener("load", function () {
       this.mode = "showing";
-      video.textTracks[1].mode = "showing"; // thanks Firefox mdr
+      video.textTracks[1].mode = "showing";
     });
   }
 
@@ -254,9 +252,8 @@ class VideoView extends React.Component {
           body: JSON.stringify({ imdbCode: this.state.imdb, name: this.props.auth.user.username, value: this.state.comValue })
         })
       this.setState({ comValue: '' })
-      console.log(res.status)
     } catch (e) {
-      // console.log('error db insert comments :' + e)
+      return false
     }
   }
 
@@ -275,17 +272,14 @@ class VideoView extends React.Component {
       if (result.status === 200) {
         const content = await result.json();
         this.setState({ comments: content })
-      } else {
-        // no comment
       }
     } catch (e) {
-      //console.log('error comments: '+ e)
+        return false
     }
   }
 
   setLang() {
     if (this.state.lang === 'en' || this.state.lang === '') {
-      console.log(this.state.subtitleFr)
       return (
         {
           file: {
@@ -312,14 +306,10 @@ class VideoView extends React.Component {
   }
 
   saveComment = () => {
-    // add comment to commnents array
     if (this.state.comValue !== '') {
       this.addComment()
-      console.log('save commnet to DB ' + this.state.comValue)
     }
-    //console.log('save commnet to DB '+this.state.comValue)
   }
-  // S02E04
   render() {
     // ??
     if (!this.state.isLoaded || !this.state.src) {
@@ -360,7 +350,7 @@ class VideoView extends React.Component {
             url={this.state.src}
             width='100%'
             height='100%'
-            onError={(err) => console.log(err)}
+            onError={(err) => false}
             onProgress={this.loadPlayer}
             onDuration={this.setDuration.bind(this)}
             onReady={() => this.findSubtitle(query.imdbCode, query.title,

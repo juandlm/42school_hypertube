@@ -48,8 +48,8 @@ export default class Search extends React.Component{
           const datares = await dataSearch.json()
           this.props.updateFilms(datares, query, 'serie')
         }
-      }catch(e){
-        //console.log(e)
+      } catch(e){
+        return false
       }
     }else
       this.props.updateFilms(results, query)
@@ -57,7 +57,6 @@ export default class Search extends React.Component{
 
   handleChange(event){
     this.setState({searchValue:event.target.value})
-    console.log('query '+event.target.value)
     this.setQueryResults(event.target.value)
   }
 

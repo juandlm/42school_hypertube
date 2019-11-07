@@ -34,8 +34,6 @@ class Home extends React.Component {
       selectedFilm: ''
     }
     this.isFiltered = false
-
-    console.log(props)
   }
 
   filterData(filter) {
@@ -59,7 +57,6 @@ class Home extends React.Component {
       if (!results)
         results = await this.api.getMovies({ page: page, limit: 40, ...filter })
     } else {
-      // qd on paginate et que pas de results => do nothing !
       if (this.state.query && this.state.query !== '' && !reset)
         results = await this.api.getMovies({ page: page, limit: 40, sort_by: 'title', query_term: this.state.query })
       if (results && !results.data.movies && this.state.page > 1) {
@@ -71,10 +68,8 @@ class Home extends React.Component {
       if (!results)
         results = await this.api.getMovies({ page: page, limit: 40, sort_by: 'download_count' })
     }
-    // console.log(results.data.movies)
     if (!results.data.movies)
       return;
-    // console.log(results.data.movies)
     if (page > 1) {
       this.setState(prevState => ({
         films: [...prevState.films, ...results.data.movies],
@@ -150,12 +145,11 @@ class Home extends React.Component {
           body: JSON.stringify({ imdbCode: '', id: id, username: username })
         })
       const data = await result.json()
-      console.log(data)
       if (data) {
         this.setState({ isSeen: data })
       }
     } catch (e) {
-      // console.log(e);
+
     }
   }
 
@@ -261,7 +255,7 @@ class Home extends React.Component {
                   { cursor: 'pointer', backdropFilter: 'drop-shadow(16px 16px 20px red) invert(75%)' } : { cursor: 'pointer', backdropFilter: '' }}
               onClick={this.handleMouseClick.bind(this, film)}>
 
-              <img src={film.medium_cover_image || film.small_screenshot || film.posterLink} onError={() => console.log('img error')} alt={film.title}
+              <img src={film.medium_cover_image || film.small_screenshot || film.posterLink} onError={() => false} alt={film.title}
                 style={
                   this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ?
                     { filter: 'grayscale(100%)' } : { filter: '' }} />

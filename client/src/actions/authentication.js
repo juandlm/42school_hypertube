@@ -60,7 +60,6 @@ export const loginUser = (user) => dispatch => {
 export const loginForgottenUser = (user) => dispatch => {
     axios.post('/api/users/loginForgotten', user)
             .then(res => {
-                console.log(res);
                 dispatch({
                     type: GET_SEND,
                     payload: true
@@ -77,7 +76,6 @@ export const loginForgottenUser = (user) => dispatch => {
 export const loginNewPasswordUser = (user) => dispatch => {
     axios.post('/api/users/loginNewPassword', user)
             .then(res => {
-                console.log(res);
                 sessionStorage.setItem('alert_success', 'Mot de passe modifié avec succès !');
                 window.location.href = '/login';
             })
@@ -92,7 +90,7 @@ export const loginNewPasswordUser = (user) => dispatch => {
 export const loginCheckNewPasswordUser = (user) => dispatch => {
     axios.post('/api/users/loginCheckNewPassword', user)
             .then(res => {
-                console.log(res);
+                return true
             })
             .catch(err => {
                 sessionStorage.setItem('alert_error', 'Ce lien n\'est pas valide');
