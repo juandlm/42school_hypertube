@@ -101,7 +101,6 @@ class VideoView extends React.Component {
       let diff = this.duration - this.downloadSpeed
       if (diff < 0) {
         let waitingTime = -diff
-        //console.log('Need to wait time before loading video :'+waitingTime)
         setTimeout(() => this.setState({ playing: true, controls: true }, waitingTime))
       } else {
         this.setState({ playing: true, controls: true })
@@ -110,7 +109,6 @@ class VideoView extends React.Component {
   }
 
   componentDidMount() {
-    // console.log(this.props.settings.data)
     this.getFilm()
     this.setState({ lang: this.props.settings.data.lang || '' })
   }
@@ -132,11 +130,10 @@ class VideoView extends React.Component {
           body: JSON.stringify({ imdbCode: imdbCode, id: id, username: username })
         })
     } catch (e) {
-      console.log(e)
+      // console.log(e)
     }
   }
 
-  //
   async getIsSeen(id, username, imdbCode) {
     try {
       const result = await fetch("/api/film/getSeen",
@@ -153,7 +150,7 @@ class VideoView extends React.Component {
       // si imdbCode == imdbCode && hash == hash => oui
       console.log(data)
     } catch (e) {
-      console.log(e)
+      // console.log(e)
     }
   }
 
@@ -169,7 +166,6 @@ class VideoView extends React.Component {
       return (track)
     }
     const video = document.querySelector("video")
-    //console.log(prefLang)
     let firstTrack, secondTrack = ''
     if (prefLang === 'en' || prefLang === '') {
       firstTrack = createTrack(enSub, "English", "en", prefLang)
@@ -247,7 +243,6 @@ class VideoView extends React.Component {
     else
       this.setState({ comments: [{ imdbCode: this.imdb, username: this.props.auth.user.username, value: this.state.comValue }] })
     try {
-      console.log(this.props.auth.user.username)
       const res = await fetch("/api/film/addComments",
         {
           headers: {
@@ -261,7 +256,7 @@ class VideoView extends React.Component {
       this.setState({ comValue: '' })
       console.log(res.status)
     } catch (e) {
-      console.log('error db insert comments :' + e)
+      // console.log('error db insert comments :' + e)
     }
   }
 
@@ -347,7 +342,6 @@ class VideoView extends React.Component {
         </div>
       )
     }
-    // const lang = this.state.lang
     const query = this.state.query
 
     return (

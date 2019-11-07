@@ -1,15 +1,9 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { IconButton, Typography } from '@material-ui/core';
 
-export default function Legals() {
-    const [ open, setOpen ] = React.useState(false);
+const Legals = () => {
+    const [open, setOpen] = React.useState(false);
     const websiteName = 'HYPERTUBE';
 
     const handleClickOpen = () => {
@@ -21,13 +15,13 @@ export default function Legals() {
     }
 
     return (
-        <div>
+        <div className="Legals">
             <Button onClick={handleClickOpen} id="Legals">Mentions legales</Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 maxWidth="lg"
-                fullWidth={true}
+                fullWidth
                 scroll="body"
                 aria-labelledby="scroll-dialog-title"
             >
@@ -63,13 +57,13 @@ export default function Legals() {
                         Thomas SHELBY s’efforce de fournir sur le site <a href="/">{websiteName}</a> des informations aussi précises que possible. Toutefois, il ne pourra être tenue responsable des omissions, des inexactitudes et des carences dans la mise à jour, qu’elles soient de son fait ou du fait des tiers partenaires qui lui fournissent ces informations.<br />
                         Tous les informations indiquées sur le site <a href="/">{websiteName}</a> sont données à titre indicatif, et sont susceptibles d’évoluer. Par ailleurs, les renseignements figurant sur le site <a href="/">{websiteName}</a> ne sont pas exhaustifs. Ils sont donnés sous réserve de modifications ayant été apportées depuis leur mise en ligne.
                     </DialogContentText>
-  
+
                     <DialogTitle>4. Limitations contractuelles sur les données techniques.</DialogTitle>
                     <DialogContentText>
                         Le site utilise la technologie JavaScript.<br />
                         Le site Internet ne pourra être tenu responsable de dommages matériels liés à l’utilisation du site. De plus, l’utilisateur du site s’engage à accéder au site en utilisant un matériel récent, ne contenant pas de virus et avec un navigateur de dernière génération mis-à-jour.
                     </DialogContentText>
-                
+
                     <DialogTitle>5. Propriété intellectuelle et contrefaçons.</DialogTitle>
                     <DialogContentText>
                         Thomas SHELBY est propriétaire des droits de propriété intellectuelle ou détient les droits d’usage sur tous les éléments accessibles sur le site, notamment les textes, images, graphismes, logo, icônes, sons, logiciels.<br />
@@ -81,9 +75,9 @@ export default function Legals() {
                     <DialogContentText>
                         Thomas SHELBY ne pourra être tenue responsable des dommages directs et indirects causés au matériel de l’utilisateur, lors de l’accès au site URL, et résultant soit de l’utilisation d’un matériel ne répondant pas aux spécifications indiquées au point 4, soit de l’apparition d’un bug ou d’une incompatibilité.<br />
                         Thomas SHELBY ne pourra également être tenue responsable des dommages indirects (tels par exemple qu’une perte de marché ou perte d’une chance) consécutifs à l’utilisation du site <a href="/">{websiteName}</a>.<br />
-                        Des espaces interactifs (possibilité de poser des questions dans l’espace contact) sont à la disposition des utilisateurs. Thomas SHELBY se réserve le droit de supprimer, sans mise en demeure préalable, tout contenu déposé dans cet espace qui contreviendrait à la législation applicable en France, en particulier aux dispositions relatives à la protection des données. Le cas échéant, Thomas SHELBY se réserve également la possibilité de mettre en cause la responsabilité civile et/ou pénale de l’utilisateur, notamment en cas de message à caractère raciste, injurieux, diffamant, ou pornographique, quel que soit le support utilisé (texte, photographie…).    
-                    </DialogContentText>                
- 
+                        Des espaces interactifs (possibilité de poser des questions dans l’espace contact) sont à la disposition des utilisateurs. Thomas SHELBY se réserve le droit de supprimer, sans mise en demeure préalable, tout contenu déposé dans cet espace qui contreviendrait à la législation applicable en France, en particulier aux dispositions relatives à la protection des données. Le cas échéant, Thomas SHELBY se réserve également la possibilité de mettre en cause la responsabilité civile et/ou pénale de l’utilisateur, notamment en cas de message à caractère raciste, injurieux, diffamant, ou pornographique, quel que soit le support utilisé (texte, photographie…).
+                    </DialogContentText>
+
                     <DialogTitle>7. Gestion des données personnelles.</DialogTitle>
                     <DialogContentText>
                         En France, les données personnelles sont notamment protégées par la loi n° 78-87 du 6 janvier 1978, la loi n° 2004-801 du 6 août 2004, l'article L. 226-13 du Code pénal et la Directive Européenne du 24 octobre 1995.<br />
@@ -93,7 +87,7 @@ export default function Legals() {
                         Aucune information personnelle de l'utilisateur du site <a href="/">{websiteName}</a> n'est publiée à l'insu de l'utilisateur, échangée, transférée, cédée ou vendue sur un support quelconque à des tiers. Seule l'hypothèse du rachat de Thomas SHELBY et de ses droits permettrait la transmission des dites informations à l'éventuel acquéreur qui serait à son tour tenu de la même obligation de conservation et de modification des données vis à vis de l'utilisateur du site <a href="/">{websiteName}</a>.<br />
                         Le site n'est pas déclaré à la CNIL car il ne recueille pas d'informations personnelles.<br />
                         Les bases de données sont protégées par les dispositions de la loi du 1er juillet 1998 transposant la directive 96/9 du 11 mars 1996 relative à la protection juridique des bases de données.
-                    </DialogContentText>                
+                    </DialogContentText>
 
                     <DialogTitle>8. Liens hypertextes et cookies.</DialogTitle>
                     <DialogContentText>
@@ -105,31 +99,33 @@ export default function Legals() {
                             Paramétrez les Règles de conservation sur :  utiliser les paramètres personnalisés pour l'historique. Enfin décochez-la pour  désactiver les cookies.<br />
                         <strong>Sous Safari</strong> : Cliquez en haut à droite du navigateur sur le pictogramme de menu (symbolisé par un rouage). Sélectionnez Paramètres. Cliquez sur Afficher les paramètres avancés. Dans la section "Confidentialité", cliquez sur Paramètres de contenu. Dans la section "Cookies", vous pouvez bloquer les cookies.<br />
                         <strong>Sous Chrome</strong> : Cliquez en haut à droite du navigateur sur le pictogramme de menu (symbolisé par trois lignes horizontales). Sélectionnez Paramètres. Cliquez sur Afficher les paramètres avancés. Dans la section "Confidentialité", cliquez sur préférences.  Dans l'onglet "Confidentialité", vous pouvez bloquer les cookies.<br />
-                    </DialogContentText>                
-                
+                    </DialogContentText>
+
                     <DialogTitle>9. Droit applicable et attribution de juridiction.</DialogTitle>
                     <DialogContentText>
                         Tout litige en relation avec l’utilisation du site <a href="/">{websiteName}</a> est soumis au droit français. Il est fait attribution exclusive de juridiction aux tribunaux compétents de Paris.
-                    </DialogContentText>                
-                
+                    </DialogContentText>
+
                     <DialogTitle>10. Les principales lois concernées.</DialogTitle>
                     <DialogContentText>
                         Loi n° 78-17 du 6 janvier 1978, notamment modifiée par la loi n° 2004-801 du 6 août 2004 relative à l'informatique, aux fichiers et aux libertés.<br />
                         Loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique.
-                    </DialogContentText>                
-                    
+                    </DialogContentText>
+
                     <DialogTitle>11. Lexique.</DialogTitle>
                     <DialogContentText>
                         <strong>Utilisateur</strong> : Internaute se connectant, utilisant le site susnommé.<br />
                         <strong>Informations personnelles</strong> : « les informations qui permettent, sous quelque forme que ce soit, directement ou non, l'identification des personnes physiques auxquelles elles s'appliquent » (article 4 de la loi n° 78-17 du 6 janvier 1978).
-                    </DialogContentText>                
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Ok
-                        </Button>
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div >
     );
 }
+
+export default Legals;

@@ -139,7 +139,6 @@ class Home extends React.Component {
   // --> fetch tout les films vu par le pelo
   async getIsSeen(id, username) {
     try {
-      //console.log(axios.defaults.headers.common)
       const result = await fetch("/api/film/getSeen",
         {
           headers: {
@@ -154,7 +153,6 @@ class Home extends React.Component {
       console.log(data)
       if (data) {
         this.setState({ isSeen: data })
-        console.log(data)
       }
     } catch (e) {
       // console.log(e);
@@ -245,7 +243,6 @@ class Home extends React.Component {
 
     if (!films) return Loader(isLoading);
 
-    console.log(films)
     return (
       <div>
         <PrimarySearchAppBar

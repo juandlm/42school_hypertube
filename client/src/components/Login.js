@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
 import extractParamsUrl from '../validation/extractParams';
-import { connect } from 'react-redux';
 import { loginUser } from '../actions/authentication';
 import jsonwebtoken from 'jsonwebtoken'
-
 import classnames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Typography, Link, TextField, Button } from '@material-ui/core';
@@ -17,33 +15,33 @@ const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} 
 
 const GitHubButton = withStyles(theme => ({
     root: {
-      color: '#FFFFFF',
-      backgroundColor: '#24292e',
-      '&:hover': {
-        backgroundColor: '#000000',
-      },
+        color: '#FFFFFF',
+        backgroundColor: '#24292e',
+        '&:hover': {
+            backgroundColor: '#000000',
+        },
     },
-  }))(Button);
+}))(Button);
 
 const FacebookButton = withStyles(theme => ({
     root: {
-      color: '#FFFFFF',
-      backgroundColor: '#3b5998',
-      '&:hover': {
-        backgroundColor: '#2f477a',
-      },
+        color: '#FFFFFF',
+        backgroundColor: '#3b5998',
+        '&:hover': {
+            backgroundColor: '#2f477a',
+        },
     },
-  }))(Button);
+}))(Button);
 
 const GoogleButton = withStyles(theme => ({
     root: {
-      color: '#FFFFFF',
-      backgroundColor: '#db3236',
-      '&:hover': {
-        backgroundColor: '#b72024',
-      },
+        color: '#FFFFFF',
+        backgroundColor: '#db3236',
+        '&:hover': {
+            backgroundColor: '#b72024',
+        },
     },
-  }))(Button);
+}))(Button);
 
 class Login extends Component {
 
@@ -67,11 +65,11 @@ class Login extends Component {
 
     componentDidMount() {
         const getParams = extractParamsUrl(this.props.location.search)
-        
+
         if (getParams.oauth) {
-            var decoded = new Buffer.from(decodeURIComponent(getParams.oauth), 'base64').toString('utf8'),
+            let decoded = new Buffer.from(decodeURIComponent(getParams.oauth), 'base64').toString('utf8'),
                 verified
-            jsonwebtoken.verify(decoded.replace('Bearer ', ''), 'LeStageApproche2019', function(err, token) {
+            jsonwebtoken.verify(decoded.replace('Bearer ', ''), 'LeStageApproche2019', function (err, token) {
                 if (!err)
                     verified = token
             })
@@ -102,10 +100,6 @@ class Login extends Component {
 
     handleFortyTwo = (e) => {
         e.preventDefault();
-        // const user = {
-        //     email: this.state.email,
-        //     password: this.state.password,
-        // }
         this.props.fortyTwo();
     }
 
@@ -128,7 +122,7 @@ class Login extends Component {
                         <Typography component="h1" variant="h5">
                             Connexion
                         </Typography>
-                        <form className={classes.form} onSubmit={ this.handleSubmit }>
+                        <form className={classes.form} onSubmit={this.handleSubmit}>
                             <TextField
                                 name="email"
                                 label="Nom d'utilisateur (ou email)"
@@ -163,7 +157,7 @@ class Login extends Component {
                                 required
                                 fullWidth
                             />
-                            {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}     
+                            {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
                             <Button
                                 type="submit"
                                 variant="contained"
@@ -187,44 +181,44 @@ class Login extends Component {
                             </Grid>
                         </form>
                         <div className="text-center mt-4 w-75">
-                        <h6 className="font-weight-bold">Vous pouvez également vous connecter à travers de</h6>
-                        <div className="d-flex justify-content-between mt-3">
-                            <a href="http://localhost:5000/api/oauth/42" style={{ textDecoration: 'none' }}>
-                                <Button
-                                variant="contained"
-                                color="default"
-                                className={classes.button}
-                                >
-                                <img with="35px" height="28px" src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" alt="42" />
-                                </Button>
-                            </a>
-                            <a href="http://localhost:5000/api/oauth/github" style={{ textDecoration: 'none' }}>
-                                <GitHubButton
-                                variant="contained"
-                                color="default"
-                                className={classes.button}
-                                >
-                                <i className="fab fa-github fa-2x fa-fw"></i>
-                                </GitHubButton>
-                            </a>
-                            <a href="http://localhost:5000/api/oauth/google" style={{ textDecoration: 'none' }}>
-                                <GoogleButton
-                                variant="contained"
-                                color="secondary"
-                                className={classes.button}
-                                >
-                                <i className="fab fa-google fa-2x fa-fw"></i>
-                                </GoogleButton>
-                            </a>      
-                            <a href="http://localhost:5000/api/oauth/facebook" style={{ textDecoration: 'none' }}>
-                                <FacebookButton
-                                variant="contained"
-                                color="primary"
-                                className={classes.button}
-                                >
-                                <i className="fab fa-facebook-f fa-2x fa-fw"></i>
-                                </FacebookButton>
-                            </a>
+                            <h6 className="font-weight-bold">Vous pouvez également vous connecter à travers de</h6>
+                            <div className="d-flex justify-content-between mt-3">
+                                <a href="http://localhost:5000/api/oauth/42" style={{ textDecoration: 'none' }}>
+                                    <Button
+                                        variant="contained"
+                                        color="default"
+                                        className={classes.button}
+                                    >
+                                        <img with="35px" height="28px" src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" alt="42" />
+                                    </Button>
+                                </a>
+                                <a href="http://localhost:5000/api/oauth/github" style={{ textDecoration: 'none' }}>
+                                    <GitHubButton
+                                        variant="contained"
+                                        color="default"
+                                        className={classes.button}
+                                    >
+                                        <i className="fab fa-github fa-2x fa-fw"></i>
+                                    </GitHubButton>
+                                </a>
+                                <a href="http://localhost:5000/api/oauth/google" style={{ textDecoration: 'none' }}>
+                                    <GoogleButton
+                                        variant="contained"
+                                        color="secondary"
+                                        className={classes.button}
+                                    >
+                                        <i className="fab fa-google fa-2x fa-fw"></i>
+                                    </GoogleButton>
+                                </a>
+                                <a href="http://localhost:5000/api/oauth/facebook" style={{ textDecoration: 'none' }}>
+                                    <FacebookButton
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.button}
+                                    >
+                                        <i className="fab fa-facebook-f fa-2x fa-fw"></i>
+                                    </FacebookButton>
+                                </a>
                             </div>
                         </div>
                     </div>

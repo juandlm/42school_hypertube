@@ -4,6 +4,11 @@ const navBarStyle = makeStyles(theme => ({
   navlogo: {
     width: '150px',
   },
+  miniNavlogo: {
+    marginTop: '4px',
+    marginLeft: '-15px',
+    width: '30px',
+  },
   list: {
     width: '300',
   },
@@ -22,6 +27,13 @@ const navBarStyle = makeStyles(theme => ({
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
+    },
+  },
+  smTitle: {
+    borderRadius: theme.shape.borderRadius,
+    display: 'block',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
     },
   },
   search: {
@@ -77,6 +89,9 @@ const navBarStyle = makeStyles(theme => ({
   },
   tooltip: {
     marginRight: theme.spacing(0.4),
+  },
+  listItemIcon: {
+    paddingLeft: '10px'
   }
 }));
 

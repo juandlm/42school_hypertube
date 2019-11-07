@@ -2,16 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom'
-import { AppBar, Toolbar, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core/';
+import { AppBar, Toolbar, IconButton, Menu, MenuItem, Tooltip, ListItemIcon, ListItemText } from '@material-ui/core/';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SettingsIcon from '@material-ui/icons/Settings';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import Search from './Search';
 import navBar from '../css/navBar';
 import { logoutUser } from '../actions/authentication';
-import Brightness2Icon from '@material-ui/icons/Brightness2';
-
 import { changeTheme } from '../actions/themeAction';
 
 const useStyles = navBar;
@@ -56,37 +55,32 @@ const PrimarySearchAppBar = (props) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={switchTheme}>
+        <ListItemIcon className={classes.listItemIcon}>
+          <Brightness4Icon fontSize="default" />
+        </ListItemIcon>
+        <ListItemText primary="Switch theme" />
+      </MenuItem>
+
       <MenuItem component={Link} to={`/user/${username}`}>
-        <IconButton
-          aria-label="account of current user"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        Profile
+        <ListItemIcon className={classes.listItemIcon}>
+          <AccountCircle fontSize="default" />
+        </ListItemIcon>
+        <ListItemText primary="Profile" />
       </MenuItem>
 
       <MenuItem component={Link} to='/settings'>
-        <IconButton
-          aria-label="settings"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <SettingsIcon />
-        </IconButton>
-        Settings
+        <ListItemIcon className={classes.listItemIcon}>
+          <SettingsIcon fontSize="default" />
+        </ListItemIcon>
+        <ListItemText primary="Settings" />
       </MenuItem>
 
       <MenuItem onClick={logOut}>
-        <IconButton
-          aria-label="logout"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <PowerSettingsNewIcon />
-        </IconButton>
-        Logout
+        <ListItemIcon className={classes.listItemIcon}>
+          <PowerSettingsNewIcon fontSize="default" />
+        </ListItemIcon>
+        <ListItemText primary="Logout" />
       </MenuItem>
     </Menu>
   );
@@ -98,6 +92,9 @@ const PrimarySearchAppBar = (props) => {
 
           <MenuItem component={Link} to='/' className={classes.title} onClick={refreshHome}>
             <img src="/logonav.png" alt="logo" className={classes.navlogo} />
+          </MenuItem>
+          <MenuItem component={Link} to='/' className={classes.smTitle} onClick={refreshHome}>
+            <img src="/logosmnav.png" alt="mini logo" className={classes.miniNavlogo} />
           </MenuItem>
 
           <Search
@@ -113,14 +110,14 @@ const PrimarySearchAppBar = (props) => {
             <div>
               <div className={classes.sectionDesktop}>
 
-              <Tooltip title="Toggle light/dark theme">
+                <Tooltip title="Toggle light/dark theme">
                   <IconButton
                     edge="end"
                     aria-label="switch theme"
                     className={classes.iconButton}
                     onClick={switchTheme}
                   >
-                    <Brightness2Icon />
+                    <Brightness4Icon />
                   </IconButton>
                 </Tooltip>
 

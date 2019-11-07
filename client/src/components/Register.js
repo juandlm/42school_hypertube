@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { registerUser } from '../actions/authentication';
 import classnames from 'classnames';
-
 import { withStyles } from '@material-ui/core/styles';
 import { Button, TextField, FormControlLabel, Checkbox, Link, Grid, Paper, Typography } from '@material-ui/core';
 import styles from '../css/public';

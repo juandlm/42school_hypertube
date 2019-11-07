@@ -19,12 +19,11 @@ import VideoView from './components/VideoView';
 import User from './components/User';
 import Alert from './components/Alert';
 import AlertRedux from './components/AlertRedux';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
 import { CssBaseline } from '@material-ui/core';
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { indigo } from '@material-ui/core/colors';
-import { changeTheme } from './actions/themeAction';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 
 const lightTheme = createMuiTheme({
@@ -45,11 +44,11 @@ const darkTheme = createMuiTheme({
 	}
 });
 
-
 const privateRoute = process.env.REACT_APP_IS_PRIVATE_ROUTE;
 const publicRoute = process.env.REACT_APP_IS_PUBLIC_ROUTE;
 
 class App extends React.Component {
+
 	constructor(props) {
 		super(props);
 
@@ -65,16 +64,7 @@ class App extends React.Component {
 				window.location.href = '/login';
 			}
 		}
-		// console.log(localStorage.theme)
-		// if (localStorage.getItem('theme') === 'false')
-		// 	this.props.changeTheme(false)
 	}
-
-	// componentWillUnmount() {
-	// 	if (localStorage.getItem('theme') === 'false')
-	// 		this.props.changeTheme(false)
-	// }
-
 
 	handleAlert = () => {
 		let data;
@@ -97,7 +87,7 @@ class App extends React.Component {
 		}
 	}
 
-	test = () => {
+	switchTheme = () => {
 		if (localStorage.getItem('theme') === 'false')
 			return (darkTheme);
 		if (this.props.theme.theme)
@@ -106,12 +96,8 @@ class App extends React.Component {
 	}
 
 	render() {
-		
-
-
-
 		return (
-			<MuiThemeProvider theme={this.test()}>
+			<MuiThemeProvider theme={this.switchTheme()}>
 				<CssBaseline />
 				<Router>
 					<Switch>
@@ -164,12 +150,11 @@ class App extends React.Component {
 App.propTypes = {
 	setCurrentUser: PropTypes.func.isRequired,
 	getUserSettings: PropTypes.func.isRequired,
-	logoutUser: PropTypes.func.isRequired,
-	changeTheme: PropTypes.func.isRequired
+	logoutUser: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
 	theme: state.theme
 });
 
-export default connect(mapStateToProps, { setCurrentUser, getUserSettings, logoutUser, changeTheme })(App);
+export default connect(mapStateToProps, { setCurrentUser, getUserSettings, logoutUser })(App);

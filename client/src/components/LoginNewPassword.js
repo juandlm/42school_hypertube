@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loginCheckNewPasswordUser, loginNewPasswordUser } from '../actions/authentication';
-
 import classnames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Typography, Link, TextField, Button } from '@material-ui/core';
