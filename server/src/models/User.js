@@ -14,9 +14,9 @@ const userSchema = mongoose.Schema({
             }
         }
     },
-    username : {
-        type : String, 
-        required: true, 
+    username: {
+        type: String,
+        required: true,
         unique: true,
         min: 3,
         max: 50
@@ -26,41 +26,41 @@ const userSchema = mongoose.Schema({
         required: true,
         minLength: 7,
         maxLength: 30
-	},
-    firstName : {
-        type : String, 
-        required: true, 
+    },
+    firstName: {
+        type: String,
+        required: true,
         min: 3,
         max: 50
     },
-    lastName : {
-        type : String, 
+    lastName: {
+        type: String,
         required: true,
-        min: 3, 
+        min: 3,
         max: 50
     },
-	lang:{
-        type : String, 
+    lang: {
+        type: String,
         default: 'en',
         min: 3,
         max: 10
     },
-    fortyTwoId:{
-        type: Number, 
-        min: 1, 
+    fortyTwoId: {
+        type: Number,
+        min: 1,
         max: 100000000
     },
-	githubId:{
-        type: Number, 
-        min: 1, 
+    githubId: {
+        type: Number,
+        min: 1,
         max: 100000000
     },
-    googleId:{
-        type: String, 
+    googleId: {
+        type: String,
         min: 1
     },
-    facebookId:{
-        type: String, 
+    facebookId: {
+        type: String,
         min: 1
     },
     oAuth: {
@@ -68,7 +68,7 @@ const userSchema = mongoose.Schema({
         default: false
     },
     avatar: {
-        type : String,
+        type: String,
         default: () => {
             return (Math.floor(Math.random() * 9) + 1).toString()
         },
@@ -76,8 +76,8 @@ const userSchema = mongoose.Schema({
         max: 256
     },
     confirmed: {
-        type: Boolean, 
-        required: true, 
+        type: Boolean,
+        required: true,
         default: false
     },
     register_token: {
@@ -99,10 +99,14 @@ const userSchema = mongoose.Schema({
 userSchema.methods.generateAuthToken = async function() {
     const user = this
     const token = jwt.sign({
-		_id: user._id,
-		username: user.username
-	}, process.env.JWT_KEY, {expiresIn: 3600})
-    user.tokens = user.tokens.concat({token})
+        _id: user._id,
+        username: user.username
+    }, process.env.JWT_KEY, {
+        expiresIn: 3600
+    })
+    user.tokens = user.tokens.concat({
+        token
+    })
     await user.save()
     return token
 }

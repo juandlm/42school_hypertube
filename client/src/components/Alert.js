@@ -43,8 +43,7 @@ const Alert = (props) => {
   const [open, setOpen] = React.useState(false);
   const { message, variant } = props;
 
-  useEffect(() => 
-  {
+  useEffect(() => {
     setOpen(true);
   }, [props.status]);
 
@@ -68,7 +67,7 @@ const Alert = (props) => {
           'aria-describedby': 'message-id',
         }}
       >
-      <MySnackbarContentWrapper
+        <MySnackbarContentWrapper
           onClose={handleClose}
           variant={variant}
           message={message}

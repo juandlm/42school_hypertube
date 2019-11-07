@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
 /*
-**  ---------   Configuration Nodemailer   -----------
-*/
+ **  ---------   Configuration Nodemailer   -----------
+ */
 
 const mailAccountUser = process.env.MAIL_USER;
 const mailAccountPassword = process.env.MAIL_PASS;
@@ -20,8 +20,8 @@ const smtpTransport = nodemailer.createTransport({
 });
 
 /*
-**  ---------   Envoi du mail   -----------
-*/
+ **  ---------   Envoi du mail   -----------
+ */
 
 const sendMail = (mail, res) => {
     smtpTransport.sendMail(mail, (err) => {
@@ -52,8 +52,8 @@ const sendMailSimple = (mail) => {
 }
 
 /*
-**  ---------   Mails   -----------
-*/
+ **  ---------   Mails   -----------
+ */
 
 const mailSignup = (dest, username, token, res) => {
     const link = `${mailLink}registerValidation?username=${username}&key=${token}`;

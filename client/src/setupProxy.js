@@ -7,23 +7,23 @@ let authHeader = ''
 const opt = {
     target: 'http://localhost:5000',
     changeOrigin: true,
-    onProxyReq: function(proxyReq, req, res) {
-      if (req.headers && req.headers.authorization)
-          authHeader = req.headers.authorization
-      const dst = req.query
-      if (dst && dst.hash && dst.title && dst.imdbCode && authHeader){
-        proxyReq.setHeader('Authorization', authHeader);
-      }
+    onProxyReq: function (proxyReq, req, res) {
+        if (req.headers && req.headers.authorization)
+            authHeader = req.headers.authorization
+        const dst = req.query
+        if (dst && dst.hash && dst.title && dst.imdbCode && authHeader) {
+            proxyReq.setHeader('Authorization', authHeader);
+        }
     }
 }
 
-module.exports = function(app) {
-  app.use(
-    '/api',
-     proxy(opt)
-  );
-  app.use(
-    '/getSub',
-     proxy(opt)
-  );
+module.exports = function (app) {
+    app.use(
+        '/api',
+        proxy(opt)
+    );
+    app.use(
+        '/getSub',
+        proxy(opt)
+    );
 };

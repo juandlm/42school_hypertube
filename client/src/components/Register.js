@@ -14,33 +14,33 @@ const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} 
 
 const GitHubButton = withStyles(theme => ({
     root: {
-      color: '#FFFFFF',
-      backgroundColor: '#24292e',
-      '&:hover': {
-        backgroundColor: '#000000',
-      },
+        color: '#FFFFFF',
+        backgroundColor: '#24292e',
+        '&:hover': {
+            backgroundColor: '#000000',
+        },
     },
-  }))(Button);
+}))(Button);
 
 const FacebookButton = withStyles(theme => ({
     root: {
-      color: '#FFFFFF',
-      backgroundColor: '#3b5998',
-      '&:hover': {
-        backgroundColor: '#2f477a',
-      },
+        color: '#FFFFFF',
+        backgroundColor: '#3b5998',
+        '&:hover': {
+            backgroundColor: '#2f477a',
+        },
     },
-  }))(Button);
+}))(Button);
 
 const GoogleButton = withStyles(theme => ({
     root: {
-      color: '#FFFFFF',
-      backgroundColor: '#db3236',
-      '&:hover': {
-        backgroundColor: '#b72024',
-      },
+        color: '#FFFFFF',
+        backgroundColor: '#db3236',
+        '&:hover': {
+            backgroundColor: '#b72024',
+        },
     },
-  }))(Button);
+}))(Button);
 
 class Register extends Component {
 
@@ -118,7 +118,7 @@ class Register extends Component {
                             Register
                         </Typography>
 
-                        <form className={classes.form} onSubmit={ this.handleSubmit }>
+                        <form className={classes.form} onSubmit={this.handleSubmit}>
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
@@ -266,46 +266,46 @@ class Register extends Component {
                             </Grid>
                         </form>
                         <div className="text-center mt-4 w-75">
-                        <h6 className="font-weight-bold">Vous pouvez également vous enregistrer à travers de</h6>
-                        <div className="d-flex justify-content-between mt-3">
-                            <a href="http://localhost:5000/api/oauth/42" style={{ textDecoration: 'none' }}>
-                                <Button
-                                variant="contained"
-                                color="default"
-                                className={classes.button}
-                                >
-                                <img with="35px" height="28px" src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" alt="42" />
-                                </Button>
-                            </a>
-                            <a href="http://localhost:5000/api/oauth/github" style={{ textDecoration: 'none' }}>
-                                <GitHubButton
-                                variant="contained"
-                                color="default"
-                                className={classes.button}
-                                >
-                                <i className="fab fa-github fa-2x fa-fw"></i>
-                                </GitHubButton>
-                            </a>
-                            <a href="http://localhost:5000/api/oauth/google" style={{ textDecoration: 'none' }}>
-                                <GoogleButton
-                                variant="contained"
-                                color="secondary"
-                                className={classes.button}
-                                >
-                                <i className="fab fa-google fa-2x fa-fw"></i>
-                                </GoogleButton>
-                            </a>      
-                            <a href="http://localhost:5000/api/oauth/facebook" style={{ textDecoration: 'none' }}>
-                                <FacebookButton
-                                variant="contained"
-                                color="primary"
-                                className={classes.button}
-                                >
-                                <i className="fab fa-facebook-f fa-2x fa-fw"></i>
-                                </FacebookButton>
-                            </a>
+                            <h6 className="font-weight-bold">Vous pouvez également vous enregistrer à travers de</h6>
+                            <div className="d-flex justify-content-between mt-3">
+                                <a href="http://localhost:5000/api/oauth/42" style={{ textDecoration: 'none' }}>
+                                    <Button
+                                        variant="contained"
+                                        color="default"
+                                        className={classes.button}
+                                    >
+                                        <img with="35px" height="28px" src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" alt="42" />
+                                    </Button>
+                                </a>
+                                <a href="http://localhost:5000/api/oauth/github" style={{ textDecoration: 'none' }}>
+                                    <GitHubButton
+                                        variant="contained"
+                                        color="default"
+                                        className={classes.button}
+                                    >
+                                        <i className="fab fa-github fa-2x fa-fw"></i>
+                                    </GitHubButton>
+                                </a>
+                                <a href="http://localhost:5000/api/oauth/google" style={{ textDecoration: 'none' }}>
+                                    <GoogleButton
+                                        variant="contained"
+                                        color="secondary"
+                                        className={classes.button}
+                                    >
+                                        <i className="fab fa-google fa-2x fa-fw"></i>
+                                    </GoogleButton>
+                                </a>
+                                <a href="http://localhost:5000/api/oauth/facebook" style={{ textDecoration: 'none' }}>
+                                    <FacebookButton
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.button}
+                                    >
+                                        <i className="fab fa-facebook-f fa-2x fa-fw"></i>
+                                    </FacebookButton>
+                                </a>
                             </div>
-                        </div>                       
+                        </div>
                     </div>
                     <div className={classes.legals}>
                         <Legals />
@@ -326,4 +326,4 @@ const mapStateToProps = state => ({
     errors: state.errors
 });
 
-export default connect(mapStateToProps,{ registerUser })(withStyles(styles)(withRouter(Register)))
+export default connect(mapStateToProps, { registerUser })(withStyles(styles)(withRouter(Register)))

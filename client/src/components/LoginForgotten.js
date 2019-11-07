@@ -126,8 +126,8 @@ class LoginForgotten extends Component {
                             Mot de passe oublié ?
                         </Typography>
 
-                        <form className={classes.form} onSubmit={ this.handleSubmit }>
-               
+                        <form className={classes.form} onSubmit={this.handleSubmit}>
+
                             {content}
 
                             <Grid container>

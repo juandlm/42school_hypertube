@@ -29,7 +29,7 @@ class LoginNewPassword extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-        if(nextProps.errors) {
+        if (nextProps.errors) {
             this.setState({
                 errors: nextProps.errors,
                 password: '',
@@ -87,7 +87,7 @@ class LoginNewPassword extends Component {
                         <Typography component="h2" variant="subtitle1" className={classes.subtitle}>
                             Vous pouvez maintenant réinitialiser votre mot de passe.
                         </Typography>
-                        <form className={classes.form} onSubmit={ this.handleSubmit }>
+                        <form className={classes.form} onSubmit={this.handleSubmit}>
                             <TextField
                                 name="password"
                                 label="Mot de passe"

@@ -24,19 +24,19 @@ class User extends Component {
 
     getUserInfo = (username) => {
         axios.post('/api/users/getUserInfo', { 'username': username }, { 'Content-Type': 'application/json' })
-        .then((res) => {
-            if (res.data != null) {
-                this.setState({
-                    userInfo: res.data,
-                    isLoading: true
-                })
-            } else {
-                this.props.history.push('/');
-            }
-        })
-        .catch((error) => {
-            return false
-        });
+            .then((res) => {
+                if (res.data != null) {
+                    this.setState({
+                        userInfo: res.data,
+                        isLoading: true
+                    })
+                } else {
+                    this.props.history.push('/');
+                }
+            })
+            .catch((error) => {
+                return false
+            });
     }
 
     // getFilms
@@ -48,7 +48,7 @@ class User extends Component {
         const { classes } = this.props;
         const { userInfo, isLoading } = this.state;
 
-        if (!isLoading) 
+        if (!isLoading)
             return Loader(isLoading);
 
         return (
@@ -58,7 +58,7 @@ class User extends Component {
                     <Container maxWidth="lg">
                         <Paper className={classes.paper}>
                             <Grid container justify="center" alignItems="center">
-                                <Avatar 
+                                <Avatar
                                     alt="avatar"
                                     src={`/avatar_pictures/${userInfo.avatar}.png`}
                                     className={classes.bigAvatar} />

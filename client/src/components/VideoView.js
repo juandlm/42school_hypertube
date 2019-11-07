@@ -274,7 +274,7 @@ class VideoView extends React.Component {
         this.setState({ comments: content })
       }
     } catch (e) {
-        return false
+      return false
     }
   }
 

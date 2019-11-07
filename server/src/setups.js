@@ -16,14 +16,20 @@ const filmRouter = require('./routers/film');
 const filmController = require('./controllers/film');
 
 mongoose.connection.then(
-    () => {console.log('Connected to the DB') },
-    err => { console.log('Cannot connect to the DB', err)}
+    () => {
+        console.log('Connected to the DB')
+    },
+    err => {
+        console.log('Cannot connect to the DB', err)
+    }
 );
 
 
 app.use(express.static(path.join(__dirname, 'src')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(require('morgan')('combined'));
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -33,35 +39,43 @@ filmController.cronFilms();
 
 app.use('/api/oauth', authRouter)
 app.use('/api/users', userRouter)
-app.use('/api/film', passport.authenticate('jwt', { session: false }), filmRouter)
+app.use('/api/film', passport.authenticate('jwt', {
+    session: false
+}), filmRouter)
 
 app.get("/getSub/:lang/:dir/:file", (req, res) => {
-  const lang = req.params.lang
-  const dir = req.params.dir
-  const file = req.params.file
-  const dst = path.resolve(__dirname, '..', 'public/subtitle/'+lang+'/'+dir+'/'+file)
-  res.setHeader('Content-type', 'text/vtt');
-  res.sendFile(dst);
+    const lang = req.params.lang
+    const dir = req.params.dir
+    const file = req.params.file
+    const dst = path.resolve(__dirname, '..', 'public/subtitle/' + lang + '/' + dir + '/' + file)
+    res.setHeader('Content-type', 'text/vtt');
+    res.sendFile(dst);
 });
 
 app.get('/', (req, res) => {
-	res.json({"Hypertube" : "Stream movies VERY legally"});
-  });
+    res.json({
+        "Hypertube": "Stream movies VERY legally"
+    });
+});
 
 // handle 404 error
 app.use((req, res, next) => {
-let err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    let err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 // handle errors
 app.use((err, req, res, next) => {
-  console.log(err);
+    console.log(err);
 
-  if (err.status === 404)
-    res.status(404).json({message: "Not found"});
-  else
-    res.status(500).json({message: "Something looks wrong"});
+    if (err.status === 404)
+        res.status(404).json({
+            message: "Not found"
+        });
+    else
+        res.status(500).json({
+            message: "Something looks wrong"
+        });
 });
 
 const PORT = process.env.PORT || 5000;

@@ -13,18 +13,8 @@ export const changeTheme = (theme) => {
         type: CHANGE_THEME,
         payload: newTheme
     }
-    // dispatch(action);
     return dispatch => {
         dispatch(action);
     };
 
 };
-
-
-// export const switchThemeTo = (theme) => dispatch => {
-
-//     if (theme === true)
-//         dispatch(changeTheme(false))
-//     else
-//         dispatch(changeTheme(true))
-// }

@@ -7,14 +7,13 @@ module.exports = validateLoginInput = (data) => {
     data.email = !isEmpty(data.email) ? data.email : '';
     data.password = !isEmpty(data.password) ? data.password : '';
 
-    // if (!Validator.isEmail(data.email)) {
-    //     errors.email = 'Email is invalid';
-    // }
-
     if (Validator.isEmpty(data.email))
         errors.email = 'Email or username is required';
 
-    if (!Validator.isLength(data.password, { min: 7, max: 30 }))
+    if (!Validator.isLength(data.password, {
+            min: 7,
+            max: 30
+        }))
         errors.password = 'Password must have 7 chars';
 
     if (Validator.isEmpty(data.password))

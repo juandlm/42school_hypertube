@@ -8,13 +8,19 @@ module.exports = validateRegisterInput = (data) => {
     data.password = !isEmpty(data.password) ? data.password : '';
     data.password_confirm = !isEmpty(data.password_confirm) ? data.password_confirm : '';
 
-    if (!Validator.isLength(data.password, { min: 7, max: 30 }))
+    if (!Validator.isLength(data.password, {
+            min: 7,
+            max: 30
+        }))
         errors.password = 'Password must have be at least 7 characters long';
 
     if (Validator.isEmpty(data.password))
         errors.password = 'Password is required';
 
-    if (!Validator.isLength(data.password_confirm, { min: 7, max: 30 }))
+    if (!Validator.isLength(data.password_confirm, {
+            min: 7,
+            max: 30
+        }))
         errors.password = 'Password must have be at least 7 characters long';
 
     if (!Validator.equals(data.password, data.password_confirm))

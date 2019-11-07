@@ -9,7 +9,7 @@ import themeReducer from './themeReducer';
 export default combineReducers({
     errors: errorReducer,
     auth: authReducer,
-    settings:settingsReducer,
+    settings: settingsReducer,
     send: sendReducer,
     ui: uiReducer,
     theme: themeReducer

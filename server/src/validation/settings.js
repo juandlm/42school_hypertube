@@ -3,7 +3,9 @@ const isEmpty = require('./is-empty');
 
 module.exports = validateSettingsInput = (data) => {
     let errors = {};
-    const { settings } = data;
+    const {
+        settings
+    } = data;
 
     settings.oAuth = !isEmpty(settings.oAuth) ? settings.oAuth : '';
     settings.avatar = !isEmpty(settings.avatar) ? settings.avatar : '';
@@ -32,7 +34,10 @@ module.exports = validateSettingsInput = (data) => {
         settings.password_confirm = !isEmpty(settings.password_confirm) ? settings.password_confirm : '';
 
         if (settings.password.length > 0) {
-            if (settings.password && !Validator.isLength(settings.password, { min: 7, max: 30 }))
+            if (settings.password && !Validator.isLength(settings.password, {
+                    min: 7,
+                    max: 30
+                }))
                 errors.password = 'Password must have 7 chars';
             if (settings.password && settings.password_confirm && !Validator.equals(settings.password, settings.password_confirm))
                 errors.password = 'Password and Confirm Password must match';
@@ -44,13 +49,19 @@ module.exports = validateSettingsInput = (data) => {
         if (Validator.isEmpty(settings.email))
             errors.email = 'Email is required';
 
-        if (!Validator.isLength(settings.firstName, { min: 3, max: 50 }))
+        if (!Validator.isLength(settings.firstName, {
+                min: 3,
+                max: 50
+            }))
             errors.firstName = 'First name must be between 3 and 50 characters';
 
         if (Validator.isEmpty(settings.firstName))
             errors.firstName = 'First name field cannot be empty';
 
-        if (!Validator.isLength(settings.lastName, { min: 3, max: 50 }))
+        if (!Validator.isLength(settings.lastName, {
+                min: 3,
+                max: 50
+            }))
             errors.lastName = 'Last name must be between 3 and 50 characters';
 
         if (Validator.isEmpty(settings.lastName))
