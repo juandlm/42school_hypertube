@@ -123,7 +123,7 @@ export default class ListFilter extends React.Component {
   renderDesktopMenu = () => {
     return (
       <React.Fragment>
-        <Box my={7} mx={6} width={300}>
+        <Box my={3} mx={6} width={300}>
           <Typography gutterBottom>
             Note IMDB
           </Typography>
