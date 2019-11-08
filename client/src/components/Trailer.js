@@ -9,6 +9,30 @@ import { trailerTranslate } from '../translate';
 const ReactLanguage = require('react-language');
 ReactLanguage.setLanguage('xxx');
 
+function renderGenre(props)
+{
+  if (!props || !props.films || !props.films.genres)
+    return (
+      <div>
+
+      </div>
+    );
+  else{
+    return (
+      props.film && props.film.genres.map((value, index) => (
+        <Chip
+          label={value}
+          color="primary"
+          key={index}
+          style={{ marginLeft: '1.3em', marginBottom: '0.8em' }}
+        />
+      ))
+    )
+  }
+}
+
+
+
 export default function Trailer(props) {
   const url = props.film.yt_trailer_code ? `https://www.youtube.com/embed/${props.film.yt_trailer_code}?modestbranding=1&autoplay=1&playsinline=0&controls=2&origin=http://localhost:3000` : '';
 
@@ -27,16 +51,7 @@ export default function Trailer(props) {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        {
-          props.film && props.film.genres.map((value, index) => (
-            <Chip
-              label={value}
-              color="primary"
-              key={index}
-              style={{ marginLeft: '1.3em', marginBottom: '0.8em' }}
-            />
-          ))
-        }
+        {renderGenre(props)}
         <DialogContent dividers style={{ width: '100%', height: '100%' }}>
           <div className="embedresize">
             <div>
@@ -64,7 +79,7 @@ export default function Trailer(props) {
             />
           </DialogTitle>
           <DialogContentText>
-            <Rating value={props.film.rating || ''} max={10} precision={0.1} size="large" readOnly />
+            <Rating value={props.film.rating || 0} max={10} precision={0.1} size="large" readOnly />
           </DialogContentText>
           <DialogContentText style={{ textAlign: 'center' }}>
             <Fab
