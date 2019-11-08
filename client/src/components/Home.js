@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import InfoIcon from '@material-ui/icons/Info';
 import { IconButton, GridList, GridListTile, GridListTileBar } from '@material-ui/core/';
 import { getUserSettings } from '../actions/settings';
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 import GetApiData from '../models/getApiData'
 import ListFilter from './Dropdown';
@@ -40,6 +41,19 @@ class Home extends React.Component {
     this.isFiltered = false
   }
 
+  componentDidMount() {
+    this.getFilms(1)
+    this.getIsSeen(this.props.auth.user._id, this.props.auth.user.name)
+    window.addEventListener("scroll", this.handleScroll, false);
+    this.getUserSettings();
+  }
+
+  componentWillUnmount() {
+    // cancel async requests
+    this.controller.abort();
+    window.removeEventListener("scroll", this.handleScroll, false);
+  }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.settings.data.lang) {
       ReactLanguage.setLanguage(nextProps.settings.data.lang);
@@ -48,6 +62,11 @@ class Home extends React.Component {
       ReactLanguage.setLanguage('en');
       sessionStorage.setItem('lang', 'en');
     }
+  }
+
+  getUserSettings = () => {
+    const userId = this.props.auth.user._id;
+    this.props.getUserSettings(userId);
   }
 
   filterData(filter) {
@@ -61,9 +80,8 @@ class Home extends React.Component {
       if (!this.isFiltered) {
         this.setState({ page: 1, filter: filter })
         this.isFiltered = true
-      } else {
+      } else
         this.setState({ filter: filter })
-      }
       if (this.state.query)
         results = await this.api.getMovies({ page: page, limit: 40, query_term: this.state.query, ...filter })
       if (results && !results.data.movies)
@@ -168,7 +186,7 @@ class Home extends React.Component {
   }
 
   isSeen(imdbCode, hash) {
-    if (this.state.isSeen.length === 0)
+    if (this.state.isSeen.length === 0 || !this.state.isSeen || this.state.isSeen.length === 0 || !hash)
       return;
     const cmpHash = typeof hash === 'object' ? hash.hash : hash
     for (let i = 0; i < this.state.isSeen.length; i++) {
@@ -181,30 +199,11 @@ class Home extends React.Component {
     return (false)
   }
 
-  getUserSettings = () => {
-    const userId = this.props.auth.user._id;
-    this.props.getUserSettings(userId);
-  }
-
-  componentDidMount() {
-    this.getFilms(1)
-    this.getIsSeen(this.props.auth.user._id, this.props.auth.user.name)
-    window.addEventListener("scroll", this.handleScroll, false);
-    this.getUserSettings();
-  }
-
-  componentWillUnmount() {
-    // cancel async requests
-    this.controller.abort();
-    window.removeEventListener("scroll", this.handleScroll, false);
-  }
-
-
   updateFilms(results, query, type) {
     if (results && results.data && results.data.movie_count > 0) {
       results.data.movies = results.data.movies.filter(film => {
         const best = this.getBestTorrent(film.torrents)
-        return best.seeds > 15 && best.peers > 10
+        return best.seeds > 12 && best.peers > 7
       })
     }
     if (!query || !results) {
@@ -231,7 +230,7 @@ class Home extends React.Component {
       return;
     this.setState({ films: '', isLoading: false, isBottom: false, page: 1, filter: null, query: '', needPage: true, isSeen: [] })
     this.isFiltered = false
-    this.getFilms(1)
+    this.getFilms(1, false, true)
     this.getIsSeen(this.props.auth.user._id, this.props.auth.user.name)
   }
 
@@ -249,6 +248,30 @@ class Home extends React.Component {
     this.setState({ openTrailer: false })
   }
 
+  getGridListCols = () => {
+    if (isWidthUp('xl', this.props.width))
+      return 9;
+    if (isWidthUp('lg', this.props.width))
+      return 6;
+    if (isWidthUp('md', this.props.width))
+      return 4;
+    if (isWidthUp('sm', this.props.width))
+      return 3;
+    return 2;
+  }
+
+  getGridListTitleRow = () => {
+    if (isWidthUp('xl', this.props.width))
+      return 2.5;
+    if (isWidthUp('lg', this.props.width))
+      return 2.2;
+    if (isWidthUp('md', this.props.width))
+      return 2.2;
+    if (isWidthUp('sm', this.props.width))
+      return 2.3;
+    return 1.5;
+  }
+
   // ------> set l'url, la note, le summary dans trailer
   // qd on est over => afficher, si on passe sur un autre close le current et affiche un autre
   render() {
@@ -263,34 +286,54 @@ class Home extends React.Component {
           refresh={this.refreshComponent.bind(this)}
           updateFilms={this.updateFilms.bind(this)}
         />
-        <Trailer isOpen={this.state.openTrailer} closeTrailer={this.closeTrailer.bind(this)} film={this.state.selectedFilm} />
+        <Trailer
+          isOpen={this.state.openTrailer}
+          closeTrailer={this.closeTrailer.bind(this)}
+          film={this.state.selectedFilm}
+        />
         <ListFilter filterData={this.filterData.bind(this)}></ListFilter>
-        <GridList spacing={8} cols={5} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row', backgroundColor: 'rgba(29,29,29,1)' }}>
 
-          {this.state.films.map((film, index) => (
-            <GridListTile key={index} cols={-1} rows={2}
-              style={
-                this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ?
-                  { cursor: 'pointer', backdropFilter: 'drop-shadow(16px 16px 20px red) invert(75%)' } : { cursor: 'pointer', backdropFilter: '' }}
-              onClick={this.handleMouseClick.bind(this, film)}>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-around',
+            overflow: 'hidden'
+          }}>
 
-              <img src={film.medium_cover_image || film.small_screenshot || film.posterLink} onError={() => false} alt={film.title}
+          <GridList
+            spacing={5}
+            cellHeight={180}
+            cols={this.getGridListCols()}
+            style={{flex: 1}}
+          >
+            {this.state.films.map((film, index) => (
+              <GridListTile
+                key={index}
+                cols={1}
+                rows={this.getGridListTitleRow()}
                 style={
                   this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ?
-                    { filter: 'grayscale(100%)' } : { filter: '' }} />
-              <GridListTileBar
-                title={film.title}
-                subtitle={<span>{film.summary}</span>}
-                actionIcon={
-                  <IconButton aria-label={`info about ${film.title}`} style={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                    <InfoIcon />
-                  </IconButton>
-                }
-              />
-            </GridListTile>
-          ))}
-        </GridList>
-        {LoaderScroll(!isLoading)}
+                    { cursor: 'pointer', backdropFilter: 'drop-shadow(16px 16px 20px red) invert(75%)' } : { cursor: 'pointer', backdropFilter: '' }}
+                onClick={this.handleMouseClick.bind(this, film)}>
+
+                <img src={film.medium_cover_image || film.small_screenshot || film.posterLink} onError={() => false} alt={film.title}
+                  style={this.isSeen(film.imdb_code || film.imdb_id || film.imdbCode, film.hash || this.getBestTorrent(film.torrents)) ? { filter: 'grayscale(100%)' } : { filter: '' }} />
+                <GridListTileBar
+                  title={film.title}
+                  subtitle={<span>{film.summary}</span>}
+                  actionIcon={
+                    <IconButton aria-label={`info about ${film.title}`} style={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                      <InfoIcon />
+                    </IconButton>
+                  }
+                />
+              </GridListTile>
+              
+            ))}
+          </GridList>
+        </div>
+        {LoaderScroll(isLoading)}
       </div>
     );
   }
@@ -305,4 +348,4 @@ const mapStateToProps = (state) => ({
   settings: state.settings
 })
 
-export default connect(mapStateToProps, { getUserSettings })(withRouter(Home));
+export default connect(mapStateToProps, { getUserSettings })(withRouter(withWidth()(Home)));

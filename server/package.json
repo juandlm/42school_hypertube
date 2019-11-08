@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/setups.js"
+    "prod": "NODE_ENV=prod node src/setups.js",
+    "dev": "NODE_ENV=dev nodemon src/setups.js"
   },
   "author": "thbrouss, jde-la-m, rcabotia",
   "license": "ISC",

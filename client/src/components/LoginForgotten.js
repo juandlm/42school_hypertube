@@ -51,7 +51,7 @@ class LoginForgotten extends Component {
         return (
             <div>
                 <Typography component="h2" variant="subtitle1" className={classes.subtitle}>
-                    Saisissez l’adresse email de votre compte afin de recevoir des instructions pour réinitialiser votre mot de passe.
+                    Enter the email address of your account to receive instructions on how to reset your password.
                 </Typography>
                 <TextField
                     name="email"
@@ -79,7 +79,7 @@ class LoginForgotten extends Component {
                     className={classes.submit}
                     fullWidth
                 >
-                    Continuer
+                    Continue
                 </Button>
             </div>
         );
@@ -91,7 +91,7 @@ class LoginForgotten extends Component {
         return (
             <div>
                 <Typography className={classes.subtitle}>
-                    Un email vient de vous être envoyé à cette adresse:
+                    An email has just been sent to this address:
                 </Typography>
                 <Paper>
                     <Box m={3} p={3} textAlign="center">
@@ -99,7 +99,7 @@ class LoginForgotten extends Component {
                     </Box>
                 </Paper>
                 <Typography paragraph>
-                    Pour réinitialiser votre mot de passe veuillez cliquer dans cet email et suivre les instructions. Attention le lien dans l’email expirera rapidement. Pensez donc à vérifier dès maintenant !<br />
+                    To reset your password please click in this email and follow the instructions. Be careful the link in the email will expire quickly. So don't forget to check it out now !<br />
                 </Typography>
             </div>
         );
@@ -123,7 +123,7 @@ class LoginForgotten extends Component {
                             className="mb-5"
                         />
                         <Typography component="h1" variant="h5">
-                            Mot de passe oublié ?
+                            Forgotten password ?
                         </Typography>
 
                         <form className={classes.form} onSubmit={this.handleSubmit}>
@@ -133,7 +133,7 @@ class LoginForgotten extends Component {
                             <Grid container>
                                 <Grid item xs>
                                     <Link component={AdapterLink} to="/login" color="primary">
-                                        Retour
+                                        Back
                                     </Link>
                                 </Grid>
                             </Grid>

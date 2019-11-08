@@ -13,8 +13,6 @@ import '../css/global.css';
 
 const circular = circularStyle;
 const classes = registerStyle;
-const ReactLanguage = require('react-language');
-ReactLanguage.setLanguage('xxx');
 
 class VideoView extends React.Component {
 

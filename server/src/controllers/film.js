@@ -48,10 +48,7 @@ module.exports = {
             title: title
         }, (err, itemExist) => {
             if (!itemExist || !itemExist.have_sub) {
-                /*new subtitleUtil({imdb:code, path:'../subtitle',
-                name:title, dbModel:Film, res:res, serie: serie ? params.serie : '', hash:hash, size:size},
-                ['English', 'French'])*/
-                console.log('no sub')
+             // yolo
             } else
                 res.json(itemExist.subtitles)
         })
@@ -60,13 +57,9 @@ module.exports = {
     getComments: (req, res) => {
         const params = req.body
         const code = params.imdbCode
-        console.log(' yooooooooooooo ')
-        console.log(params)
         Film.findOne({
             imdbCode: code
         }, (err, itemExist) => {
-            console.log(' comment in DB ')
-            console.log(itemExist)
             if (!itemExist || !itemExist.comments) {
                 res.sendStatus(204)
             } else
@@ -112,7 +105,6 @@ module.exports = {
                 }
             }
         }, (err, result) => {
-            console.log(result)
             res.json(result)
         })
     },
@@ -139,7 +131,6 @@ module.exports = {
             if (sucess)
                 res.sendStatus(200)
             else if (err) {
-                //console.log(err)
                 res.sendStatus(400)
             }
         })
@@ -157,16 +148,13 @@ module.exports = {
         const is_serie = req.query.season && req.query.episode ? true : false
         torrent.updateLastSeen(Film, imdbCode, title, hash)
 
-        //console.log(req.query)
         Film.findOne({
             id: id,
             hash: hash,
             imdbCode: imdbCode
         }, (err, itemExist) => {
             if (!itemExist || (itemExist && itemExist.is_downloaded === false) || (itemExist && itemExist.need_conversion === true)) {
-                console.log('dll moovie')
                 if (itemExist && itemExist.is_downloaded === true && itemExist.need_conversion === true) {
-                    // resolvePath(pcUser, path)
                     const dst = itemExist.fileName
                     const size = fs.statSync(dst).size
                     const ext = path.extname(dst).substring(1)
@@ -176,7 +164,6 @@ module.exports = {
                         have_sub: itemExist.have_sub
                     })
                 } else {
-                    //console.log(itemExist)
                     torrent.loadTorrent(hash, title, id, size, imdbCode, Film, res, req, null, {
                         season: req.query.season || '',
                         ep: req.query.episode || '',
@@ -185,7 +172,6 @@ module.exports = {
                 }
 
             } else if (itemExist && itemExist.is_downloaded === true && itemExist.need_conversion === false) {
-                console.log('stream moovie baby')
                 const dst = itemExist.fileName
                 const size = fs.statSync(dst).size
                 const ext = path.extname(dst).substring(1)
@@ -200,7 +186,6 @@ module.exports = {
         const name = params.name
         if (!name)
             res.send(304);
-        console.log('search target  :' + name)
         const api = new searchApi({
             name: name
         })
@@ -212,12 +197,10 @@ module.exports = {
                 const serieSearch = new searchApi({
                     name: name
                 })
-                console.log('search other serie')
                 serieSearch.findOtherSeries().then(data => {
-                    if (data && data.length > 0 && Array.isArray(data)) {
-                        console.log(data)
+                    if (data && data.length > 0 && Array.isArray(data))
                         res.json(data)
-                    } else
+                    else
                         res.send(304)
                 })
             }

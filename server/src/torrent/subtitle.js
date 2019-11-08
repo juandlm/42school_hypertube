@@ -55,19 +55,11 @@ module.exports = class subtitle {
                     this.downloadBestSubtitle(filter)
                 }
             })
-            .catch(function(err) {
-                console.log('Failed to fetch page: ', err);
-            });
+            .catch((err) => env == 'dev' ? console.log(err) : {});
     }
 
     // filename pour eviter les merde
     getOpenSubtitles() {
-        console.log('imdb ' + this.imdb)
-
-        console.log(this.name)
-        // this.name.match('/')
-        // American.Horror.Story.S08E10 s09e03
-        // season + episode + filename
         this.serie ? this.getSerieSubtitle() : this.getFilmsSubtitle()
     }
 
@@ -91,7 +83,6 @@ module.exports = class subtitle {
             imdbid: this.imdb,
             filename: this.name
         }).then(subtitles => {
-            console.log(subtitles)
             this.downloadOpenSubtitle(subtitles)
         })
     }
@@ -172,20 +163,14 @@ module.exports = class subtitle {
             }
         }
     }
-    /*
-    "line_items": {
-        "$elemMatch": { "review_request_sent": { "$exists": false } }
-    }
-    */
+
     saveSubtitle(lang, path) {
         let filmData = this.dbModel
         const data = {
             lang: lang,
             path: path
         }
-        // subtitles: {$elemMatch : {lang:lang, path:path} }
-        console.log('add sub')
-        // 'is_seen.userId': { $ne: id }
+  
         this.dbModel.findOneAndUpdate({
             imdbCode: this.imdb,
             'subtitles.lang': {
@@ -198,19 +183,11 @@ module.exports = class subtitle {
             have_sub: true
         }, (err, sucess) => {
             if (!err) {
-                console.log('insert sub yo lang = ' + lang)
+                //console.log('insert sub yo lang = ' + lang)
             }
-            /*if (!err){
-              this.countSubs++
-              this.resPath = [...this.resPath, {path:path}]
-              if (!this.isReqSend && this.countSubs === 2){
-                this.res.json({path:this.resPath})
-                this.isReqSend = true
-              }
-            }*/
         });
     }
-    // /subtitle/name/name.vtt
+
     extractAndConvert(dst, url, lang) {
         mkdirp(dst, (err) => {
             request(url)
@@ -227,11 +204,11 @@ module.exports = class subtitle {
                     if (ext == '.srt') {
                         entry.pipe(srt2vtt())
                             .on('error', (err) => {
-                                console.log(err)
+                                //console.log(err)
                             })
                             .pipe(fs.createWriteStream(dstPath))
                             .on('error', (err) => {
-                                console.log(err)
+                                //console.log(err)
                             })
                     } else {
                         entry.autodrain();

@@ -12,6 +12,8 @@ const validateSettingsInput = require('../validation/settings');
 
 module.exports = {
 
+
+
     register: (req, res) => {
         const {
             errors,
@@ -60,7 +62,7 @@ module.exports = {
                     username: 'Username already exists'
                 });
             }
-        }).catch(err => console.error(err));
+        }).catch(err => env == 'dev' ? console.log(err) : {});
     },
 
     registerValidation: (req, res) => {
@@ -125,7 +127,7 @@ module.exports = {
                                     success: true,
                                     token: `Bearer ${token}`
                                 });
-                            }).catch(err => console.error('There was some error with the token', err));
+                            }).catch(err => env == 'dev' ? console.log(err) : {});
                         } else {
                             errors.password = 'Incorrect Password';
                             return res.status(400).json(errors);

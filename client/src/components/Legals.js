@@ -16,7 +16,7 @@ const Legals = () => {
 
     return (
         <div className="Legals">
-            <Button onClick={handleClickOpen} id="Legals">Mentions legales</Button>
+            <Button onClick={handleClickOpen} id="Legals">Legal notices</Button>
             <Dialog
                 open={open}
                 onClose={handleClose}

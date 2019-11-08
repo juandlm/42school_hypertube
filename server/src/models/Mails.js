@@ -24,31 +24,32 @@ const smtpTransport = nodemailer.createTransport({
  */
 
 const sendMail = (mail, res) => {
-    smtpTransport.sendMail(mail, (err) => {
-        if (err) {
-            console.log("Erreur lors de l'envoie du mail");
-            console.log(err);
-            smtpTransport.close();
-            res.status(400).end("Erreur lors de l'envoie du mail");
-        } else {
-            console.log("Mail envoyé avec succès");
-            smtpTransport.close();
-            res.end('OK');
-        }
-    });
+    try {
+        smtpTransport.sendMail(mail, (err) => {
+            if (err) {
+                smtpTransport.close();
+                res.status(400).end("Erreur lors de l'envoie du mail");
+            } else {
+                smtpTransport.close();
+                res.end('OK');
+            }
+        });
+    } catch (e) {
+        return false;
+    }
 }
 
 const sendMailSimple = (mail) => {
-    smtpTransport.sendMail(mail, (err) => {
-        if (err) {
-            console.log("Erreur lors de l'envoie du mail");
-            console.log(err);
-            smtpTransport.close();
-        } else {
-            console.log("Mail envoyé avec succès");
-            smtpTransport.close();
-        }
-    });
+    try {
+        smtpTransport.sendMail(mail, (err) => {
+            if (err)
+                smtpTransport.close();
+            else
+                smtpTransport.close();
+        });
+    } catch (e) {
+        return false;
+    }
 }
 
 /*
@@ -74,7 +75,7 @@ const mailSignup = (dest, username, token, res) => {
                             padding-bottom: 75px;
                             font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;"
                     >
-                        Pour avoir accés à tous nos films et séries, il ne vous reste plus qu'une dernière étape !
+                        To have access to all our films and series, you only have one last step left !
                     </h2>
                     <a 
                         href="${link}" 
@@ -93,10 +94,10 @@ const mailSignup = (dest, username, token, res) => {
                             margin-top: 50px;
                             margin-bottom: 50px"
                     >
-                            Confirmer votre inscription
+                        Confirm your registration
                     </a>
                     <br /><br /><br />
-                    <small>Cet email est automatique, merci de ne pas y répondre.</small>
+                    <small>This email is automatic, please do not answer it.</small>
                 </center>
             </body>
         </html>`;
@@ -104,7 +105,7 @@ const mailSignup = (dest, username, token, res) => {
     const mail = {
         from: mailAccountUser,
         to: dest,
-        subject: 'HYPERTUBE | Confirmation inscription',
+        subject: 'HYPERTUBE | Registration confirmation',
         html: message,
         attachments: [{
             filename: 'logo.png',
@@ -134,7 +135,7 @@ const mailLoginForgotten = (dest, username, token, res) => {
                             padding-bottom: 75px;
                             font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;"
                     >
-                        Cliquez sur le bouton ci-dessous pour accéder à la page vous permettant de réinitialiser votre mot de passe.
+                        Click on the button below to access the page allowing you to reset your password.
                     </h2>
                     <a 
                         href="${link}" 
@@ -153,10 +154,10 @@ const mailLoginForgotten = (dest, username, token, res) => {
                             margin-top: 50px;
                             margin-bottom: 50px"
                     >
-                        Réinitialiser mot de passe
+                        Reset password
                     </a>
                     <br /><br /><br />
-                    <small>Cet email est automatique, merci de ne pas y répondre.</small>
+                    <small>This email is automatic, please do not answer it.</small>
                 </center>
             </body>
         </html>`;
@@ -164,7 +165,7 @@ const mailLoginForgotten = (dest, username, token, res) => {
     const mail = {
         from: mailAccountUser,
         to: dest,
-        subject: 'HYPERTUBE | Récupération mot de passe',
+        subject: 'HYPERTUBE | Reset password',
         html: message,
         attachments: [{
             filename: 'logo.png',
@@ -193,13 +194,13 @@ const mailOAuth = (dest, email, password, username, oAuth) => {
                             padding-bottom: 75px;
                             font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;"
                     >
-                        Vous vous etes inscit avec votre compte ${oAuth} à Hypertube.<br />Voici les informations de votre compte pour vous connecter au site sans votre compte ${oAuth}.
+                        You have registered with ${oAuth} your account at Hypertube.<br />Here is your account information to connect to the site without your ${oAuth} account.
                     </h2>
-                    <p>Nom d'utilisateur : <strong>${username}</strong></p>
-                    <p>Email de connexion : <strong>${email}</strong></p>
-                    <p>Mot de passe : <strong>${password}</strong></p>
+                    <p>Username : <strong>${username}</strong></p>
+                    <p>Connection email : <strong>${email}</strong></p>
+                    <p>Password : <strong>${password}</strong></p>
                     <br /><br /><br />
-                    <small>Cet email est automatique, merci de ne pas y répondre.</small>
+                    <small>This email is automatic, please do not answer it.</small>
                 </center>
             </body>
         </html>`;
@@ -207,7 +208,7 @@ const mailOAuth = (dest, email, password, username, oAuth) => {
     const mail = {
         from: mailAccountUser,
         to: dest,
-        subject: 'HYPERTUBE | Informations utilisateurs',
+        subject: 'HYPERTUBE | User information',
         html: message,
         attachments: [{
             filename: 'logo.png',

@@ -96,18 +96,6 @@ export const alertTranslate = (param) => {
         return (translate('Changing your information failed', 'La modification de vos informations a échoué'))
     if (param === 'infoIndisp')
         return (translate('This user or email are unavailable', 'Cet utilisateur ou cette email sont indisponibles'))
-    if (param === 'mailSend')
-        return (translate('An email has just been sent to you, follow the instructions to confirm your registration', 'Un mail viens de vous être envoyé, suivez les instructions pour confirmer votre inscription'))
-    if (param === 'accountConfirmed')
-        return (translate('Your account has been confirmed !', 'Votre compte a été confirmé !'))
-    if (param === 'accountAlreadyActived')
-        return (translate('Your account is already activated', 'Votre compte est déjà activé'))
-    if (param === 'dataFailed')
-        return (translate('The transmitted data are wrong', 'Les données transmises sont erronées'))
-    if (param === 'pwdSuccess')
-        return (translate('Password changed successfully !', 'Mot de passe modifié avec succès !'))
-    if (param === 'linkFailed')
-        return (translate('This link is not valid', "Ce lien n'est pas valide"))
 }
 
 export const movieViewTranslate = (param) => {

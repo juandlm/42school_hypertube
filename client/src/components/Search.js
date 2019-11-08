@@ -24,18 +24,23 @@ export default class Search extends React.Component {
       this.props.updateFilms(false, query)
       return;
     }
-    const response = await fetch(
-      'https://yts.lt/api/v2/list_movies.json?query_term=' + query + '&sort_by=title&limit=50&page=1&order_by=asc',
+    let response, results = ''
+    try {
+      response = await fetch(
+      'https://yts.lt/api/v2/list_movies.json?query_term=' + query + '&sort_by=title&limit=40&page=1&order_by=asc',
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
         },
         method: "GET"
       })
+    }catch (e){
+      return false
+    }
 
-    const results = await response.json()
+    results = await response.json()
 
-    if (results.data.movie_count === 0) {
+    if (!results || results.data.movie_count === 0) {
       try {
         const dataSearch = await fetch('/api/film/search', {
           headers: {

@@ -82,15 +82,15 @@ class LoginNewPassword extends Component {
                             className="mb-5"
                         />
                         <Typography component="h1" variant="h5">
-                            Nouveau mot de passe
+                            New password
                         </Typography>
                         <Typography component="h2" variant="subtitle1" className={classes.subtitle}>
-                            Vous pouvez maintenant réinitialiser votre mot de passe.
+                            You can now reset your password.
                         </Typography>
                         <form className={classes.form} onSubmit={this.handleSubmit}>
                             <TextField
                                 name="password"
-                                label="Mot de passe"
+                                label="Password"
                                 type="password"
                                 className={classnames('form-control form-control-lg', {
                                     'is-invalid': errors.password
@@ -110,7 +110,7 @@ class LoginNewPassword extends Component {
                             {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
                             <TextField
                                 name="password_confirm"
-                                label="Confirmation mot de passe"
+                                label="Password confirmation"
                                 type="password"
                                 className={classnames('form-control form-control-lg', {
                                     'is-invalid': errors.password
@@ -136,12 +136,12 @@ class LoginNewPassword extends Component {
                                 className={classes.submit}
                                 fullWidth
                             >
-                                Confirmer
+                                Confirm
                             </Button>
                             <Grid container>
                                 <Grid item xs>
                                     <Link component={AdapterLink} to="/login" color="primary">
-                                        Retour
+                                        Back
                                     </Link>
                                 </Grid>
                             </Grid>

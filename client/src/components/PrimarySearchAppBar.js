@@ -14,8 +14,6 @@ import { logoutUser } from '../actions/authentication';
 import { changeTheme } from '../actions/themeAction';
 import { navbarTranslate } from '../translate';
 
-const ReactLanguage = require('react-language');
-ReactLanguage.setLanguage('xxx');
 const useStyles = navBar;
 
 const PrimarySearchAppBar = (props) => {

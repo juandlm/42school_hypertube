@@ -69,7 +69,7 @@ class Register extends Component {
     render() {
         const { classes } = this.props;
         const { username, email, firstName, lastName, password, password_confirm, consent, errors } = this.state;
-        const label = (<div><span>J'ai lu et j'accepte la </span><span className="signupConsent" onClick={this.handleLink}>politique d'utilisation des données</span></div>);
+        const label = (<div><span>I have read and accept the </span><span className="signupConsent" onClick={this.handleLink}>data use policy</span></div>);
 
         return (
             <Grid container component="main" className={classes.root} >
@@ -93,7 +93,7 @@ class Register extends Component {
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         name="firstName"
-                                        label="Prénom"
+                                        label="First name"
                                         value={firstName}
                                         onChange={this.handleInputChange}
                                         inputProps={{ maxLength: 50 }}
@@ -111,7 +111,7 @@ class Register extends Component {
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         name="lastName"
-                                        label="Nom"
+                                        label="Last name"
                                         value={lastName}
                                         onChange={this.handleInputChange}
                                         inputProps={{ maxLength: 50 }}
@@ -128,7 +128,7 @@ class Register extends Component {
                                 <Grid item xs={12}>
                                     <TextField
                                         name="username"
-                                        label="Nom d'utilisateur"
+                                        label="Username"
                                         value={username}
                                         onChange={this.handleInputChange}
                                         inputProps={{
@@ -165,7 +165,7 @@ class Register extends Component {
                                 <Grid item xs={12}>
                                     <TextField
                                         name="password"
-                                        label="Mot de passe"
+                                        label="Password"
                                         type="password"
                                         value={password}
                                         onChange={this.handleInputChange}
@@ -186,7 +186,7 @@ class Register extends Component {
                                 <Grid item xs={12}>
                                     <TextField
                                         name="password_confirm"
-                                        label="Confirmation mot de passe"
+                                        label="Password confirmation"
                                         type="password"
                                         value={password_confirm}
                                         onChange={this.handleInputChange}
@@ -217,7 +217,7 @@ class Register extends Component {
                                     />}
                                 label={label}
                             />
-                            {errors.remember_me && (<div className="invalid-feedback">{errors.remember_me}</div>)}
+                            {errors.consent && (<div className="invalid-feedback">{errors.consent}</div>)}
                             <Button
                                 type="submit"
                                 variant="contained"
@@ -225,12 +225,12 @@ class Register extends Component {
                                 className={classes.submit}
                                 fullWidth
                             >
-                                Inscription
+                                Register
                             </Button>
                             <Grid container>
                                 <Grid item xs>
                                     <Link component={AdapterLink} to="/login" color="primary">
-                                        Déjà membre ? Connectez-vous
+                                        Already a member? Login to your account
                                     </Link>
                                 </Grid>
                             </Grid>

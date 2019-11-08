@@ -25,6 +25,9 @@ import { indigo } from '@material-ui/core/colors';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+const ReactLanguage = require('react-language');
+ReactLanguage.setLanguage(sessionStorage.getItem('lang'));
+
 const lightTheme = createMuiTheme({
     palette: {
         type: 'light',
@@ -52,14 +55,14 @@ class App extends React.Component {
         super(props);
 
         if (localStorage.jwtToken) {
-            const currentTime = Date.now() / 3600;
+            const currentTime = Date.now() / 1000;
             const decoded = jwt_decode(localStorage.jwtToken);
-
 			setAuthToken(localStorage.jwtToken);
-			this.props.setCurrentUser(decoded);
-			this.props.getUserSettings(decoded._id);
+			props.setCurrentUser(decoded);
+			props.getUserSettings(decoded._id);
 			if (decoded.exp < currentTime) {
-				this.props.logoutUser();
+                console.log('zobe user');
+				props.logoutUser();
 				window.location.href = '/login';
 			}
 		}

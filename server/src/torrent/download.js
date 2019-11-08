@@ -50,8 +50,6 @@ module.exports = class Torrent {
 
         let storage = __dirname
         let tmp = storage.split('/')
-        console.log('subbsbsss')
-        console.log(subs)
         storage = '/' + tmp[1] + '/' + tmp[2] + '/goinfre/'
         let engine = torrentStream(magnet, {
             connections: 100,
@@ -94,7 +92,6 @@ module.exports = class Torrent {
                 //}
             });
         }).on('idle', () => {
-            console.log('------------> FILM DLL')
             this.filmsModel.findOne({
                 imdbCode: this.imdbCode
             }, (err, item) => {
@@ -133,11 +130,9 @@ module.exports = class Torrent {
             upsert: true
         }, (err, doc) => {
             if (err)
-                console.log('error : insert film data to db' + err)
-            else {
-                console.log('sucess insert film to db')
-                console.log(doc)
-            }
+                env == 'dev' ? console.log('error : insert film data to db' + err) : false
+            else
+                env == 'dev' ? console.log(doc) : false
         })
     }
 
@@ -154,7 +149,7 @@ module.exports = class Torrent {
             .format('webm')
             .outputOptions(['-deadline realtime', '-cpu-used -5'])
             .on('error', (err, stdout, stderr) => {
-                console.log('Cannot process video: ' + err.message);
+                env == 'dev' ? console.log('Cannot process video: ' + err.message) : false
             })
             .on('progress', (progress) => {
                 if (progress.targetSize > 10000 && !is_send) {
@@ -164,11 +159,11 @@ module.exports = class Torrent {
                         end: end
                     }), res)
                 }
-                console.log('Processing: ' + progress.targetSize + ' KB converted');
+                env == 'dev' ? console.log('Processing: ' + progress.targetSize + ' KB converted') : false
             })
             .on('end', (stdout, stderr) => {
                 this.storeFilm(this.filmsModel, this.movieName, this.id, this.hash, dst, this.imdbCode, this.fileSize, true, false)
-                console.log('conversion done')
+                env == 'dev' ? console.log('conversion done') : false
             }).save(dst)
     }
 
@@ -201,16 +196,11 @@ module.exports = class Torrent {
         })
     }
 
-    //this.storeFilm(filmsModel, movieName, id, hash, filePath, imdbCode, fileSize, false)
     convertVideo(res, file, start, end, type, needConversion, filePath, load_conversion, subs) {
+        
         let stream = ''
 
-        // dll ou regarder le film deja dll => on update lastSeen
-        // --> film model
-        // this.updateLastSeen()
-        // si le film n'as pas de sub, go les dll avec path + filename !
         const fileName = path.basename(filePath)
-        console.log('---------> file name : ' + fileName)
         if (subs && !subs.have_sub && type == 'download' && file) {
             new subtitleUtil({
                     imdb: this.imdbCode,
@@ -228,9 +218,6 @@ module.exports = class Torrent {
         }
         if (type == 'download' && file) {
             if (load_conversion) {
-                console.log('---> LOG CONVERSION <---')
-                console.log('start ' + start)
-                console.log('end ' + end)
                 pump(fs.createReadStream(filePath, {
                     start: start,
                     end: end
@@ -295,12 +282,10 @@ module.exports = class Torrent {
                 'Connection': 'keep-alive',
                 'Cache-Control': 'no-cache, no-store'
             }
-            console.log('mierda 1')
             res.writeHead(206, head);
             // ---> filePath <---
             this.convertVideo(res, path, start, end, type, needConversion, filePath, load_conversion, subs)
         } else {
-            console.log('mierda 2')
             const head = {
                 'Content-Type': 'video/' + videoFormat,
                 'Content-Length': fileSize + 1,

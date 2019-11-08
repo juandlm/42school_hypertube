@@ -7,9 +7,6 @@ import userStyle from '../css/user';
 import Loader from '../components/Loader';
 import { userTranslate } from '../translate';
 
-const ReactLanguage = require('react-language');
-ReactLanguage.setLanguage('xxx');
-
 class User extends Component {
 
     constructor(props) {
@@ -42,11 +39,6 @@ class User extends Component {
                 return false
             });
     }
-
-    // getFilms
-    // Les infos des 10 derniers films vu par l'user sont dans this.state.userInfo.films_seen !
-    // Gerer la recup des infos des films avec getFilms
-    // Gerer l'affichage
 
     render() {
         const { classes } = this.props;

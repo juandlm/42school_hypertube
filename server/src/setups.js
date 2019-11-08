@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+global.env = process.env.NODE_ENV
 const express = require('express');
 const mongoose = require('../config/database');
 const path = require('path');
@@ -77,6 +78,9 @@ app.use((err, req, res, next) => {
             message: "Something looks wrong"
         });
 });
+
+
+
 
 const PORT = process.env.PORT || 5000;
 

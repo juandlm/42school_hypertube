@@ -6,15 +6,11 @@ import {
     SET_CURRENT_USER,
     GET_SEND
 } from './types';
-import { alertTranslate } from '../translate';
-
-const ReactLanguage = require('react-language');
-ReactLanguage.setLanguage('xxx');
 
 export const registerUser = (user, history) => dispatch => {
     axios.post('/api/users/register', user)
         .then(() => {
-            sessionStorage.setItem('alert_info', alertTranslate('mailSend'));
+            sessionStorage.setItem('alert_info', 'An email has just been sent to you, follow the instructions to confirm your registration');
             window.location.href = '/login';
         })
         .catch(err => {
@@ -29,13 +25,13 @@ export const registerValidationUser = (user) => dispatch => {
     axios.post('/api/users/registerValidation', user)
         .then(res => {
             if (res.data.message === 'Confirmed')
-                sessionStorage.setItem('alert_success', alertTranslate('accountConfirmed'));
+                sessionStorage.setItem('alert_success', 'Your account has been confirmed !');
             else
-                sessionStorage.setItem('alert_info', alertTranslate('accountAlreadyActived'));
+                sessionStorage.setItem('alert_info', 'Your account is already activated');
             window.location.href = '/login';
         })
         .catch(err => {
-            sessionStorage.setItem('alert_error', alertTranslate('dataFailed'));
+            sessionStorage.setItem('alert_error', 'The transmitted data are wrong');
             window.location.href = '/login';
         });
 }
@@ -51,7 +47,7 @@ export const loginUser = (user) => dispatch => {
         })
         .catch(err => {
             if (err.response.data.confirmed) {
-                sessionStorage.setItem('alert_info', alertTranslate('mailSend'));
+                sessionStorage.setItem('alert_info', 'An email has just been sent to you, follow the instructions to confirm your registration');
                 window.location.href = '/login';
             }
             dispatch({
@@ -80,7 +76,7 @@ export const loginForgottenUser = (user) => dispatch => {
 export const loginNewPasswordUser = (user) => dispatch => {
     axios.post('/api/users/loginNewPassword', user)
         .then(res => {
-            sessionStorage.setItem('alert_success', alertTranslate('pwdSuccess'));
+            sessionStorage.setItem('alert_success', 'Password changed successfully !');
             window.location.href = '/login';
         })
         .catch(err => {
@@ -97,7 +93,7 @@ export const loginCheckNewPasswordUser = (user) => dispatch => {
             return true
         })
         .catch(err => {
-            sessionStorage.setItem('alert_error', alertTranslate('linkFailed'));
+            sessionStorage.setItem('alert_error', 'This link is not valid');
             window.location.href = '/login';
         });
 }

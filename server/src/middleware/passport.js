@@ -10,7 +10,6 @@ const ExtractJwt = passportJwt.ExtractJwt;
 const FortyTwoStrategy = require('passport-42').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-// const FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -28,7 +27,7 @@ passport.use(new JwtStrategy({
         } else {
             return done(null, false);
         }
-    }).catch(err => console.error(err));
+    }).catch(err => env == 'dev' ? console.log(err) : {});
 }))
 
 passport.use(new FortyTwoStrategy({
@@ -158,49 +157,5 @@ passport.use(new GoogleStrategy({
         }
     }
 ));
-
-// passport.use(new FacebookStrategy({
-// 	clientID: '697157987426399',
-// 	clientSecret: '6e5d1dc629979d3bd0481f052270a2e2',
-// 	callbackURL: "http://localhost:5000/api/oauth/facebook/redirect",
-// 	scope: ['email'],
-// 	profileFields: ['email', 'name', 'displayName']
-// },
-// 	async (accessToken, refreshToken, profile, done) => {
-// 		const currentUser = await User.findOne({
-// 			facebookId: profile._json.id
-// 		});
-// 		if (!currentUser) {
-// 			const clear_password = Math.random().toString(36).substring(2, 15),
-// 				username = profile.displayName.split(' ')[0] + profile._json.id.substr(1, 5)
-// 			const newUser = await new User({
-// 				username: username,
-// 				email: profile._json.email.replace('@', '+fb@'),
-// 				firstName: profile._json.first_name,
-// 				lastName: profile._json.last_name,
-// 				password: bcrypt.hashSync(clear_password, 10),
-// 				facebookId: profile._json.id,
-// 				oAuth: true,
-// 				confirmed: true
-// 			})
-// 			Mail.mailOAuth(profile._json.email, newUser.email, clear_password, username, 'Facebook');
-// 			await newUser.generateAuthToken().then((token) => {
-// 				return done(null, {
-// 					newUser,
-// 					success: true,
-// 					token: `Bearer ${token}`
-// 				})
-// 			})
-// 		} else {
-// 			await currentUser.generateAuthToken().then((token) => {
-// 				return done(null, {
-// 					currentUser,
-// 					success: true,
-// 					token: `Bearer ${token}`
-// 				})
-// 			})
-// 		}
-// 	}
-// ));
 
 module.exports = passport
