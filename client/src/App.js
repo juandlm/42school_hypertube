@@ -26,7 +26,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 const ReactLanguage = require('react-language');
-ReactLanguage.setLanguage(sessionStorage.getItem('lang'));
+ReactLanguage.setLanguage(sessionStorage.getItem('lang') || 'en');
 
 const lightTheme = createMuiTheme({
     palette: {
@@ -53,7 +53,7 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-
+        document.body.onmousedown = e => { if (e.button === 1) return false; };
         if (localStorage.jwtToken) {
             const currentTime = Date.now() / 1000;
             const decoded = jwt_decode(localStorage.jwtToken);
