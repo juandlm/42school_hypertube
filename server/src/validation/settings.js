@@ -3,9 +3,8 @@ const isEmpty = require('./is-empty');
 
 module.exports = validateSettingsInput = (data) => {
     let errors = {};
-    const {
-        settings
-    } = data;
+    const { settings } = data;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z]).{7,}$/;
 
     settings.oAuth = !isEmpty(settings.oAuth) ? settings.oAuth : '';
     settings.avatar = !isEmpty(settings.avatar) ? settings.avatar : '';
@@ -41,6 +40,8 @@ module.exports = validateSettingsInput = (data) => {
                 errors.password = 'Password must have 7 chars';
             if (settings.password && settings.password_confirm && !Validator.equals(settings.password, settings.password_confirm))
                 errors.password = 'Password and Confirm Password must match';
+            if (!regex.test(String(data.password)))
+                errors.password = 'Password must have lowercase and uppercase characters';
         }
 
         if (!Validator.isEmail(settings.email))

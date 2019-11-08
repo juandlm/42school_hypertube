@@ -237,17 +237,12 @@ module.exports = {
     },
 
     modifySettings: (req, res) => {
-        const {
-            errors,
-            isValid
-        } = validateSettingsInput(req.body);
+        const { errors, isValid } = validateSettingsInput(req.body);
         if (!isValid) return res.status(400).json(errors);
 
         let update = {};
         const userId = htmlspecialchars(req.body.userId);
-        const filter = {
-            _id: userId
-        };
+        const filter = { _id: userId };
         const settings = req.body.settings;
         const oAuth = settings.oAuth;
         const avatar = htmlspecialchars(settings.avatar);

@@ -28,9 +28,9 @@ export const modifySettings = (userId, settings) => dispatch => {
         })
         .catch(err => {
             if (err.response.status === 400)
-                dispatch(showAlert("error", alertTranslate('infoIndisp')));
-            else
                 dispatch(showAlert("error", alertTranslate('infoError')));
+            else
+                dispatch(showAlert("error", alertTranslate('infoIndisp')));
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data
