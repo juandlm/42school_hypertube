@@ -48,9 +48,9 @@ module.exports = {
             title: title
         }, (err, itemExist) => {
             if (!itemExist || !itemExist.have_sub) {
-             // yolo
+              res.send(204);
             } else
-                res.json(itemExist.subtitles)
+              res.json(itemExist.subtitles)
         })
     },
 
@@ -158,7 +158,7 @@ module.exports = {
                     const dst = itemExist.fileName
                     const size = fs.statSync(dst).size
                     const ext = path.extname(dst).substring(1)
-                    torrent.streamVideo(req, res, dst, size - 1, 'download', ext, dst, true, {
+                    torrent.streamVideo(res, req, dst, size - 1, 'download', ext, dst, true, {
                         season: req.query.season || '',
                         ep: req.query.episode || '',
                         have_sub: itemExist.have_sub
@@ -194,7 +194,8 @@ module.exports = {
             if (apidata)
                 res.json(apidata)
             else {
-                const serieSearch = new searchApi({
+              res.send(304)
+                /*const serieSearch = new searchApi({
                     name: name
                 })
                 serieSearch.findOtherSeries().then(data => {
@@ -202,7 +203,7 @@ module.exports = {
                         res.json(data)
                     else
                         res.send(304)
-                })
+                })*/
             }
         })
     }

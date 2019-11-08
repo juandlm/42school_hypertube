@@ -197,7 +197,7 @@ module.exports = class Torrent {
     }
 
     convertVideo(res, file, start, end, type, needConversion, filePath, load_conversion, subs) {
-        
+
         let stream = ''
 
         const fileName = path.basename(filePath)
@@ -252,9 +252,10 @@ module.exports = class Torrent {
     }
 
     // ---> attendre d'avoir dll assez
+    // req, res
     streamVideo(res, req, path, fileSize, type, format, filePath, load_conversion = null, subs) {
 
-        const range = req.headers.range
+        const range = req && req.headers && req.headers.range ? req.headers.range : false
         let needConversion = false
         let videoFormat = ''
         if (format !== 'webm' && format !== 'mp4') {
@@ -262,7 +263,7 @@ module.exports = class Torrent {
             needConversion = true
         } else
             videoFormat = format
-        if (req.headers['range'] && range) {
+        if (req && req.headers && req.headers.range && range) {
 
             const parts = range.replace(/bytes=/, "").split("-")
             const start = parseInt(parts[0], 10)
