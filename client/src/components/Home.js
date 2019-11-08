@@ -75,41 +75,44 @@ class Home extends React.Component {
 
   async getFilms(page, filter, reset = null) {
     let results = ''
-
-    if (filter) {
-      if (!this.isFiltered) {
-        this.setState({ page: 1, filter: filter })
-        this.isFiltered = true
-      } else
-        this.setState({ filter: filter })
-      if (this.state.query)
-        results = await this.api.getMovies({ page: page, limit: 40, query_term: this.state.query, ...filter })
-      if (results && !results.data.movies)
-        this.setState({ films: [], isLoading: true })
-      if (!results)
-        results = await this.api.getMovies({ page: page, limit: 40, ...filter })
-    } else {
-      if (this.state.query && this.state.query !== '' && !reset)
-        results = await this.api.getMovies({ page: page, limit: 40, sort_by: 'title', query_term: this.state.query })
-      if (results && !results.data.movies && this.state.page > 1) {
-        this.setState({ isLoading: true })
-        return;
+    try {
+      if (filter) {
+        if (!this.isFiltered) {
+          this.setState({ page: 1, filter: filter })
+          this.isFiltered = true
+        } else
+          this.setState({ filter: filter })
+        if (this.state.query)
+          results = await this.api.getMovies({ page: page, limit: 40, query_term: this.state.query, ...filter })
+        if (results && !results.data.movies)
+          this.setState({ films: [], isLoading: true })
+        if (!results)
+          results = await this.api.getMovies({ page: page, limit: 40, ...filter })
+      } else {
+        if (this.state.query && this.state.query !== '' && !reset)
+          results = await this.api.getMovies({ page: page, limit: 40, sort_by: 'title', query_term: this.state.query })
+        if (results && !results.data.movies && this.state.page > 1) {
+          this.setState({ isLoading: true })
+          return;
+        }
+        if (results && !results.data.movies)
+          this.setState({ films: [], isLoading: true })
+        if (!results)
+          results = await this.api.getMovies({ page: page, limit: 40, sort_by: 'download_count' })
       }
-      if (results && !results.data.movies)
-        this.setState({ films: [], isLoading: true })
-      if (!results)
-        results = await this.api.getMovies({ page: page, limit: 40, sort_by: 'download_count' })
+      if (!results.data.movies)
+        return;
+      if (page > 1) {
+        this.setState(prevState => ({
+          films: [...prevState.films, ...results.data.movies],
+          isLoading: true
+        }))
+      }
+      else
+        this.setState({ films: results.data.movies, isLoading: true })
+    }catch (e){
+      return false;
     }
-    if (!results.data.movies)
-      return;
-    if (page > 1) {
-      this.setState(prevState => ({
-        films: [...prevState.films, ...results.data.movies],
-        isLoading: true
-      }))
-    }
-    else
-      this.setState({ films: results.data.movies, isLoading: true })
   }
 
   handleScroll() {
@@ -305,7 +308,7 @@ class Home extends React.Component {
             spacing={5}
             cellHeight={180}
             cols={this.getGridListCols()}
-            style={{flex: 1}}
+            style={{ flex: 1 }}
           >
             {this.state.films.map((film, index) => (
               <GridListTile
@@ -329,7 +332,7 @@ class Home extends React.Component {
                   }
                 />
               </GridListTile>
-              
+
             ))}
           </GridList>
         </div>
