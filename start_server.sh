@@ -7,6 +7,6 @@ END
 
 osascript <<END
 tell application "Terminal"
-    do script "cd ~/Desktop/Hypertube/server && npm start"
+    do script "cd ~/Desktop/Hypertube/server && npm run prod"
 end tell
 END
