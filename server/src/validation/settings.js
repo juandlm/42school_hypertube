@@ -40,7 +40,7 @@ module.exports = validateSettingsInput = (data) => {
                 errors.password = 'Password must have 7 chars';
             if (settings.password && settings.password_confirm && !Validator.equals(settings.password, settings.password_confirm))
                 errors.password = 'Password and Confirm Password must match';
-            if (!regex.test(String(data.password)))
+            if (!regex.test(String(settings.password)))
                 errors.password = 'Password must have lowercase and uppercase characters';
         }
 
